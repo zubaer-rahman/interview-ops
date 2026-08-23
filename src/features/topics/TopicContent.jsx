@@ -1,11 +1,11 @@
 import React from "react";
-import { Check, BookOpen, Lightbulb, Layers, MessageSquareText, Workflow, Code2, ArrowRight } from "lucide-react";
+import { Check, BookOpen, Lightbulb, Layers, MessageSquare, Workflow, Code2, ArrowRight } from "lucide-react";
 
 export const TABS = [
   { id: "overview", label: "Overview", icon: BookOpen },
   { id: "plain", label: "Plain English", icon: Lightbulb },
   { id: "deepdive", label: "Deep Dive", icon: Layers },
-  { id: "qa", label: "Interview Q&A", icon: MessageSquareText },
+  { id: "qa", label: "Interview Q&A", icon: MessageSquare },
   { id: "blueprint", label: "Blueprint", icon: Workflow },
   { id: "code", label: "Code", icon: Code2 },
 ];
