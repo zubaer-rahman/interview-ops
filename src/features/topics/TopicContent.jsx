@@ -95,7 +95,7 @@ export function TopicContent({ activeTopic, progress, toggleComplete, activeTab,
             <div className="io-tldr">
               {activeTopic.content?.tldr?.length > 0 || activeTopic.tldr ? (
                 Array.isArray(activeTopic.content?.tldr) 
-                  ? activeTopic.content.tldr.map((p, i) => <p key={i} dangerouslySetInnerHTML={{ __html: p }} />)
+                  ? <ul style={{ paddingLeft: '20px' }}>{activeTopic.content.tldr.map((p, i) => <li key={i} dangerouslySetInnerHTML={{ __html: p }} style={{ marginBottom: '8px' }} />)}</ul>
                   : <p dangerouslySetInnerHTML={{ __html: activeTopic.content?.tldr || activeTopic.tldr }} />
               ) : <EmptyState message="No overview available for this topic." />}
             </div>

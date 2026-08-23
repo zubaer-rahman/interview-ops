@@ -1,4 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
+
+const PROFILE_KEY = "io:profile";
 import { useProgress } from "./core/hooks/useProgress";
 import { Login } from "./features/auth/Login";
 import { Sidebar } from "./features/layout/Sidebar";
@@ -11,7 +13,7 @@ import { CATEGORIES } from "./data/categories";
 const TOTAL_TOPICS = CATEGORIES.reduce((sum, c) => sum + c.topics.length, 0);
 
 export default function App() {
-  const [profile, setProfile] = useState(null);
+  const [profile, setProfile] = useState(() => localStorage.getItem(PROFILE_KEY) || null);
   const [nameInput, setNameInput] = useState("");
   const { progress, setProgress, loading, error, toggleComplete } = useProgress(profile);
 
@@ -43,7 +45,7 @@ export default function App() {
 
     if (typeof activeTopicMeta.content === 'function') {
       let cancelled = false;
-      setActiveTopic({ ...activeTopicMeta, content: null }); // Show skeleton or keep old UI structure while loading
+      setActiveTopic({ ...activeTopicMeta, content: null });
       activeTopicMeta.content().then((res) => {
         if (!cancelled) {
           setActiveTopic({ ...activeTopicMeta, content: res });
@@ -83,10 +85,12 @@ export default function App() {
   function handleLogin() {
     const name = nameInput.trim();
     if (!name) return;
+    localStorage.setItem(PROFILE_KEY, name);
     setProfile(name);
   }
 
   function switchProfile() {
+    localStorage.removeItem(PROFILE_KEY);
     setProfile(null);
     setNameInput("");
     setProgress({});
@@ -114,7 +118,7 @@ export default function App() {
         activeTopicId={activeTopicId}
         setActiveTopicId={(id) => {
           setActiveTopicId(id);
-          setIsSidebarOpen(false); // Close on selection on mobile
+          setIsSidebarOpen(false);
         }}
         setActiveTab={setActiveTab}
         progress={progress}

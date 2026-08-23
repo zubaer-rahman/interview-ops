@@ -375,7 +375,7 @@ body {
   padding: 0 30px;
   flex-shrink: 0;
 }
-.io-tabs::-webkit-scrollbar { display: none; } /* Hide scrollbar for a cleaner look */
+.io-tabs::-webkit-scrollbar { display: none; }
 .io-tab {
   display: flex; align-items: center; gap: 6px;
   background: none; border: none;
@@ -523,10 +523,10 @@ body {
   }
   .io-topbar-progress { gap: 8px; flex: 1; min-width: 0; }
   .io-topbar-title { font-size: 0.8276rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .io-topbar-sub { display: none; } /* Hide subtext to save vertical space */
+  .io-topbar-sub { display: none; }
   
-  .io-streak span { display: none; } /* Hide streak text, keep only the icon */
-  .io-streak { padding: 8px; border-radius: 50%; } /* Make streak a perfect circle */
+  .io-streak span { display: none; }
+  .io-streak { padding: 8px; border-radius: 50%; }
   
   .io-topbar-meta { display: none !important; }
   .io-mobile-meta { display: flex !important; }

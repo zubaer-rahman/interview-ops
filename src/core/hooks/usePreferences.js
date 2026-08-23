@@ -32,7 +32,6 @@ export function usePreferences() {
       console.error("Failed to save preferences", e);
     }
 
-    // Apply to document
     const root = document.documentElement;
     if (prefs.theme === "light") {
       root.classList.add("theme-light");
