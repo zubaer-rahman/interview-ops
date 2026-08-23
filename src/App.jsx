@@ -4,6 +4,8 @@ import { Login } from "./features/auth/Login";
 import { Sidebar } from "./features/layout/Sidebar";
 import { Topbar } from "./features/layout/Topbar";
 import { TopicContent } from "./features/topics/TopicContent";
+import { PreferencesModal } from "./features/preferences/PreferencesModal";
+import { usePreferences } from "./core/hooks/usePreferences";
 import { CATEGORIES } from "./data/categories";
 
 const TOTAL_TOPICS = CATEGORIES.reduce((sum, c) => sum + c.topics.length, 0);
@@ -20,6 +22,8 @@ export default function App() {
   const [activeTab, setActiveTab] = useState("overview");
   const [query, setQuery] = useState("");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isPrefsOpen, setIsPrefsOpen] = useState(false);
+  const { prefs, updatePrefs, resetPrefs } = usePreferences();
 
   const activeTopicMeta = useMemo(() => {
     for (const cat of CATEGORIES) {
@@ -119,6 +123,7 @@ export default function App() {
         switchProfile={switchProfile}
         isSidebarOpen={isSidebarOpen}
         setIsSidebarOpen={setIsSidebarOpen}
+        onOpenPrefs={() => setIsPrefsOpen(true)}
       />
 
       <main className="io-main">
@@ -141,6 +146,14 @@ export default function App() {
           setActiveTab={setActiveTab}
         />
       </main>
+
+      <PreferencesModal
+        isOpen={isPrefsOpen}
+        onClose={() => setIsPrefsOpen(false)}
+        prefs={prefs}
+        updatePrefs={updatePrefs}
+        resetPrefs={resetPrefs}
+      />
     </div>
   );
 }

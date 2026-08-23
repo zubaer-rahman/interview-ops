@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Check, BookOpen, Lightbulb, Layers, MessageSquare, Workflow, Code2, ArrowRight } from "lucide-react";
+import { Check, BookOpen, Lightbulb, Layers, MessageSquare, Workflow, Code2, ArrowRight, Target, Clock } from "lucide-react";
 import { highlightCode } from "../../utils/highlightCode";
 
 const TABS = [
@@ -44,7 +44,23 @@ export function TopicContent({ activeTopic, progress, toggleComplete, activeTab,
   return (
     <div className="io-content">
       <div className="io-content-head">
-        <div className="io-breadcrumb">{activeTopic.categoryName}</div>
+        <div className="io-breadcrumb" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+          <span>{activeTopic.categoryName}</span>
+          <div className="io-mobile-meta" style={{ display: 'none', gap: '8px' }}>
+            {activeTopic.difficulty && (
+              <div className={`io-meta-badge diff-${activeTopic.difficulty.toLowerCase()}`}>
+                <Target size={12} />
+                <span>{activeTopic.difficulty}</span>
+              </div>
+            )}
+            {activeTopic.estimatedMinutes && (
+              <div className="io-meta-badge time-badge">
+                <Clock size={12} />
+                <span>{activeTopic.estimatedMinutes}m</span>
+              </div>
+            )}
+          </div>
+        </div>
         <div className="io-content-title-row">
           <h2 className="io-content-title">{activeTopic.title}</h2>
           <button

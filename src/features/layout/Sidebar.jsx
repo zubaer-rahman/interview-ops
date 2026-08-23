@@ -1,4 +1,4 @@
-import { Terminal, Search, Check, ChevronRight, LogOut } from "lucide-react";
+import { Terminal, Search, Check, ChevronRight, LogOut, Settings } from "lucide-react";
 
 export function Sidebar({
   query,
@@ -15,7 +15,8 @@ export function Sidebar({
   overallPct,
   switchProfile,
   isSidebarOpen,
-  setIsSidebarOpen
+  setIsSidebarOpen,
+  onOpenPrefs
 }) {
   return (
     <>
@@ -93,13 +94,22 @@ export function Sidebar({
             <div className="io-profile-pct">{overallPct}% complete</div>
           </div>
         </div>
-        <button
-          className="io-profile-switch"
-          onClick={switchProfile}
-          title="Switch profile"
-        >
-          <LogOut size={15} />
-        </button>
+        <div style={{ display: 'flex', gap: '4px' }}>
+          <button
+            className="io-profile-switch"
+            onClick={onOpenPrefs}
+            title="Preferences"
+          >
+            <Settings size={15} />
+          </button>
+          <button
+            className="io-profile-switch"
+            onClick={switchProfile}
+            title="Switch profile"
+          >
+            <LogOut size={15} />
+          </button>
+        </div>
       </div>
     </aside>
     </>
