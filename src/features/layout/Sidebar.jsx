@@ -1,4 +1,5 @@
-import { Terminal, Search, Check, ChevronRight, LogOut, Settings } from "lucide-react";
+import { useState } from "react";
+import { Terminal, Search, Check, ChevronRight, ChevronDown, LogOut, Settings } from "lucide-react";
 
 export function Sidebar({
   query,
@@ -18,6 +19,17 @@ export function Sidebar({
   setIsSidebarOpen,
   onOpenPrefs
 }) {
+  const [openCategories, setOpenCategories] = useState(() => new Set([activeCategory]));
+
+  function toggleCategory(catId) {
+    setOpenCategories((prev) => {
+      const next = new Set(prev);
+      if (next.has(catId)) next.delete(catId);
+      else next.add(catId);
+      return next;
+    });
+  }
+
   return (
     <>
       <div 
@@ -45,23 +57,30 @@ export function Sidebar({
         {filteredCategories.map((cat) => {
           const cp = categoryProgress(cat);
           const isActive = cat.id === activeCategory;
+          const isOpen = openCategories.has(cat.id);
           return (
             <div key={cat.id} className="io-cat-group">
               <button
                 className={`io-cat-btn ${isActive ? "is-active" : ""}`}
-                onClick={() => setActiveCategory(isActive ? activeCategory : cat.id)}
+                onClick={() => {
+                  setActiveCategory(cat.id);
+                  toggleCategory(cat.id);
+                }}
               >
                 <span className="io-cat-tag" style={{ background: `${cat.color}20`, color: cat.color }}>{cat.icon}</span>
                 <span className="io-cat-name">{cat.name}</span>
                 <span className="io-cat-count">
                   {cp.done}/{cp.total}
                 </span>
+                {isOpen
+                  ? <ChevronDown size={13} className="io-cat-chev" />
+                  : <ChevronRight size={13} className="io-cat-chev" />}
               </button>
               <div className="io-spine">
                 <div className="io-spine-fill" style={{ width: `${cp.pct}%` }} />
               </div>
 
-              {isActive && (
+              {isOpen && (
                 <div className="io-topic-list">
                   {cat.topics.map((t) => (
                     <button
