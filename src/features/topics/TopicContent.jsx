@@ -9,8 +9,13 @@ export const TABS = [
   { id: "blueprint", label: "Blueprint", icon: Workflow },
   { id: "code", label: "Code", icon: Code2 },
   { id: "mcq", label: "Judge", icon: Layers },
-
 ];
+
+const EmptyState = ({ message }) => (
+  <div style={{ color: 'var(--text-muted)', fontStyle: 'italic', padding: '32px 16px', textAlign: 'center', background: 'var(--panel-alt)', borderRadius: '8px', border: '1px dashed var(--border)' }}>
+    {message}
+  </div>
+);
 
 export function TopicContent({ activeTopic, progress, toggleComplete, activeTab, setActiveTab }) {
   if (!activeTopic) return null;
@@ -50,50 +55,59 @@ export function TopicContent({ activeTopic, progress, toggleComplete, activeTab,
       <div className="io-panel">
         {activeTab === "overview" && (
           <div className="io-tldr">
-            {Array.isArray(activeTopic.content?.tldr) 
-              ? activeTopic.content.tldr.map((p, i) => <p key={i} dangerouslySetInnerHTML={{ __html: p }} />)
-              : <p dangerouslySetInnerHTML={{ __html: activeTopic.content?.tldr || activeTopic.tldr }} />
-            }
+            {activeTopic.content?.tldr?.length > 0 || activeTopic.tldr ? (
+              Array.isArray(activeTopic.content?.tldr) 
+                ? activeTopic.content.tldr.map((p, i) => <p key={i} dangerouslySetInnerHTML={{ __html: p }} />)
+                : <p dangerouslySetInnerHTML={{ __html: activeTopic.content?.tldr || activeTopic.tldr }} />
+            ) : <EmptyState message="No overview available for this topic." />}
           </div>
         )}
         
         {activeTab === "plain" && (
-          <p className="io-plain" dangerouslySetInnerHTML={{ __html: activeTopic.content?.laymanDefinition || activeTopic.content?.layman || activeTopic.layman }} />
+          <div className="io-plain">
+            {activeTopic.content?.laymanDefinition || activeTopic.content?.layman || activeTopic.layman ? (
+              <p dangerouslySetInnerHTML={{ __html: activeTopic.content?.laymanDefinition || activeTopic.content?.layman || activeTopic.layman }} />
+            ) : <EmptyState message="No plain English explanation available." />}
+          </div>
         )}
         
         {activeTab === "deepdive" && (
           <div className="io-deepdive">
-            {Array.isArray(activeTopic.content?.deepDive) 
-              ? activeTopic.content.deepDive.map((section, i) => (
-                  <div key={i} style={{ marginBottom: '1.5rem' }}>
-                    <h3 style={{ color: 'var(--amber)', fontSize: '15px', marginBottom: '8px' }}>{section.heading}</h3>
-                    <p dangerouslySetInnerHTML={{ __html: section.text }} />
-                  </div>
-                ))
-              : <p dangerouslySetInnerHTML={{ __html: activeTopic.content?.deepDive || activeTopic.deepDive }} />
-            }
+            {activeTopic.content?.deepDive?.length > 0 || activeTopic.deepDive ? (
+              Array.isArray(activeTopic.content?.deepDive) 
+                ? activeTopic.content.deepDive.map((section, i) => (
+                    <div key={i} style={{ marginBottom: '1.5rem' }}>
+                      <h3 style={{ color: 'var(--amber)', fontSize: '15px', marginBottom: '8px' }}>{section.heading}</h3>
+                      <p dangerouslySetInnerHTML={{ __html: section.text }} />
+                    </div>
+                  ))
+                : <p dangerouslySetInnerHTML={{ __html: activeTopic.content?.deepDive || activeTopic.deepDive }} />
+            ) : <EmptyState message="No deep dive content available for this topic." />}
           </div>
         )}
         
-        {activeTab === "blueprint" && activeTopic.content?.diagramSvg && (
-          <div className="io-blueprint-svg" dangerouslySetInnerHTML={{ __html: activeTopic.content.diagramSvg }} style={{ background: 'var(--panel-alt)', padding: '16px', borderRadius: '8px', overflowX: 'auto' }} />
-        )}
-        {activeTab === "blueprint" && (activeTopic.content?.diagram || activeTopic.diagram) && !activeTopic.content?.diagramSvg && (
-          <div className="io-blueprint">
-            {(activeTopic.content?.diagram?.steps || activeTopic.diagram?.steps || []).map((step, i, arr) => (
-              <React.Fragment key={i}>
-                <div className="io-blueprint-step">
-                  <span className="io-blueprint-num">{String(i + 1).padStart(2, "0")}</span>
-                  <span>{step}</span>
-                </div>
-                {i < arr.length - 1 && (
-                  <div className="io-blueprint-arrow">
-                    <ArrowRight size={16} />
-                  </div>
-                )}
-              </React.Fragment>
-            ))}
-          </div>
+        {activeTab === "blueprint" && (
+          <>
+            {activeTopic.content?.diagramSvg ? (
+              <div className="io-blueprint-svg" dangerouslySetInnerHTML={{ __html: activeTopic.content.diagramSvg }} style={{ background: 'var(--panel-alt)', padding: '16px', borderRadius: '8px', overflowX: 'auto' }} />
+            ) : (activeTopic.content?.diagram || activeTopic.diagram) ? (
+              <div className="io-blueprint">
+                {(activeTopic.content?.diagram?.steps || activeTopic.diagram?.steps || []).map((step, i, arr) => (
+                  <React.Fragment key={i}>
+                    <div className="io-blueprint-step">
+                      <span className="io-blueprint-num">{String(i + 1).padStart(2, "0")}</span>
+                      <span>{step}</span>
+                    </div>
+                    {i < arr.length - 1 && (
+                      <div className="io-blueprint-arrow">
+                        <ArrowRight size={16} />
+                      </div>
+                    )}
+                  </React.Fragment>
+                ))}
+              </div>
+            ) : <EmptyState message="No blueprint diagram available for this topic." />}
+          </>
         )}
         
         {activeTab === "qa" && (
@@ -105,12 +119,16 @@ export function TopicContent({ activeTopic, progress, toggleComplete, activeTab,
               </div>
             )}
             
-            {(activeTopic.content?.interviewQuestions || activeTopic.content?.qa || activeTopic.qa || []).map((pair, i) => (
-              <div className="io-qa-item" key={i}>
-                <div className="io-qa-q" dangerouslySetInnerHTML={{ __html: `Q. ${pair.question || pair.q}` }} />
-                <div className="io-qa-a" dangerouslySetInnerHTML={{ __html: pair.answer || pair.a }} />
-              </div>
-            ))}
+            {((activeTopic.content?.interviewQuestions || activeTopic.content?.qa || activeTopic.qa || [])).length > 0 ? (
+              (activeTopic.content?.interviewQuestions || activeTopic.content?.qa || activeTopic.qa || []).map((pair, i) => (
+                <div className="io-qa-item" key={i}>
+                  <div className="io-qa-q" dangerouslySetInnerHTML={{ __html: `Q. ${pair.question || pair.q}` }} />
+                  <div className="io-qa-a" dangerouslySetInnerHTML={{ __html: pair.answer || pair.a }} />
+                </div>
+              ))
+            ) : (
+              !activeTopic.content?.interviewAnswer && !activeTopic.interviewAnswer && <EmptyState message="No Q&A available for this topic." />
+            )}
           </div>
         )}
         
@@ -144,28 +162,32 @@ export function TopicContent({ activeTopic, progress, toggleComplete, activeTab,
               </div>
             ))}
             {!(activeTopic.content?.mcqQuestions?.length > 0) && (
-              <p style={{ color: 'var(--text-muted)' }}>No quiz available for this topic.</p>
+              <EmptyState message="No judge questions available for this topic." />
             )}
           </div>
         )}
         
         {activeTab === "code" && (
           <div className="io-code-examples">
-            {activeTopic.content?.codeExamples ? (
-              activeTopic.content.codeExamples.map((ex, i) => (
-                <div key={i} style={{ marginBottom: '24px' }}>
-                  <h4 style={{ fontSize: '14px', marginBottom: '6px', color: 'var(--text)' }}>{ex.title}</h4>
-                  {ex.description && <p style={{ fontSize: '13px', color: 'var(--text-dim)', marginBottom: '8px' }}>{ex.description}</p>}
-                  <pre className="io-code">
-                    <code>{ex.code}</code>
-                  </pre>
-                </div>
-              ))
+            {activeTopic.content?.codeExamples?.length > 0 ? (
+              Array.isArray(activeTopic.content.codeExamples) ? (
+                activeTopic.content.codeExamples.map((ex, i) => (
+                  <div key={i} style={{ marginBottom: '24px' }}>
+                    <h4 style={{ fontSize: '14px', marginBottom: '6px', color: 'var(--text)' }}>{ex.title}</h4>
+                    {ex.description && <p style={{ fontSize: '13px', color: 'var(--text-dim)', marginBottom: '8px' }}>{ex.description}</p>}
+                    <pre className="io-code">
+                      <code>{ex.code}</code>
+                    </pre>
+                  </div>
+                ))
+              ) : (
+                <div style={{ background: 'var(--panel-alt)', padding: '16px', borderRadius: '8px', overflowX: 'auto' }} dangerouslySetInnerHTML={{ __html: activeTopic.content.codeExamples }} />
+              )
             ) : (activeTopic.content?.code || activeTopic.code) ? (
               <pre className="io-code">
                 <code>{activeTopic.content?.code?.snippet || activeTopic.code?.snippet}</code>
               </pre>
-            ) : null}
+            ) : <EmptyState message="No code examples available for this topic." />}
           </div>
         )}
       </div>
