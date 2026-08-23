@@ -1049,5 +1049,569 @@ export const CATEGORIES = [
         }
       }
     ]
+  },
+  {
+    "id": "js",
+    "name": "JavaScript Core",
+    "tag": "JS",
+    "topics": [
+      {
+        "id": "js-closures",
+        "title": "Closures",
+        "tldr": "A closure is a function bundled with references to the variables from the scope it was created in — even after that outer scope has finished running.",
+        "layman": "Think of it like a backpack: when a function is created, it packs up the variables sitting around it and carries that backpack wherever it goes — even after the room it was made in is long gone.",
+        "diagram": {
+          "steps": [
+            "Outer function runs",
+            "Inner function is defined inside it",
+            "Outer function returns",
+            "Inner function still holds the outer variables"
+          ]
+        },
+        "deepDive": "When a function is defined inside another function, it keeps a live link to its parent's variable bindings rather than a snapshot of their values. This is what lets a counter factory hand back an `increment` function that still remembers and can mutate its own private `count`, without that count leaking into global scope. Closures are the mechanism behind module patterns, memoization caches, and event handlers that need to remember context — but they're also a common source of accidental memory retention if a closure outlives its usefulness while still holding a reference to a large object.",
+        "qa": [
+          {
+            "q": "Why does a closure keep working after the outer function returns?",
+            "a": "Because JS keeps the outer function's variable environment alive in memory as long as any inner function still references it — the garbage collector can't reclaim it early."
+          },
+          {
+            "q": "What's the classic closure-in-a-loop bug?",
+            "a": "Using `var` in a loop that creates callbacks — all callbacks share the same single binding, so they all see the final loop value. Switching to `let` creates a fresh binding per iteration."
+          }
+        ],
+        "code": {
+          "lang": "javascript",
+          "snippet": "function makeCounter() {\n  let count = 0;\n  return {\n    increment: () => ++count,\n    value: () => count,\n  };\n}\n\nconst counter = makeCounter();\ncounter.increment();\ncounter.increment();\nconsole.log(counter.value()); // 2 — private state, no globals"
+        }
+      },
+      {
+        "id": "js-event-loop",
+        "title": "The Event Loop",
+        "tldr": "JavaScript runs on a single thread, but the event loop lets it stay non-blocking by handing off async work and running callbacks once the call stack is clear.",
+        "layman": "JS is a single chef who can't cook two dishes at once, but keeps an order queue — finishing what's on the counter before grabbing the next ticket.",
+        "diagram": {
+          "steps": [
+            "Call stack runs sync code",
+            "Async work handed off",
+            "Microtask queue drains completely",
+            "One macrotask runs, then repeat"
+          ]
+        },
+        "deepDive": "The call stack executes synchronous code first. Async operations (timers, network calls, promises) are delegated to the browser or Node APIs, and when they finish, their callbacks are queued rather than run immediately. The event loop's job is simple: once the call stack is empty, drain the microtask queue (promises, queueMicrotask) completely before pulling a single task from the macrotask queue (setTimeout, I/O, UI events). This ordering is why a `Promise.resolve().then()` always fires before a `setTimeout(fn, 0)`, even though both are scheduled for 'as soon as possible.'",
+        "qa": [
+          {
+            "q": "Why does a resolved promise callback run before a setTimeout(0) callback?",
+            "a": "Microtasks (promises) are fully drained before the event loop pulls the next macrotask (timers), regardless of which was scheduled first."
+          },
+          {
+            "q": "What happens if a synchronous function takes 5 seconds to run?",
+            "a": "Everything blocks — no renders, no timers, no I/O callbacks — because there's only one call stack and it's occupied the whole time."
+          }
+        ],
+        "code": {
+          "lang": "javascript",
+          "snippet": "console.log(\"1: sync\");\n\nsetTimeout(() => console.log(\"2: macrotask\"), 0);\n\nPromise.resolve().then(() => console.log(\"3: microtask\"));\n\nconsole.log(\"4: sync\");\n\n// Output order: 1, 4, 3, 2"
+        }
+      },
+      {
+        "id": "js-prototypes",
+        "title": "Prototypal Inheritance",
+        "tldr": "Every JS object has an internal link to another object — its prototype — and property lookups walk up this chain until they find a match or hit `null`.",
+        "layman": "It's like asking a relative for something you don't own — if you don't have it yourself, you check one level up the family tree, and keep going until someone has it.",
+        "diagram": {
+          "steps": [
+            "Look on the object itself",
+            "Not found — check its prototype",
+            "Still not found — check further up",
+            "Found, or the chain ends at null"
+          ]
+        },
+        "deepDive": "Unlike classical inheritance, where a class is a blueprint, JS objects inherit directly from other live objects. `class` syntax is sugar over this same prototype chain — under the hood, methods you define on a class body are attached to `ClassName.prototype`, and every instance's internal `[[Prototype]]` points there. This is why adding a method to a prototype after instances already exist still makes it available on those instances — they don't own a copy, they look it up dynamically at call time.",
+        "qa": [
+          {
+            "q": "What's the practical difference between an own property and an inherited one?",
+            "a": "`Object.hasOwnProperty()` only returns true for properties set directly on the object itself, not ones found further up the prototype chain."
+          },
+          {
+            "q": "Does `class` in JS create a fundamentally different inheritance model?",
+            "a": "No — it's syntactic sugar over the same prototype chain; `instanceof` and method lookup still walk `[[Prototype]]` links underneath."
+          }
+        ],
+        "code": {
+          "lang": "javascript",
+          "snippet": "function Animal(name) { this.name = name; }\nAnimal.prototype.speak = function () {\n  return `${this.name} makes a sound.`;\n};\n\nconst dog = new Animal(\"Rex\");\nconsole.log(dog.speak()); // \"Rex makes a sound.\"\nconsole.log(dog.hasOwnProperty(\"speak\")); // false — it's inherited"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react",
+    "name": "React",
+    "tag": "React",
+    "topics": [
+      {
+        "id": "react-hooks",
+        "title": "Hooks & Render Lifecycle",
+        "tldr": "Hooks let function components hold state and side effects across renders, relying on stable call order rather than a class instance to track identity.",
+        "layman": "Hooks are sticky notes stuck to a component in a fixed order — React reads them off in exactly that order every render, so shuffling the notes mixes up which one holds what.",
+        "diagram": {
+          "steps": [
+            "Render #1: hooks registered in order",
+            "State/effects tied to that slot index",
+            "Render #2: same call order expected",
+            "React matches each hook to the right slot"
+          ]
+        },
+        "deepDive": "React associates each `useState` or `useEffect` call with a slot in an internal list, matched purely by the order hooks are called in — not by name. That's why hooks can't live inside conditionals or loops: change the call order between renders and React attaches the wrong stored state to the wrong hook. `useEffect` callbacks run after the DOM has been painted, and React compares the dependency array by reference between renders to decide whether to re-run the effect or skip it.",
+        "qa": [
+          {
+            "q": "Why can't hooks be called conditionally?",
+            "a": "React matches hook state to hooks by call order, not by name — a conditional hook call shifts every subsequent hook's slot and corrupts state on that render."
+          },
+          {
+            "q": "What causes a useEffect to re-run when you didn't expect it to?",
+            "a": "A new object, array, or function literal in the dependency array — these are recreated every render and fail reference equality even if their contents look the same."
+          }
+        ],
+        "code": {
+          "lang": "javascript",
+          "snippet": "function SearchBox({ query }) {\n  const [results, setResults] = useState([]);\n\n  useEffect(() => {\n    let cancelled = false;\n    fetchResults(query).then((data) => {\n      if (!cancelled) setResults(data);\n    });\n    return () => { cancelled = true; }; // avoid stale-response race\n  }, [query]);\n\n  return <ResultsList items={results} />;\n}"
+        }
+      },
+      {
+        "id": "react-reconciliation",
+        "title": "Reconciliation & Keys",
+        "tldr": "React compares the new element tree to the previous one and patches only what changed — `key` is how it tracks which list item is which across renders.",
+        "layman": "Keys are name tags at a reunion — without them, React can only guess who moved by seat position, and might mix up two people who just swapped chairs.",
+        "diagram": {
+          "steps": [
+            "New element tree is built",
+            "Compared against the previous tree",
+            "Keys match old items to new ones",
+            "Only the changed nodes get patched"
+          ]
+        },
+        "deepDive": "Rather than diffing at the level of arbitrary tree edits, React uses a heuristic diffing algorithm: elements of different types are treated as entirely new subtrees, and same-type elements are compared prop-by-prop and updated in place. For lists, React needs a stable identity per item to know whether an element moved, was added, or was removed — that's the entire purpose of `key`. Using array index as a key works only if the list never reorders or has items inserted/removed from the middle; otherwise state gets attached to the wrong row after a reorder.",
+        "qa": [
+          {
+            "q": "Why is using array index as a key risky?",
+            "a": "If items are reordered or removed, the index-to-item mapping shifts, so React may reuse a DOM node (and any local state on it) for the wrong logical item."
+          },
+          {
+            "q": "What's the fix for stale state after reordering a keyed list?",
+            "a": "Use a stable, unique identifier from the data itself (like a database id) instead of the array index."
+          }
+        ],
+        "code": {
+          "lang": "javascript",
+          "snippet": "// Fragile — breaks on reorder/insert\ntodos.map((todo, i) => <TodoRow key={i} todo={todo} />);\n\n// Stable — survives reorder/insert\ntodos.map((todo) => <TodoRow key={todo.id} todo={todo} />);"
+        }
+      },
+      {
+        "id": "react-state-patterns",
+        "title": "State Management Patterns",
+        "tldr": "Not all state belongs in the same place — the right pattern depends on whether state is local, shared across siblings, or genuinely global to the app.",
+        "layman": "It's about picking the right-sized box for your stuff — don't rent a warehouse (a global store) just to hold one sock (a single component's toggle).",
+        "diagram": {
+          "steps": [
+            "Is state needed by one component?",
+            "Yes — keep it local with useState",
+            "No, siblings need it too?",
+            "Lift to shared parent, or use Context"
+          ]
+        },
+        "deepDive": "The most common mistake is reaching for a global store before it's needed. Local `useState` covers most component-owned state. When two sibling components need the same value, lifting it to their nearest common parent is usually enough — no library required. Context is well-suited to low-frequency, broadly-read values like theme or auth, but re-renders every consumer on change, so it's a poor fit for fast-changing state like form input on every keystroke. Dedicated state libraries earn their keep when state is genuinely global, updated from many places, and needs to avoid the re-render cost of Context.",
+        "qa": [
+          {
+            "q": "When does Context become a performance problem?",
+            "a": "When it wraps state that changes frequently — every component consuming that context re-renders on each change, regardless of whether it uses the specific value that changed."
+          },
+          {
+            "q": "What's a sign that state should be lifted rather than left local?",
+            "a": "Two sibling components need to stay in sync — if one can't know about a change the other made, the state belongs in their common parent instead."
+          }
+        ],
+        "code": {
+          "lang": "javascript",
+          "snippet": "// Lifted state — no library needed for two siblings\nfunction Parent() {\n  const [filter, setFilter] = useState(\"all\");\n  return (\n    <>\n      <FilterBar value={filter} onChange={setFilter} />\n      <TaskList filter={filter} />\n    </>\n  );\n}"
+        }
+      }
+    ]
+  },
+  {
+    "id": "sysdesign",
+    "name": "System Design",
+    "tag": "Sys",
+    "topics": [
+      {
+        "id": "sd-load-balancing",
+        "title": "Load Balancing",
+        "tldr": "A load balancer spreads incoming requests across multiple servers so no single instance becomes a bottleneck or a single point of failure.",
+        "layman": "It's a host directing guests to whichever checkout line is shortest, instead of making everyone pile up at register one.",
+        "diagram": {
+          "steps": [
+            "Request arrives",
+            "Balancer checks instance health",
+            "Routes to the least-loaded healthy node",
+            "Response returned to the client"
+          ]
+        },
+        "deepDive": "Beyond simple round-robin, most production balancers route by least-connections (send traffic to whichever backend has the fewest active requests) or by weighted capacity when servers aren't identical. Health checks are what make a load balancer resilient rather than just distributive — it needs to detect a failing instance and stop routing to it before users see errors. At the architecture level, load balancers also enable rolling deploys: new instances join the pool, old ones drain their in-flight connections and leave, with zero downtime from the user's perspective.",
+        "qa": [
+          {
+            "q": "Round-robin vs least-connections — when does the difference matter?",
+            "a": "When request durations vary a lot. Round-robin can pile slow requests onto one server; least-connections adapts to real-time load instead of just taking turns."
+          },
+          {
+            "q": "How does a load balancer support zero-downtime deploys?",
+            "a": "New instances register once healthy, traffic gradually shifts to them, and old instances are drained of in-flight requests before being removed from the pool."
+          }
+        ],
+        "code": {
+          "lang": "text",
+          "snippet": "Client\n  |\n  v\n[Load Balancer] --health checks--> instance A (healthy)\n  |--- 40% ------------------------> instance B (healthy)\n  |--- 40% ------------------------> instance C (unhealthy, skipped)\n  '--- 20% ------------------------> instance D (healthy)"
+        }
+      },
+      {
+        "id": "sd-caching",
+        "title": "Caching Strategies",
+        "tldr": "Caching trades a bit of staleness for a lot of speed — the right strategy depends on how fresh the data needs to be and who's responsible for updating it.",
+        "layman": "It's keeping frequently-used spices on the counter instead of walking to the pantry every time — faster, but you have to remember to restock when they run low.",
+        "diagram": {
+          "steps": [
+            "Read request comes in",
+            "Check the cache first",
+            "Hit — return the cached value",
+            "Miss — read the database, then populate the cache"
+          ]
+        },
+        "deepDive": "Cache-aside is the most common pattern: the app checks the cache first, and on a miss, reads from the database and writes the result back to the cache. Write-through keeps the cache always consistent by writing to cache and database together, at the cost of slightly slower writes. The hardest part of caching isn't storing data, it's invalidation — deciding when cached data has gone stale and needs to be evicted or refreshed, especially when multiple services can write to the same underlying data.",
+        "qa": [
+          {
+            "q": "What's the main risk of cache-aside?",
+            "a": "A window where the database has changed but the cache hasn't been invalidated yet, so reads can return stale data until the next miss or explicit invalidation."
+          },
+          {
+            "q": "Why is cache invalidation considered hard?",
+            "a": "Because it requires knowing exactly which cached entries are affected by a given write, especially across services — over-invalidate and you lose the benefit, under-invalidate and you serve stale data."
+          }
+        ],
+        "code": {
+          "lang": "text",
+          "snippet": "read(key):\n  if cache.has(key): return cache.get(key)      # hit\n  value = db.query(key)                         # miss\n  cache.set(key, value, ttl=300)\n  return value"
+        }
+      },
+      {
+        "id": "sd-sharding",
+        "title": "Database Sharding",
+        "tldr": "Sharding splits one large dataset across multiple databases so no single machine has to hold or serve all of it.",
+        "layman": "Instead of one giant filing cabinet, you split files across several smaller cabinets by last name — fast to search one, slower if you ever need to search all of them at once.",
+        "diagram": {
+          "steps": [
+            "Compute shard key from the request",
+            "Route to the owning shard",
+            "That shard processes the query locally",
+            "Result is returned to the caller"
+          ]
+        },
+        "deepDive": "A shard key determines which physical database a given row lives on — for example, splitting users by `user_id % N` across N databases. The upside is horizontal scalability: each shard handles a fraction of total load. The downside is that queries spanning multiple shards (like a global search across all users) become expensive, since they must fan out to every shard and merge results. Choosing a shard key is mostly about picking an access pattern to optimize for, since it's very costly to change later — a poor choice creates 'hot shards' that get disproportionate traffic.",
+        "qa": [
+          {
+            "q": "What makes a shard key choice hard to change later?",
+            "a": "Resharding means physically moving data between databases while the system stays live, which is a large, risky migration — not a config change."
+          },
+          {
+            "q": "Why do cross-shard queries hurt performance?",
+            "a": "The query has to be sent to every shard, and results merged and often re-sorted afterward, instead of a single database doing the work locally."
+          }
+        ],
+        "code": {
+          "lang": "text",
+          "snippet": "shard_id = hash(user_id) % NUM_SHARDS\n\nuser_id=4821 -> hash -> % 4 -> shard 1\nuser_id=9310 -> hash -> % 4 -> shard 2\n# Query for one user: hits exactly one shard\n# Query across all users: must fan out to all 4"
+        }
+      }
+    ]
+  },
+  {
+    "id": "db",
+    "name": "Databases",
+    "tag": "DB",
+    "topics": [
+      {
+        "id": "db-indexing",
+        "title": "SQL Indexing",
+        "tldr": "An index is a separate sorted structure that lets the database find rows without scanning the whole table — at the cost of extra storage and slower writes.",
+        "layman": "It's the index at the back of a textbook — instead of reading every page to find a term, you jump straight to the page listed.",
+        "diagram": {
+          "steps": [
+            "Query filters on a column",
+            "Index is checked (B-tree)",
+            "Jump straight to matching rows",
+            "Rows returned — full scan avoided"
+          ]
+        },
+        "deepDive": "Without an index, a `WHERE` clause forces a full table scan — checking every row. A B-tree index on that column lets the database jump almost directly to matching rows in logarithmic time. The trade-off is real: every insert or update also has to update every index on that table, and indexes take disk space. This is why indexing every column isn't free — it's a deliberate choice based on which columns are actually filtered or joined on frequently, weighed against write-heavy workload cost.",
+        "qa": [
+          {
+            "q": "Why not just index every column?",
+            "a": "Each index adds overhead to every write (insert/update/delete) and consumes storage, so indexes should be chosen based on actual query patterns, not applied blindly."
+          },
+          {
+            "q": "What's a composite index and when does column order matter?",
+            "a": "An index across multiple columns, useful when queries filter on that exact combination. Column order matters because the index can only be used efficiently as a left-to-right prefix match."
+          }
+        ],
+        "code": {
+          "lang": "sql",
+          "snippet": "-- Full table scan without an index on email\nSELECT * FROM users WHERE email = 'a@example.com';\n\nCREATE INDEX idx_users_email ON users(email);\n-- Now the same query does an index lookup instead"
+        }
+      },
+      {
+        "id": "db-acid",
+        "title": "ACID Transactions",
+        "tldr": "ACID describes the guarantees a database transaction makes: Atomicity, Consistency, Isolation, and Durability — the contract that keeps concurrent writes safe.",
+        "layman": "It's the rulebook that keeps a bank transfer honest — money never vanishes mid-transfer, and two people can't spend the same dollar at the same instant.",
+        "diagram": {
+          "steps": [
+            "Transaction begins",
+            "Multiple writes staged",
+            "All succeed — commit",
+            "Any fail — rollback entirely"
+          ]
+        },
+        "deepDive": "Atomicity means a transaction's operations happen entirely or not at all — a bank transfer never leaves money deducted from one account without arriving in the other. Consistency ensures a transaction moves the database from one valid state to another, respecting constraints. Isolation controls how concurrent transactions see each other's uncommitted changes — different isolation levels (read committed, repeatable read, serializable) trade correctness guarantees for throughput. Durability means once a transaction commits, it survives a crash — typically guaranteed by writing to a durable log before acknowledging the commit.",
+        "qa": [
+          {
+            "q": "What real-world problem does Atomicity solve?",
+            "a": "It prevents a multi-step operation (like a funds transfer) from being left half-done if a crash or error happens partway through."
+          },
+          {
+            "q": "Why would an app choose a weaker isolation level than serializable?",
+            "a": "Stricter isolation reduces concurrency by locking more aggressively; weaker levels allow more parallel throughput at the cost of certain anomalies like non-repeatable reads."
+          }
+        ],
+        "code": {
+          "lang": "sql",
+          "snippet": "BEGIN;\nUPDATE accounts SET balance = balance - 100 WHERE id = 1;\nUPDATE accounts SET balance = balance + 100 WHERE id = 2;\nCOMMIT; -- both updates succeed together, or neither does"
+        }
+      },
+      {
+        "id": "db-normalization",
+        "title": "Normalization",
+        "tldr": "Normalization organizes tables to eliminate redundant data, so a fact is stored in exactly one place and updates can't drift out of sync.",
+        "layman": "Instead of writing a friend's phone number on every party invite, you keep one contact card and reference it — update it once, and it's right everywhere.",
+        "diagram": {
+          "steps": [
+            "Identify repeated data",
+            "Split it into its own table",
+            "Reference it by a key/id",
+            "Update happens in exactly one place"
+          ]
+        },
+        "deepDive": "Each normal form fixes a specific kind of redundancy. First normal form requires atomic columns — no comma-separated lists stuffed into one field. Second and third normal form remove columns that depend on only part of a key, or on another non-key column, pushing them into their own table instead. The trade-off is query complexity: a fully normalized schema needs more joins to reassemble a full picture, which is why read-heavy systems sometimes deliberately denormalize specific tables for speed, accepting the redundancy in exchange for fewer joins.",
+        "qa": [
+          {
+            "q": "What problem does normalization directly prevent?",
+            "a": "Update anomalies — where the same fact is duplicated in multiple rows and an update only changes some of them, leaving the data inconsistent."
+          },
+          {
+            "q": "Why would a team deliberately denormalize part of a schema?",
+            "a": "To avoid expensive joins on hot read paths, trading some redundancy and update complexity for significantly faster reads."
+          }
+        ],
+        "code": {
+          "lang": "sql",
+          "snippet": "-- Denormalized: customer_name repeated on every order row\norders(order_id, customer_name, customer_email, total)\n\n-- Normalized: customer data lives in one place\ncustomers(customer_id, name, email)\norders(order_id, customer_id, total)"
+        }
+      }
+    ]
+  },
+  {
+    "id": "devops",
+    "name": "DevOps",
+    "tag": "Ops",
+    "topics": [
+      {
+        "id": "devops-docker",
+        "title": "Docker Fundamentals",
+        "tldr": "A Docker container packages an app with everything it needs to run, isolated from the host — so 'it works on my machine' becomes 'it works in the container, everywhere.'",
+        "layman": "It's a lunchbox that packs the food and the container together, so it tastes the same wherever you open it — not just the recipe, but the exact ingredients too.",
+        "diagram": {
+          "steps": [
+            "Dockerfile defines the steps",
+            "Image is built in layers",
+            "Container is started from the image",
+            "Runs isolated — same behavior everywhere"
+          ]
+        },
+        "deepDive": "An image is a read-only, layered snapshot built from a Dockerfile — each instruction (install a package, copy files) adds a cached layer, which is why reordering a Dockerfile to put rarely-changing steps first speeds up rebuilds. A container is a running instance of that image with its own isolated filesystem view and process namespace, but it shares the host's kernel — unlike a full virtual machine, which virtualizes hardware and runs its own kernel. That shared-kernel model is what makes containers dramatically lighter and faster to start than VMs.",
+        "qa": [
+          {
+            "q": "What's the core difference between a container and a VM?",
+            "a": "A container shares the host OS kernel and isolates only the process/filesystem view, while a VM virtualizes hardware and runs a full separate OS — making VMs heavier but more isolated."
+          },
+          {
+            "q": "Why does Dockerfile instruction order affect build speed?",
+            "a": "Docker caches each layer; if an early layer changes, every layer after it must rebuild — so stable steps (like installing dependencies) should come before frequently-changing ones (like copying app code)."
+          }
+        ],
+        "code": {
+          "lang": "dockerfile",
+          "snippet": "FROM node:20-alpine\nWORKDIR /app\nCOPY package*.json ./\nRUN npm ci                 # cached unless package.json changes\nCOPY . .                   # changes often — kept last\nCMD [\"node\", \"server.js\"]"
+        }
+      },
+      {
+        "id": "devops-cicd",
+        "title": "CI/CD Pipelines",
+        "tldr": "Continuous Integration catches problems by testing every change automatically; Continuous Delivery/Deployment automates getting a passing change safely into production.",
+        "layman": "It's an assembly line with a quality inspector at every station, instead of only checking the finished product at the very end.",
+        "diagram": {
+          "steps": [
+            "Code is pushed",
+            "Automated build & tests run",
+            "Pass — deployable artifact produced",
+            "Deploy step ships it to production"
+          ]
+        },
+        "deepDive": "CI means every push triggers an automated build and test run, so integration problems surface within minutes instead of being discovered weeks later when branches finally merge. CD extends that automation further: Continuous Delivery means every passing build is deployable at the push of a button, while Continuous Deployment goes one step further and ships automatically with no human approval gate. The real value of a mature pipeline isn't just running tests — it's making the feedback loop fast enough that developers trust and actually wait for it, rather than working around it.",
+        "qa": [
+          {
+            "q": "What's the practical difference between Continuous Delivery and Continuous Deployment?",
+            "a": "Delivery stops at 'ready to deploy, needs a human to press the button'; Deployment removes that manual gate and ships automatically once checks pass."
+          },
+          {
+            "q": "Why is pipeline speed itself considered a design goal?",
+            "a": "If a pipeline is too slow, developers start batching changes or skipping it locally, which defeats the fast-feedback purpose CI is meant to provide."
+          }
+        ],
+        "code": {
+          "lang": "yaml",
+          "snippet": "on: [push]\njobs:\n  test:\n    steps:\n      - run: npm ci\n      - run: npm test\n  deploy:\n    needs: test\n    if: github.ref == 'refs/heads/main'\n    steps:\n      - run: ./deploy.sh"
+        }
+      },
+      {
+        "id": "devops-orchestration",
+        "title": "Container Orchestration",
+        "tldr": "An orchestrator like Kubernetes keeps a fleet of containers running as declared — restarting failures, scaling replicas, and routing traffic to healthy instances.",
+        "layman": "It's a manager who notices an empty seat on the floor and immediately assigns someone else to cover it — without waiting for a human to notice.",
+        "diagram": {
+          "steps": [
+            "Desired state declared",
+            "Orchestrator watches the cluster",
+            "Detects drift — a crash or lost node",
+            "Reschedules to match the desired state"
+          ]
+        },
+        "deepDive": "Instead of manually deciding which server runs which container, you declare a desired state ('run 3 replicas of this image, exposed on port 80') and the orchestrator continuously reconciles the live cluster toward that state. If a container crashes, it's restarted automatically; if a node dies, its workloads are rescheduled elsewhere. This declarative, self-healing model is the core value proposition over manually running `docker run` on individual machines — the system actively works to correct drift from the desired state rather than requiring a human to notice and fix it.",
+        "qa": [
+          {
+            "q": "What does 'declarative' mean in this context?",
+            "a": "You describe the desired end state (replica count, image version) rather than the exact steps to get there — the orchestrator figures out and continuously enforces how."
+          },
+          {
+            "q": "How does orchestration handle a crashed container differently than plain Docker?",
+            "a": "Plain Docker does nothing on its own; an orchestrator detects the container no longer matches the desired replica count and starts a replacement automatically."
+          }
+        ],
+        "code": {
+          "lang": "yaml",
+          "snippet": "apiVersion: apps/v1\nkind: Deployment\nspec:\n  replicas: 3\n  template:\n    spec:\n      containers:\n        - name: web\n          image: myapp:1.4.0\n# Kubernetes keeps exactly 3 healthy pods running, always"
+        }
+      }
+    ]
+  },
+  {
+    "id": "git",
+    "name": "Git & Version Control",
+    "tag": "Git",
+    "topics": [
+      {
+        "id": "git-branching",
+        "title": "Branching Strategies",
+        "tldr": "A branching strategy is a team's agreed convention for how features, fixes, and releases move through the repository — trunk-based and Git-flow are the two common poles.",
+        "layman": "It's the difference between everyone editing one shared document constantly (trunk-based) versus each person drafting separately and merging on a schedule (Git-flow).",
+        "diagram": {
+          "steps": [
+            "Work starts on a branch",
+            "Changes are committed over time",
+            "Branch is merged or rebased into main",
+            "History reflects the team's chosen strategy"
+          ]
+        },
+        "deepDive": "Trunk-based development keeps everyone merging small, frequent changes into a single main branch, often behind feature flags, favoring speed and minimizing long-lived divergence. Git-flow uses longer-lived branches (develop, release, feature, hotfix) with more structure, which suits teams shipping on a slower, more formal release cadence. The right choice depends less on which is 'better' and more on deployment frequency and team size — trunk-based struggles without strong test automation, while Git-flow's extra ceremony can slow down teams that deploy many times a day.",
+        "qa": [
+          {
+            "q": "Why does trunk-based development depend heavily on test automation?",
+            "a": "Changes merge to main frequently and often deploy quickly, so there's no long-lived branch acting as a safety buffer — broken code reaches everyone almost immediately without solid automated checks."
+          },
+          {
+            "q": "When does Git-flow's extra structure make sense?",
+            "a": "For teams with scheduled, less frequent releases who benefit from an explicit staging/release branch to stabilize before shipping."
+          }
+        ],
+        "code": {
+          "lang": "text",
+          "snippet": "Trunk-based:\nmain ---o---o---o---o---o---o---> (small, frequent merges)\n\nGit-flow:\nmain    ---------o-----------o--->\ndevelop -o--o--o--o--o--o--o--o-->\nfeature      \\--o--o--/"
+        }
+      },
+      {
+        "id": "git-merge-rebase",
+        "title": "Merge vs Rebase",
+        "tldr": "Merge preserves exact history by adding a new commit that ties two branches together; rebase rewrites history by replaying your commits on top of another branch.",
+        "layman": "Merge keeps a note saying 'today two paths crossed'; rebase quietly rewrites the story as if your part happened right after, in one clean line.",
+        "diagram": {
+          "steps": [
+            "Two branches diverge",
+            "Merge: combine with a merge commit",
+            "Rebase: replay commits on top instead",
+            "Choice depends on whether the branch is shared"
+          ]
+        },
+        "deepDive": "A merge commit has two parents and keeps the branch's original commits untouched — the history shows exactly what happened, including the fact that two lines of work diverged and came back together. Rebase instead takes your commits and reapplies them one by one on top of the target branch, producing a linear history with no merge commit, but at the cost of rewriting commit hashes. That rewriting is exactly why rebasing a branch that others have already pulled from is risky — their local history no longer matches, causing painful divergence.",
+        "qa": [
+          {
+            "q": "Why is rebasing a shared/public branch considered dangerous?",
+            "a": "Rebase rewrites commit hashes; anyone who already has the old commits will have a history that conflicts with the rewritten one, causing confusing duplicate commits or forced pushes."
+          },
+          {
+            "q": "What's the main visual/practical benefit of rebase over merge?",
+            "a": "A clean, linear history with no merge commits, which makes `git log` and `git bisect` easier to follow — at the cost of losing the literal record of when branches diverged."
+          }
+        ],
+        "code": {
+          "lang": "bash",
+          "snippet": "# Merge — keeps both histories, adds a merge commit\ngit checkout main\ngit merge feature-branch\n\n# Rebase — replays your commits on top of main, linear history\ngit checkout feature-branch\ngit rebase main"
+        }
+      },
+      {
+        "id": "git-conflicts",
+        "title": "Resolving Merge Conflicts",
+        "tldr": "A conflict happens when Git can't automatically reconcile two changes to the same lines — resolving it means manually deciding what the final code should be.",
+        "layman": "It's two people editing the same paragraph of a shared doc at the same time — someone has to sit down and decide which sentence wins.",
+        "diagram": {
+          "steps": [
+            "Two branches edit the same lines",
+            "Merge or rebase is attempted",
+            "Git can't auto-resolve — conflict marked",
+            "Human edits, stages, and commits"
+          ]
+        },
+        "deepDive": "Git tracks changes line by line; when two branches touch the same lines differently, it can't guess which version is correct, so it pauses and marks the file with conflict markers showing both versions side by side. Resolving means editing the file to the intended final state, removing the markers, and staging the file to tell Git the conflict is resolved. Conflicts are far more manageable when commits are small and frequent — large, long-lived branches that drift far from main accumulate conflict surface area exponentially, not linearly.",
+        "qa": [
+          {
+            "q": "Why do conflict markers appear at all instead of Git picking a version?",
+            "a": "Git can only auto-merge when changes don't overlap on the same lines; overlapping edits require human judgment about intent, which Git can't infer."
+          },
+          {
+            "q": "Why do small, frequent commits reduce conflict pain?",
+            "a": "Less code diverges between merges, so there's a smaller surface area where two branches could have touched the same lines differently."
+          }
+        ],
+        "code": {
+          "lang": "text",
+          "snippet": "<<<<<<< HEAD\nconst timeout = 3000;\n=======\nconst timeout = 5000;\n>>>>>>> feature-branch\n\n# Resolve by choosing/combining, then:\ngit add config.js\ngit commit"
+        }
+      }
+    ]
   }
 ];
