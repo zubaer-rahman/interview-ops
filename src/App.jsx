@@ -19,6 +19,7 @@ export default function App() {
   );
   const [activeTab, setActiveTab] = useState("overview");
   const [query, setQuery] = useState("");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const activeTopic = useMemo(() => {
     for (const cat of CATEGORIES) {
@@ -83,12 +84,17 @@ export default function App() {
         setActiveCategory={setActiveCategory}
         categoryProgress={categoryProgress}
         activeTopicId={activeTopicId}
-        setActiveTopicId={setActiveTopicId}
+        setActiveTopicId={(id) => {
+          setActiveTopicId(id);
+          setIsSidebarOpen(false); // Close on selection on mobile
+        }}
         setActiveTab={setActiveTab}
         progress={progress}
         profile={profile}
         overallPct={overallPct}
         switchProfile={switchProfile}
+        isSidebarOpen={isSidebarOpen}
+        setIsSidebarOpen={setIsSidebarOpen}
       />
 
       <main className="io-main">
@@ -98,6 +104,8 @@ export default function App() {
           TOTAL_TOPICS={TOTAL_TOPICS}
           loadingProfile={loading}
           storageError={error}
+          isSidebarOpen={isSidebarOpen}
+          setIsSidebarOpen={setIsSidebarOpen}
         />
 
         <TopicContent

@@ -45,6 +45,22 @@ body {
 .io-root button { font-family: inherit; cursor: pointer; }
 .io-root input { font-family: inherit; }
 
+/* ---------- Scrollbars ---------- */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--ink);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-dim);
+}
+
 /* ---------- Login ---------- */
 .io-login-root {
   align-items: center;
@@ -244,6 +260,8 @@ body {
   padding: 16px 26px;
   border-bottom: 1px solid var(--border);
   flex-shrink: 0;
+  flex-wrap: wrap;
+  gap: 16px;
 }
 .io-topbar-progress { display: flex; align-items: center; gap: 12px; }
 .io-ring { position: relative; width: 40px; height: 40px; }
@@ -295,7 +313,10 @@ body {
   display: flex; gap: 2px;
   border-bottom: 1px solid var(--border);
   margin-bottom: 22px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
+.io-tabs::-webkit-scrollbar { display: none; } /* Hide scrollbar for a cleaner look */
 .io-tab {
   display: flex; align-items: center; gap: 6px;
   background: none; border: none;
@@ -304,6 +325,7 @@ body {
   color: var(--text-dim);
   border-bottom: 2px solid transparent;
   margin-bottom: -1px;
+  flex-shrink: 0;
 }
 .io-tab:hover { color: var(--text-muted); }
 .io-tab.is-active { color: var(--amber); border-bottom-color: var(--amber); }
@@ -370,8 +392,67 @@ body {
   margin: 0;
 }
 
-@media (max-width: 720px) {
-  .io-root { flex-direction: column; height: auto; }
-  .io-sidebar { width: 100%; max-height: 300px; }
-  .io-content { padding: 20px; }
+.io-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  padding: 6px;
+  border-radius: 6px;
+  margin-right: 4px;
+}
+.io-menu-btn:hover { color: var(--text); background: var(--panel-alt); }
+
+.io-sidebar-backdrop {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .io-menu-btn { display: flex; align-items: center; justify-content: center; }
+  
+  .io-sidebar-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 40;
+    backdrop-filter: blur(2px);
+  }
+  .io-sidebar-backdrop.is-open { display: block; }
+  
+  .io-sidebar { 
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    width: 280px; 
+    height: 100%; 
+    max-height: none; 
+    border-right: 1px solid var(--border);
+    border-bottom: none;
+    z-index: 50;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .io-sidebar.is-open { transform: translateX(0); }
+  
+  .io-root { flex-direction: row; }
+  .io-main { flex: 1; height: 100%; width: 100%; min-width: 0; }
+  .io-content { padding: 16px; }
+  
+  /* Pro Mobile Topbar */
+  .io-topbar { 
+    padding: 12px 16px; 
+    flex-wrap: nowrap; 
+    gap: 12px; 
+  }
+  .io-topbar-progress { gap: 8px; flex: 1; min-width: 0; }
+  .io-topbar-title { font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .io-topbar-sub { display: none; } /* Hide subtext to save vertical space */
+  
+  .io-streak span { display: none; } /* Hide streak text, keep only the icon */
+  .io-streak { padding: 8px; border-radius: 50%; } /* Make streak a perfect circle */
+  
+  .io-content-title { font-size: 20px; }
+  .io-content-title-row { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .io-blueprint-step { width: 100%; }
+  .io-login-card { margin: 16px; padding: 24px 20px; }
 }

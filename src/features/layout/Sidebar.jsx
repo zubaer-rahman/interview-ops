@@ -14,9 +14,16 @@ export function Sidebar({
   profile,
   overallPct,
   switchProfile,
+  isSidebarOpen,
+  setIsSidebarOpen
 }) {
   return (
-    <aside className="io-sidebar">
+    <>
+      <div 
+        className={`io-sidebar-backdrop ${isSidebarOpen ? "is-open" : ""}`} 
+        onClick={() => setIsSidebarOpen(false)} 
+      />
+      <aside className={`io-sidebar ${isSidebarOpen ? "is-open" : ""}`}>
       <div className="io-brand">
         <div className="io-brand-mark">
           <Terminal size={16} strokeWidth={2.5} />
@@ -95,5 +102,6 @@ export function Sidebar({
         </button>
       </div>
     </aside>
+    </>
   );
 }

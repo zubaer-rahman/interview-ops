@@ -1,9 +1,16 @@
-import { Flame } from "lucide-react";
+import { Flame, Menu } from "lucide-react";
 
-export function Topbar({ overallPct, completedCount, TOTAL_TOPICS, loadingProfile, storageError }) {
+export function Topbar({ overallPct, completedCount, TOTAL_TOPICS, loadingProfile, storageError, isSidebarOpen, setIsSidebarOpen }) {
   return (
     <header className="io-topbar">
       <div className="io-topbar-progress">
+        <button 
+          className="io-menu-btn" 
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          aria-label="Toggle Menu"
+        >
+          <Menu size={20} />
+        </button>
         <div className="io-ring">
           <svg viewBox="0 0 40 40">
             <circle cx="20" cy="20" r="17" className="io-ring-track" />
