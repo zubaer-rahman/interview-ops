@@ -1,0 +1,179 @@
+export const mongodb_aggregation_project = {
+  "id": "mongodb-aggregation-project",
+  "title": "$project",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 15,
+  "tldr": [
+    "$project reshapes documents by including, excluding, adding, or renaming fields, passing only specified fields to the next stage.",
+    "Include fields with 1 (true), exclude with 0 (false). _id is included by default; set _id: 0 to exclude.",
+    "$project can add computed fields using expressions: { total: { $multiply: [\"$price\", \"$quantity\"] } }.",
+    "Use $addFields instead of $project when you want to keep all existing fields and add computed ones."
+  ],
+  "laymanDefinition": "$project is like a custom photo frame. You decide exactly which parts of the picture to show and what labels to add.",
+  "deepDive": [
+    {
+      "heading": "Field Inclusion/Exclusion",
+      "text": "Set field to 1 (include) or 0 (exclude). Mixing 1s and 0s is allowed except for _id. Inclusion mode: { field1: 1, field2: 1 } excludes all non-specified fields. Exclusion mode: { field1: 0 } includes all other fields."
+    },
+    {
+      "heading": "Computed Fields",
+      "text": "Add new fields with expressions: { fullName: { $concat: [\"$firstName\", \" \", \"$lastName\"] } }, { totalPrice: { $multiply: [\"$price\", 1.08] } }."
+    },
+    {
+      "heading": "Expression Operators",
+      "text": "Arithmetic: $add, $subtract, $multiply, $divide, $mod. String: $concat, $substr, $toUpper, $toLower. Date: $year, $month, $dayOfMonth, $dateToString. Conditional: $cond, $ifNull, $switch."
+    },
+    {
+      "heading": "$project vs $addFields",
+      "text": "$project reshapes and can remove fields. $addFields only adds/overwrites fields while preserving all existing fields. Use $addFields when you want to keep the original document structure."
+    },
+    {
+      "heading": "Field Paths and Nested Fields",
+      "text": "Use dot notation: \"$address.city\". Include nested fields: { \"address.city\": 1 }. Use sub-object expressions: { address: { city: \"$address.city\" } }."
+    }
+  ],
+  "interviewAnswer": "$project controls the shape of documents flowing through the pipeline. Essential for data transformation and reducing document size.",
+  "interviewQuestions": [
+    {
+      "question": "What does $project do?",
+      "answer": "Reshapes documents by including, excluding, adding, or renaming fields. Passes only specified fields to the next stage."
+    },
+    {
+      "question": "How do you exclude a field?",
+      "answer": "Set field to 0: { password: 0 }. All other fields are included by default."
+    },
+    {
+      "question": "How do you include only specific fields?",
+      "answer": "Set desired fields to 1: { name: 1, email: 1 }. Non-specified fields are excluded. _id included by default."
+    },
+    {
+      "question": "What is the difference between $project and $addFields?",
+      "answer": "$project can remove fields. $addFields only adds/overwrites fields while preserving existing ones."
+    },
+    {
+      "question": "How do you add a computed field?",
+      "answer": "Use expression operators: { total: { $multiply: [\"$price\", \"$qty\"] } }."
+    },
+    {
+      "question": "Can you rename a field with $project?",
+      "answer": "Yes: { newName: \"$oldName\" }. Exclude _id: { _id: 0, newName: \"$oldName\" }."
+    },
+    {
+      "question": "What are common string expressions?",
+      "answer": "$concat (concatenate), $toUpper/$toLower (case), $substr (substring), $trim (whitespace)."
+    },
+    {
+      "question": "What are common date expressions?",
+      "answer": "$year, $month, $dayOfMonth, $dayOfWeek, $hour, $minute, $second, $dateToString."
+    },
+    {
+      "question": "What is $cond in $project?",
+      "answer": "Conditional: { $cond: { if: { $gte: [\"$price\", 100] }, then: \"expensive\", else: \"cheap\" } }."
+    },
+    {
+      "question": "Can $project be used multiple times?",
+      "answer": "Yes. Multiple $project stages can incrementally reshape data."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"300\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">$project</text><rect x=\"10\" y=\"40\" width=\"140\" height=\"35\" rx=\"5\" fill=\"#47A248\" stroke=\"#47A248\" stroke-width=\"1.5\"/><text x=\"80\" y=\"56\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Input Doc</text><text x=\"80\" y=\"69\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">{ name, age, pwd }</text><line x1=\"150\" y1=\"58\" x2=\"180\" y2=\"58\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"190\" y=\"40\" width=\"140\" height=\"35\" rx=\"5\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1.5\"/><text x=\"260\" y=\"56\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">$project</text><text x=\"260\" y=\"69\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">{ name: 1, _id: 0 }</text><line x1=\"330\" y1=\"58\" x2=\"360\" y2=\"58\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"370\" y=\"40\" width=\"110\" height=\"35\" rx=\"5\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1.5\"/><text x=\"425\" y=\"56\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Output</text><text x=\"425\" y=\"69\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">{ name }</text><rect x=\"190\" y=\"95\" width=\"140\" height=\"30\" rx=\"5\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1.5\"/><text x=\"260\" y=\"111\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Computed</text><text x=\"260\" y=\"108\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">total: { $multiply: [...]</text><text x=\"260\" y=\"119\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\"> }</text><text x=\"240\" y=\"170\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">$project: Include/exclude fields, add computed fie</text><text x=\"240\" y=\"182\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">lds, rename.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "Field Inclusion",
+      "useCase": "Select specific fields.",
+      "code": "await db.collection('users').aggregate([{ $project: { name: 1, email: 1, _id: 0 } }]).toArray();",
+      "description": "Returns only name and email, excluding _id."
+    },
+    {
+      "title": "Field Exclusion",
+      "useCase": "Remove sensitive data.",
+      "code": "await db.collection('users').aggregate([{ $project: { password: 0, token: 0 } }]).toArray();",
+      "description": "Returns all fields except password and token."
+    },
+    {
+      "title": "Computed Field",
+      "useCase": "Full name from parts.",
+      "code": "await db.collection('users').aggregate([{ $project: { fullName: { $concat: [\"$firstName\", \" \", \"$lastName\"] }, email: 1 } }]).toArray();",
+      "description": "Creates computed fullName by concatenating first and last name."
+    },
+    {
+      "title": "Conditional Value",
+      "useCase": "Price category.",
+      "code": "await db.collection('products').aggregate([{ $project: { name: 1, price: 1, category: { $cond: { if: { $gte: [\"$price\", 100] }, then: \"Premium\", else: \"Standard\" } } } }]).toArray();",
+      "description": "Adds computed category based on price threshold."
+    },
+    {
+      "title": "Date Transformation",
+      "useCase": "Extract date parts.",
+      "code": "await db.collection('orders').aggregate([{ $project: { orderId: 1, year: { $year: \"$date\" }, month: { $month: \"$date\" } } }]).toArray();",
+      "description": "Extracts year and month components from date field."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What does $project do?",
+      "options": [
+        "Groups documents",
+        "Reshapes fields",
+        "Filters documents",
+        "Sorts results"
+      ],
+      "answer": 1,
+      "explanation": "$project reshapes fields."
+    },
+    {
+      "question": "How do you include only name and email?",
+      "options": [
+        "{ name: 1, email: 1, _id: 0 }",
+        "{ fields: [\"name\",\"email\"] }",
+        "{ name: 1, email: 1 }",
+        "Both A and C work"
+      ],
+      "answer": 0,
+      "explanation": "Set fields to 1, exclude _id."
+    },
+    {
+      "question": "Which expression concatenates strings?",
+      "options": [
+        "$add",
+        "$concat",
+        "$merge",
+        "$join"
+      ],
+      "answer": 1,
+      "explanation": "$concat concatenates string values."
+    },
+    {
+      "question": "What does $cond do?",
+      "options": [
+        "Conditional logic",
+        "Condenses arrays",
+        "Counts documents",
+        "Converts types"
+      ],
+      "answer": 0,
+      "explanation": "$cond provides if-then-else conditional logic."
+    },
+    {
+      "question": "How do you rename a field?",
+      "options": [
+        "{ newName: \"$oldName\" }",
+        "{ rename: [\"old\",\"new\"] }",
+        "{ $rename: { old: \"new\" } }",
+        "{ old: \"$newName\" }"
+      ],
+      "answer": 0,
+      "explanation": "Set new field path to old field value."
+    },
+    {
+      "question": "What is $project vs $addFields?",
+      "options": [
+        "$project removes fields",
+        "$addFields removes fields",
+        "Same operation",
+        "$project is faster"
+      ],
+      "answer": 0,
+      "explanation": "$project can remove fields, $addFields only adds."
+    }
+  ]
+};

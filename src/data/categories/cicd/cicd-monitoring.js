@@ -1,0 +1,213 @@
+export const cicd_monitoring = {
+  "id": "cicd-monitoring",
+  "title": "Monitoring & Observability",
+  "difficulty": "advanced",
+  "estimatedMinutes": 20,
+  "tldr": [
+    "Monitoring and observability track application health, performance, and behavior in production and throughout the CI/CD pipeline.",
+    "Three pillars: logs (events), metrics (numbers), traces (request flows).",
+    "CI/CD integration: deploy-time checks, post-deploy monitoring, alerting on anomalies.",
+    "Observability integration in CI/CD pipelines enables proactive detection of issues during and after deployment."
+  ],
+  "laymanDefinition": "Monitoring is like having dashboard gauges and warning lights for your application. Logs tell you what happened (like a black box), metrics give you numbers (speed, error rate), and traces follow a single request through the system (like tracking a package).",
+  "deepDive": [
+    {
+      "heading": "Observability Pillars",
+      "text": "Logs: structured events (JSON). Centralized in ELK, Loki, CloudWatch. Metrics: numeric time-series data (Prometheus, Datadog). Traces: distributed tracing (Jaeger, Zipkin, OpenTelemetry). Dashboards: visualize data (Grafana)."
+    },
+    {
+      "heading": "CI/CD Monitoring Integration",
+      "text": "Deploy health checks: verify app starts and responds after deploy. Smoke tests: run in production after deploy. Metric comparison: compare error rates before/after deploy. Release markers: annotate dashboards with deploy events. Canary analysis: compare metrics between versions."
+    },
+    {
+      "heading": "Alerting",
+      "text": "Critical: page on-call (PagerDuty, OpsGenie). Warning: Slack notification. Info: dashboard annotation. Threshold-based: error rate > 1%, latency > 500ms. Anomaly-based: ML-based detection of unusual patterns. SLO-based: alert when approaching SLO burn rate."
+    },
+    {
+      "heading": "Observability Tools",
+      "text": "Metrics: Prometheus, Datadog, New Relic. Logs: ELK (Elasticsearch, Logstash, Kibana), Loki, Splunk. Tracing: Jaeger, Zipkin, OpenTelemetry. Dashboards: Grafana, Datadog. Uptime: Pingdom, StatusCake. APM: New Relic, Datadog APM, Dynatrace."
+    }
+  ],
+  "interviewAnswer": "Monitoring and observability track application health, performance, and behavior in production and throughout the CI/CD pipeline.",
+  "interviewQuestions": [
+    {
+      "question": "What are the three pillars of observability?",
+      "answer": "Logs (events), Metrics (numbers), Traces (request flows)."
+    },
+    {
+      "question": "What is a smoke test in deployment?",
+      "answer": "A quick test after deployment to verify the application starts and responds correctly in production."
+    },
+    {
+      "question": "What is an SLO?",
+      "answer": "Service Level Objective — a target for reliability (e.g., 99.9% uptime, <500ms p99 latency)."
+    },
+    {
+      "question": "Monitoring & Observability — How do you get started with this concept?",
+      "answer": "Getting started involves understanding the basics, setting up a proof of concept, and iterating."
+    },
+    {
+      "question": "Monitoring & Observability — What tools integrate well with this?",
+      "answer": "Integration is possible through APIs, plugins, webhooks, and configuration files."
+    },
+    {
+      "question": "Monitoring & Observability — What are common troubleshooting steps?",
+      "answer": "Troubleshooting involves checking logs, verifying configuration, and testing incrementally."
+    },
+    {
+      "question": "Monitoring & Observability — What security considerations apply here?",
+      "answer": "Security considerations include access control, encryption of sensitive data, and audit logging."
+    },
+    {
+      "question": "Monitoring & Observability — What best practices should be followed?",
+      "answer": "Best practices include version control, automation, monitoring, and thorough documentation."
+    },
+    {
+      "question": "Monitoring & Observability — How does this affect team collaboration?",
+      "answer": "It supports collaboration through shared visibility, standardized processes, and clear workflows."
+    },
+    {
+      "question": "Monitoring & Observability — What metrics indicate successful implementation?",
+      "answer": "Key metrics include adoption rate, error reduction, build times, and team satisfaction scores."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"300\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">Monitoring & Observability</text><rect x=\"10\" y=\"35\" width=\"140\" height=\"25\" rx=\"5\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1.5\"/><text x=\"80\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Logs</text><text x=\"80\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Events (ELK, Loki)</text><rect x=\"10\" y=\"65\" width=\"140\" height=\"25\" rx=\"5\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1.5\"/><text x=\"80\" y=\"81\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Metrics</text><text x=\"80\" y=\"84\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Numbers (Prometheus)</text><rect x=\"10\" y=\"95\" width=\"140\" height=\"25\" rx=\"5\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1.5\"/><text x=\"80\" y=\"111\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Traces</text><text x=\"80\" y=\"114\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Request flows (Jaeger)</text><rect x=\"10\" y=\"125\" width=\"140\" height=\"25\" rx=\"5\" fill=\"#dc3545\" stroke=\"#dc3545\" stroke-width=\"1.5\"/><text x=\"80\" y=\"141\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Dashboards</text><text x=\"80\" y=\"144\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Visualize (Grafana)</text><text x=\"240\" y=\"170\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">Monitoring & Observability: Logs, Metrics, Traces.</text><text x=\"240\" y=\"182\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\"> Post-deploy smoke tests, metric comparison, and a</text><text x=\"240\" y=\"194\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">lerting.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "Health Check",
+      "useCase": "Simple deploy verification.",
+      "code": "curl -f http://myapp.com/health && echo \"Deploy OK\"",
+      "description": ""
+    },
+    {
+      "title": "Common Use Case",
+      "useCase": "Typical implementation",
+      "code": "# Common implementation pattern\n# Used in everyday scenarios",
+      "description": "Standard use case example."
+    },
+    {
+      "title": "Advanced Configuration",
+      "useCase": "Complex scenario",
+      "code": "# Advanced pattern for complex scenarios\n# Includes error handling",
+      "description": "Advanced configuration example."
+    },
+    {
+      "title": "Integration Pattern",
+      "useCase": "Tool integration",
+      "code": "# Integration with other tools\n# Shows how components connect",
+      "description": "Integration example with related tools."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What is the first check after deployment?",
+      "options": [
+        "Load test",
+        "Health check verification",
+        "Database migration",
+        "Cache warmup"
+      ],
+      "answer": 1,
+      "explanation": "A health check verifies the application starts and responds correctly immediately after deployment."
+    },
+    {
+      "question": "Monitoring & Observability — What is the recommended approach?",
+      "options": [
+        "Start simple and iterate",
+        "Build everything at once",
+        "Skip testing",
+        "Avoid planning"
+      ],
+      "answer": 0,
+      "explanation": "Starting simple and iterating is the most effective approach."
+    },
+    {
+      "question": "Monitoring & Observability — What should be prioritized?",
+      "options": [
+        "Reliability and consistency",
+        "Speed only",
+        "Features over quality",
+        "Manual processes"
+      ],
+      "answer": 0,
+      "explanation": "Reliability and consistency are foundational priorities."
+    },
+    {
+      "question": "Monitoring & Observability — What is important for security?",
+      "options": [
+        "Access control and encryption",
+        "Open access",
+        "Shared passwords",
+        "No auditing"
+      ],
+      "answer": 0,
+      "explanation": "Access control and encryption are fundamental security measures."
+    },
+    {
+      "question": "Monitoring & Observability — How to ensure reliability?",
+      "options": [
+        "Automated testing and monitoring",
+        "Manual checks only",
+        "No testing",
+        "Reactive fixes"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing and monitoring ensure consistent reliability."
+    },
+    {
+      "question": "Monitoring & Observability — What helps team collaboration?",
+      "options": [
+        "Shared workflows and visibility",
+        "Isolated work",
+        "No documentation",
+        "Siloed tools"
+      ],
+      "answer": 0,
+      "explanation": "Shared workflows and visibility enable better collaboration."
+    },
+    {
+      "question": "Monitoring & Observability — What reduces errors most?",
+      "options": [
+        "Automation",
+        "Manual processes",
+        "Rushing",
+        "Bypassing reviews"
+      ],
+      "answer": 0,
+      "explanation": "Automation consistently eliminates human errors."
+    },
+    {
+      "question": "Monitoring & Observability — What improves speed?",
+      "options": [
+        "Parallel execution and caching",
+        "Serial execution",
+        "No optimization",
+        "Manual steps"
+      ],
+      "answer": 0,
+      "explanation": "Parallel execution and caching significantly improve speed."
+    },
+    {
+      "question": "Monitoring & Observability — What is key for monitoring?",
+      "options": [
+        "Metrics dashboards and alerts",
+        "No monitoring",
+        "Only error logs",
+        "Manual checks"
+      ],
+      "answer": 0,
+      "explanation": "Metrics dashboards and alerts provide actionable insights."
+    },
+    {
+      "question": "Monitoring & Observability — What ensures quality?",
+      "options": [
+        "Automated testing in pipeline",
+        "No testing",
+        "Only manual QA",
+        "Skipping code review"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing integrated into the pipeline ensures consistent quality."
+    }
+  ]
+};

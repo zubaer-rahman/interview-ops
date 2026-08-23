@@ -1,0 +1,169 @@
+export const tm_sticky_sessions = {
+  "id": "tm-sticky-sessions",
+  "title": "Sticky Sessions",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 15,
+  "tldr": [
+    "Sticky sessions (session persistence) bind a user's session to a specific backend server for the session duration.",
+    "Essential for stateful applications that store session data in-memory on the server.",
+    "Common methods: application-controlled cookies, load balancer cookies, IP-based persistence.",
+    "Alternative: external session stores (Redis, Memcached) that decouple sessions from servers."
+  ],
+  "laymanDefinition": "Sticky sessions are like coat check at a theater. When you check your coat, they give you a ticket stub (cookie) with a number. When you return, they look at your ticket and give you back YOUR coat (session data) from the correct bin (server).",
+  "deepDive": [
+    {
+      "heading": "Application-Controlled Cookies",
+      "text": "The application sets a session cookie (e.g., session_id=abc123) and stores session data locally on the server that handled the request. Subsequent requests with the same cookie must go to the same server where the session data lives. Simple but fragile."
+    },
+    {
+      "heading": "Load Balancer Sticky Cookies",
+      "text": "The load balancer intercepts the response, replaces the application cookie or adds its own (AWSALB, SERVERID). On subsequent requests, the LB reads the cookie and routes to the correct backend. Transparent to the application."
+    },
+    {
+      "heading": "Consistent Hash Stickiness",
+      "text": "Uses a hash ring to map session IDs to servers. Consistent hashing minimizes remapping when servers are added/removed. Only a fraction of sessions move (1/n). Used by HAProxy, Envoy, Redis Cluster."
+    },
+    {
+      "heading": "Sticky Sessions Best Practices",
+      "text": "Use sticky cookies over IP hash. Set reasonable cookie TTL. Implement graceful drain: mark server as draining, let active sessions finish, then stop routing new sessions to it. Monitor stickiness ratio (target: 100% for sticky services)."
+    }
+  ],
+  "interviewAnswer": "Sticky sessions are a pragmatic solution for stateful apps. Use load balancer cookie stickiness for simplicity, consistent hashing for resilience. Always plan for server failures — have a session recovery strategy. For critical systems, use external session stores instead.",
+  "interviewQuestions": [
+    {
+      "question": "What are sticky sessions?",
+      "answer": "A mechanism to route all requests from a user session to the same backend server."
+    },
+    {
+      "question": "Difference from session affinity?",
+      "answer": "They are often used interchangeably. Sticky sessions typically refer to cookie-based persistence."
+    },
+    {
+      "question": "What is a consistent hash?",
+      "answer": "Hash ring mapping — minimizes session redistribution when servers change."
+    },
+    {
+      "question": "How to drain a server gracefully?",
+      "answer": "Mark as draining — stop new sessions, let existing sessions complete."
+    },
+    {
+      "question": "What is the alternative to sticky sessions?",
+      "answer": "External session store (Redis, Memcached) — no stickiness needed."
+    },
+    {
+      "question": "Why is IP hash problematic?",
+      "answer": "NAT: many users share one IP → all go to same server."
+    },
+    {
+      "question": "What happens if the sticky server crashes?",
+      "answer": "Session data is lost — user must re-authenticate or restart the session."
+    },
+    {
+      "question": "What is the sticky cookie name in AWS ALB?",
+      "answer": "AWSALB (AppCookieStickinessPolicy)."
+    },
+    {
+      "question": "How does HAProxy implement stickiness?",
+      "answer": "cookie SERVERID insert indirect nocache — injects a cookie tracking the server."
+    },
+    {
+      "question": "What is session replication?",
+      "answer": "Replicating session data across all servers — enables any-server routing without stickiness."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"300\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">Sticky Sessions</text><rect x=\"10\" y=\"35\" width=\"130\" height=\"25\" rx=\"5\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1.5\"/><text x=\"75\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Client</text><text x=\"75\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Cookie: srv=web2</text><line x1=\"140\" y1=\"48\" x2=\"180\" y2=\"48\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"190\" y=\"35\" width=\"160\" height=\"25\" rx=\"5\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1.5\"/><text x=\"270\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Load Balancer</text><text x=\"270\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Reads cookie → web2</text><line x1=\"350\" y1=\"48\" x2=\"380\" y2=\"48\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"390\" y=\"35\" width=\"90\" height=\"25\" rx=\"5\" fill=\"#dc3545\" stroke=\"#dc3545\" stroke-width=\"1.5\"/><text x=\"435\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">web1</text><text x=\"435\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">empty</text><rect x=\"390\" y=\"70\" width=\"90\" height=\"25\" rx=\"5\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1.5\"/><text x=\"435\" y=\"86\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">web2</text><text x=\"435\" y=\"89\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">session data</text><rect x=\"10\" y=\"70\" width=\"170\" height=\"25\" rx=\"5\" fill=\"#e83e8c\" stroke=\"#e83e8c\" stroke-width=\"1.5\"/><text x=\"95\" y=\"86\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Cookie-based: AWSALB</text><text x=\"95\" y=\"89\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">LB injects</text><rect x=\"10\" y=\"105\" width=\"170\" height=\"25\" rx=\"5\" fill=\"#6610f2\" stroke=\"#6610f2\" stroke-width=\"1.5\"/><text x=\"95\" y=\"121\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Consistent Hash: hash(sessionID)</text><text x=\"95\" y=\"124\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Minimal remapping</text><text x=\"240\" y=\"155\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">Sticky Sessions: Cookie-based routing ensures user</text><text x=\"240\" y=\"248\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\"> returns to the same server for their session.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "HAProxy Sticky Session Cookie",
+      "useCase": "Cookie injection.",
+      "code": "backend app\n  cookie SRV insert indirect nocache maxidle 30m\n  server app1 10.0.1.1:80 check cookie app1\n  server app2 10.0.2.1:80 check cookie app2\n\n# Client gets: Set-Cookie: SRV=app1; path=/",
+      "description": "HAProxy injects SRV cookie to maintain stickiness."
+    },
+    {
+      "title": "AWS ALB Sticky Session Config",
+      "useCase": "Cloud LB stickiness.",
+      "code": "resource \"aws_lb_target_group\" \"example\" {\n  stickiness {\n    enabled = true\n    type = \"lb_cookie\"\n    cookie_duration_seconds = 3600\n  }\n}\n\n# Cookie name: AWSALB\n# One hour stickiness duration",
+      "description": "AWS ALB stickiness with lb_cookie type."
+    },
+    {
+      "title": "Consistent Hash with Envoy",
+      "useCase": "Maglev consistent hash.",
+      "code": "route_config:\n  virtual_hosts:\n  - name: backend\n    domains: [\"*\"]\n    routes:\n    - match: { prefix: \"/\" }\n      route:\n        hash_policy:\n        - cookie:\n            name: session_id\n            ttl: 120s\n        cluster: app_cluster",
+      "description": "Envoy consistent hash based on session_id cookie."
+    },
+    {
+      "title": "Application-Level Sticky Session (Node + Redis)",
+      "useCase": "App-managed.",
+      "code": "app.use((req, res, next) => {\n  var sid = req.cookies.session_id;\n  if (!sid) {\n    sid = uuid.v4();\n    res.cookie(\"session_id\", sid);\n  }\n  redis.get(\"session:\" + sid, (err, data) => {\n    req.session = JSON.parse(data || \"{}\");\n    next();\n  });\n});",
+      "description": "Application manages session cookie, stores data in Redis (no LB stickiness needed)."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What do sticky sessions use?",
+      "options": [
+        "Cookies",
+        "IP routing",
+        "DNS",
+        "SSL"
+      ],
+      "answer": 0,
+      "explanation": "Sticky sessions use cookies for persistence."
+    },
+    {
+      "question": "What happens when sticky server fails?",
+      "options": [
+        "Session migrates",
+        "Session data lost",
+        "Another server takes over",
+        "Session is cached"
+      ],
+      "answer": 1,
+      "explanation": "Session data is lost when the sticky server fails."
+    },
+    {
+      "question": "What is consistent hashing for?",
+      "options": [
+        "Faster routing",
+        "Minimal session remapping",
+        "Better security",
+        "SSL termination"
+      ],
+      "answer": 1,
+      "explanation": "Consistent hash minimizes session moves on server changes."
+    },
+    {
+      "question": "How to drain a server?",
+      "options": [
+        "Restart server",
+        "Mark as draining",
+        "Delete server",
+        "Remove cookie"
+      ],
+      "answer": 1,
+      "explanation": "Draining lets existing sessions finish, stops new sessions."
+    },
+    {
+      "question": "Alternative to sticky sessions?",
+      "options": [
+        "Round robin",
+        "External session store",
+        "DNS routing",
+        "IP hash"
+      ],
+      "answer": 1,
+      "explanation": "External store like Redis decouples sessions from servers."
+    },
+    {
+      "question": "What is session replication?",
+      "options": [
+        "Copy session to all servers",
+        "Delete session",
+        "Cache session",
+        "Encrypt session"
+      ],
+      "answer": 0,
+      "explanation": "Replicate session data across all servers for fault tolerance."
+    }
+  ]
+};

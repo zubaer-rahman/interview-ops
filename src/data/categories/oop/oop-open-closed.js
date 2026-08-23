@@ -1,0 +1,179 @@
+export const oop_open_closed = {
+  "id": "oop-open-closed",
+  "title": "Open-Closed Principle",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 15,
+  "tldr": [
+    "The Open-Closed Principle (OCP) states that classes should be open for extension but closed for modification.",
+    "You should be able to add new functionality without changing existing, tested, and deployed code.",
+    "Achieved through abstraction: interfaces, abstract classes, and polymorphism allow extending behavior without modification.",
+    "OCP reduces the risk of introducing bugs in existing working code when adding new features."
+  ],
+  "laymanDefinition": "OCP is like a power outlet with interchangeable adapters. The outlet itself (existing code) stays the same. To add new functionality (e.g., USB charging), you plug in an adapter (new extension) that conforms to the outlet's interface. The outlet is \"closed\" for modification but \"open\" for extension via adapters.",
+  "deepDive": [
+    {
+      "heading": "Extension Points",
+      "text": "Identify areas where requirements are likely to change or grow. Define interfaces at those points. Examples: payment methods, notification channels, data exporters, validation rules, sorting strategies. Each extension point becomes an interface that new implementations can fulfill without changing existing code."
+    },
+    {
+      "heading": "Strategy Pattern for OCP",
+      "text": "The Strategy pattern is a textbook OCP implementation. Define a family of algorithms (strategies) behind a common interface. The context class delegates to a strategy. New strategies can be added without changing the context."
+    },
+    {
+      "heading": "Template Method Pattern",
+      "text": "Define the skeleton of an algorithm in a base class (closed for modification), and let subclasses override specific steps (open for extension). The base class controls the workflow; subclasses provide custom behavior."
+    },
+    {
+      "heading": "OCP and Testing",
+      "text": "Existing tests remain valid because existing code does not change. New functionality is tested independently. Zero risk of breaking existing features when adding new ones. This is one of OCP\\'s greatest benefits."
+    },
+    {
+      "heading": "Predicting Extension Points",
+      "text": "Not all code needs to be OCP-compliant from the start. Premature abstraction adds complexity. Follow YAGNI (You Ain\\'t Gonna Need It): abstract when you see the second instance of a pattern. Refactor to OCP when adding the third similar feature."
+    }
+  ],
+  "interviewAnswer": "OCP: extend behavior without modifying existing code. Use interfaces and polymorphism. Strategy and Template Method patterns support OCP. Do not over-abstract — refactor to OCP when you see repetition.",
+  "interviewQuestions": [
+    {
+      "question": "What is the Open-Closed Principle?",
+      "answer": "Classes should be open for extension but closed for modification."
+    },
+    {
+      "question": "How do you achieve OCP?",
+      "answer": "Through abstraction: interfaces, abstract classes, and polymorphism."
+    },
+    {
+      "question": "What is an extension point?",
+      "answer": "A place in code where new behavior can be plugged in without changing existing code."
+    },
+    {
+      "question": "What pattern supports OCP?",
+      "answer": "Strategy Pattern — define interchangeable algorithms behind a common interface."
+    },
+    {
+      "question": "What is the Template Method pattern?",
+      "answer": "Base class defines workflow skeleton; subclasses override specific steps."
+    },
+    {
+      "question": "What does \"closed for modification\" mean?",
+      "answer": "Existing, tested code should not be changed when adding new functionality."
+    },
+    {
+      "question": "What does \"open for extension\" mean?",
+      "answer": "You can add new behavior by creating new classes that implement interfaces."
+    },
+    {
+      "question": "How does OCP affect testing?",
+      "answer": "Existing tests remain valid. New features have independent tests. No regression risk."
+    },
+    {
+      "question": "What is the risk of over-applying OCP?",
+      "answer": "Premature abstraction adds unnecessary complexity. Follow YAGNI."
+    },
+    {
+      "question": "When should you refactor to OCP?",
+      "answer": "When you see a third similar implementation — the pattern has emerged."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"300\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">Open-Closed Principle</text><rect x=\"10\" y=\"35\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1.5\"/><text x=\"65\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Existing Code</text><text x=\"65\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Closed</text><rect x=\"10\" y=\"65\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1.5\"/><text x=\"65\" y=\"81\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Interface</text><text x=\"65\" y=\"84\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Contract</text><rect x=\"10\" y=\"95\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1.5\"/><text x=\"65\" y=\"111\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">New Feature A</text><text x=\"65\" y=\"114\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">New impl</text><rect x=\"10\" y=\"125\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#dc3545\" stroke=\"#dc3545\" stroke-width=\"1.5\"/><text x=\"65\" y=\"141\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">New Feature B</text><text x=\"65\" y=\"144\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">New impl</text><rect x=\"10\" y=\"155\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#e83e8c\" stroke=\"#e83e8c\" stroke-width=\"1.5\"/><text x=\"65\" y=\"171\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">More Features</text><text x=\"65\" y=\"174\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Plug in</text><line x1=\"120\" y1=\"48\" x2=\"150\" y2=\"48\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"120\" y1=\"78\" x2=\"150\" y2=\"78\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"120\" y1=\"108\" x2=\"150\" y2=\"108\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"120\" y1=\"138\" x2=\"150\" y2=\"138\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"120\" y1=\"168\" x2=\"150\" y2=\"168\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"160\" y=\"35\" width=\"230\" height=\"155\" rx=\"5\" fill=\"#17a2b8\" stroke=\"#17a2b8\" stroke-width=\"1.5\"/><text x=\"275\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Open-Closed Principle</text><text x=\"275\" y=\"162\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Open for extension (new implementations).</text><text x=\"275\" y=\"173\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\"> Closed for modification (no changes to e</text><text x=\"275\" y=\"184\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">xisting code).</text><text x=\"240\" y=\"220\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">OCP: Extend without modifying. Abstraction + polym</text><text x=\"240\" y=\"232\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">orphism. Strategy, Template Method patterns.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "OCP Violation: Conditional Logic",
+      "useCase": "Modifying code to add features.",
+      "code": "class NotificationService {\n  send(type, message, recipient) {\n    if (type === \"email\") { /* send email */ }\n    else if (type === \"sms\") { /* send SMS */ }\n    // Adding \"push\" requires modifying this class!\n  }\n}",
+      "description": "OCP violation: adding a new notification type requires modifying existing, tested code."
+    },
+    {
+      "title": "OCP-Compliant: Strategy Pattern",
+      "useCase": "Extend via new classes.",
+      "code": "class NotificationChannel {\n  send(recipient, message) { throw new Error(\"Abstract\"); }\n}\nclass EmailChannel extends NotificationChannel {\n  send(recipient, message) { console.log(`Email to ${recipient}: ${message}`); }\n}\nclass SMSChannel extends NotificationChannel {\n  send(recipient, message) { console.log(`SMS to ${recipient}: ${message}`); }\n}\nclass PushChannel extends NotificationChannel {\n  send(recipient, message) { console.log(`Push to ${recipient}: ${message}`); }\n}\nclass NotificationService {\n  constructor(channels) { this.channels = channels; }\n  notify(recipient, message) { this.channels.forEach(c => c.send(recipient, message)); }\n}",
+      "description": "OCP: new notification channels are added by creating a new class — NotificationService never changes."
+    },
+    {
+      "title": "OCP with Configuration",
+      "useCase": "Dynamically loading extensions.",
+      "code": "const registry = {\n  email: EmailChannel, sms: SMSChannel, push: PushChannel\n};\nfunction createService(config) {\n  const channels = config.channels.map(name => new registry[name]());\n  return new NotificationService(channels);\n}",
+      "description": "OCP with configuration: new channels register themselves, no service code changes."
+    },
+    {
+      "title": "OCP with Decorator Pattern",
+      "useCase": "Extending behavior without modifying.",
+      "code": "class Coffee { cost() { return 5; } description() { return \"Coffee\"; } }\nclass MilkDecorator {\n  constructor(c) { this.coffee = c; }\n  cost() { return this.coffee.cost() + 2; }\n  description() { return this.coffee.description() + \", Milk\"; }\n}\nclass SugarDecorator {\n  constructor(c) { this.coffee = c; }\n  cost() { return this.coffee.cost() + 1; }\n  description() { return this.coffee.description() + \", Sugar\"; }\n}\nconst coffee = new SugarDecorator(new MilkDecorator(new Coffee()));",
+      "description": "Decorator pattern extends behavior at runtime. Adding new decorators does not modify existing ones."
+    },
+    {
+      "title": "Refactoring to OCP",
+      "useCase": "When you see the pattern emerge.",
+      "code": "// BEFORE: if/else chain\nclass Validator {\n  validate(type, value) {\n    if (type === \"email\") { /* email */ }\n    else if (type === \"phone\") { /* phone */ }\n    else if (type === \"zipcode\") { /* zip */ }\n  }\n}\n// AFTER: Strategy pattern\nclass ValidationRule { validate(v) { throw new Error(\"Abstract\"); } }\nclass EmailRule extends ValidationRule { validate(v) { /* email */ } }\nclass PhoneRule extends ValidationRule { validate(v) { /* phone */ } }\nclass Validator { constructor(rules) { this.rules = rules; } validate(v) { return this.rules.every(r=>r.validate(v)); } }",
+      "description": "Refactor to OCP when you see the third conditional branch — the pattern has emerged."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What does OCP stand for?",
+      "options": [
+        "Open-Closed Principle",
+        "Object-Creation Principle",
+        "Operation-Chain Principle",
+        "Ordered-Class Principle"
+      ],
+      "answer": 0,
+      "explanation": "OCP = Open-Closed Principle."
+    },
+    {
+      "question": "What does \"closed for modification\" mean?",
+      "options": [
+        "No one can access the class",
+        "Existing code should not change",
+        "The class is final",
+        "The class is private"
+      ],
+      "answer": 1,
+      "explanation": "Closed for modification means you should not change existing, tested code."
+    },
+    {
+      "question": "How is OCP typically achieved?",
+      "options": [
+        "Inheritance and polymorphism",
+        "Global variables",
+        "Copy-paste",
+        "Switch statements"
+      ],
+      "answer": 0,
+      "explanation": "OCP is achieved through abstraction: interfaces, abstract classes, and polymorphism."
+    },
+    {
+      "question": "Which design pattern supports OCP?",
+      "options": [
+        "Singleton",
+        "Strategy",
+        "Factory",
+        "Observer"
+      ],
+      "answer": 1,
+      "explanation": "The Strategy pattern allows adding new algorithms without modifying the context class."
+    },
+    {
+      "question": "What is the risk of over-applying OCP?",
+      "options": [
+        "Too much abstraction",
+        "Too few classes",
+        "No testing",
+        "Slow performance"
+      ],
+      "answer": 0,
+      "explanation": "Premature abstraction adds unnecessary complexity."
+    },
+    {
+      "question": "When should you refactor to OCP?",
+      "options": [
+        "At project start",
+        "When the third similar case appears",
+        "Never",
+        "Only for performance"
+      ],
+      "answer": 1,
+      "explanation": "Refactor to OCP when you see repetition — the third instance usually reveals the pattern."
+    }
+  ]
+};

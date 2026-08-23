@@ -1,0 +1,149 @@
+export const react_jsx = {
+  "id": "react-jsx",
+  "title": "React JSX",
+  "difficulty": "beginner",
+  "estimatedMinutes": 15,
+  "tldr": [
+    "JSX is a syntax extension for JavaScript that looks like HTML but compiles to React.createElement calls.",
+    "JSX expressions use curly braces {} to embed JavaScript values.",
+    "Every JSX element must be closed, and adjacent elements must be wrapped in a fragment or parent element.",
+    "JSX prevents injection attacks by default - values are escaped before rendering."
+  ],
+  "laymanDefinition": "JSX is like a recipe card that mixes text instructions (HTML-like tags) with variables in curly braces. {sugar} is a placeholder filled with an actual number.",
+  "deepDive": [
+    {
+      "heading": "JSX is Syntactic Sugar",
+      "text": "JSX compiles to React.createElement(type, props, ...children) calls at build time via Babel or TypeScript."
+    },
+    {
+      "heading": "Embedding Expressions",
+      "text": "Any JS expression works in {}: variables, function calls, ternary, map(). Statements (if/else, for) are NOT allowed."
+    },
+    {
+      "heading": "JSX vs HTML Differences",
+      "text": "className vs class, htmlFor vs for, camelCase properties (onClick), self-closing tags need slash, style takes object."
+    },
+    {
+      "heading": "Fragments",
+      "text": "JSX needs a single root. Use <></> to group without adding DOM nodes."
+    }
+  ],
+  "interviewAnswer": "JSX is a syntax extension for JavaScript allowing HTML-like markup in JS files. It compiles to React.createElement calls, producing VDOM objects. Values in {} are escaped, preventing XSS. camelCase attributes, style objects, and fragments are key differences from HTML.",
+  "interviewQuestions": [
+    {
+      "question": "What is JSX and why use it?",
+      "answer": "HTML-like syntax in JS. Familiar, compile-time errors, compiles to createElement calls, allows embedding JS expressions."
+    },
+    {
+      "question": "How does JSX prevent XSS?",
+      "answer": "Escapes all values in curly braces before rendering. Strings are HTML-escaped."
+    },
+    {
+      "question": "Key JSX vs HTML differences?",
+      "answer": "className, htmlFor, camelCase events, style as object, closed tags, {/* comments */}."
+    },
+    {
+      "question": "Why can't JSX return two adjacent elements?",
+      "answer": "createElement returns one root. Use fragments to group."
+    },
+    {
+      "question": "What does JSX compile to?",
+      "answer": "React.createElement(type, props, ...children) producing VDOM objects."
+    },
+    {
+      "question": "Can you use statements in JSX?",
+      "answer": "No. Only expressions (ternary, &&, map). if/else/for are statements."
+    },
+    {
+      "question": "What are fragments?",
+      "answer": "<></> groups children without adding DOM nodes."
+    },
+    {
+      "question": "How to add inline styles?",
+      "answer": "As JS object with camelCase: <div style={{ backgroundColor: 'blue' }}>."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 700 380\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:700px;\"><defs><marker id=\"arrJ\" markerWidth=\"10\" markerHeight=\"7\" refX=\"10\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,10 3.5,0 7\" fill=\"#6c9fff\"/></marker></defs><rect x=\"10\" y=\"10\" width=\"680\" height=\"360\" rx=\"10\" fill=\"var(--bg-card)\" stroke=\"var(--border)\" stroke-width=\"1\"/><text x=\"350\" y=\"38\" text-anchor=\"middle\" fill=\"#e8eaed\" font-size=\"14\" font-weight=\"bold\">JSX Compilation Pipeline</text><rect x=\"40\" y=\"55\" width=\"290\" height=\"130\" rx=\"6\" fill=\"#1a1d28\" stroke=\"#fbbf24\" stroke-width=\"1.5\"/><text x=\"185\" y=\"78\" text-anchor=\"middle\" fill=\"#fbbf24\" font-size=\"11\" font-weight=\"bold\">JSX Source Code</text><rect x=\"55\" y=\"90\" width=\"260\" height=\"80\" rx=\"4\" fill=\"#2a2f45\"/><text x=\"185\" y=\"108\" text-anchor=\"middle\" fill=\"#e8eaed\" font-family=\"monospace\" font-size=\"11\">&lt;div className=\"hero\"&gt;</text><text x=\"185\" y=\"126\" text-anchor=\"middle\" fill=\"#e8eaed\" font-family=\"monospace\" font-size=\"11\">  &lt;h1&gt;{title}&lt;/h1&gt;</text><text x=\"185\" y=\"144\" text-anchor=\"middle\" fill=\"#e8eaed\" font-family=\"monospace\" font-size=\"11\">  &lt;p&gt;{content}&lt;/p&gt;</text><text x=\"185\" y=\"162\" text-anchor=\"middle\" fill=\"#e8eaed\" font-family=\"monospace\" font-size=\"11\">&lt;/div&gt;</text><line x1=\"330\" y1=\"120\" x2=\"370\" y2=\"120\" stroke=\"#6c9fff\" stroke-width=\"2\" marker-end=\"url(#arrJ)\"/><rect x=\"370\" y=\"55\" width=\"290\" height=\"130\" rx=\"6\" fill=\"#1a1d28\" stroke=\"#34d399\" stroke-width=\"1.5\"/><text x=\"515\" y=\"78\" text-anchor=\"middle\" fill=\"#34d399\" font-size=\"11\" font-weight=\"bold\">Compiled (Babel)</text><rect x=\"385\" y=\"90\" width=\"260\" height=\"80\" rx=\"4\" fill=\"#2a2f45\"/><text x=\"515\" y=\"108\" text-anchor=\"middle\" fill=\"#e8eaed\" font-family=\"monospace\" font-size=\"10\">React.createElement(</text><text x=\"515\" y=\"124\" text-anchor=\"middle\" fill=\"#e8eaed\" font-family=\"monospace\" font-size=\"10\">  'div', { className: 'hero' },</text><text x=\"515\" y=\"140\" text-anchor=\"middle\" fill=\"#e8eaed\" font-family=\"monospace\" font-size=\"10\">  createElement('h1', null, title),</text><text x=\"515\" y=\"156\" text-anchor=\"middle\" fill=\"#e8eaed\" font-family=\"monospace\" font-size=\"10\">  createElement('p', null, content)</text><text x=\"515\" y=\"168\" text-anchor=\"middle\" fill=\"#e8eaed\" font-family=\"monospace\" font-size=\"10\">)</text><line x1=\"350\" y1=\"200\" x2=\"350\" y2=\"230\" stroke=\"#f87171\" stroke-width=\"2\" marker-end=\"url(#arrJ)\"/><rect x=\"40\" y=\"230\" width=\"620\" height=\"50\" rx=\"6\" fill=\"#1a1d28\" stroke=\"#f87171\" stroke-width=\"1.5\"/><text x=\"350\" y=\"253\" text-anchor=\"middle\" fill=\"#f87171\" font-size=\"12\" font-weight=\"bold\">React processes createElement output (VDOM Tree)</text><line x1=\"350\" y1=\"280\" x2=\"350\" y2=\"310\" stroke=\"#34d399\" stroke-width=\"2\" marker-end=\"url(#arrJ)\"/><rect x=\"120\" y=\"310\" width=\"460\" height=\"36\" rx=\"6\" fill=\"#2a2f45\" stroke=\"#34d399\" stroke-width=\"1\"/><text x=\"350\" y=\"332\" text-anchor=\"middle\" fill=\"#34d399\" font-size=\"11\" font-weight=\"bold\">Real DOM: &lt;div class=\"hero\"&gt;&lt;h1&gt;Hello&lt;/h1&gt;&lt;p&gt;World&lt;/p&gt;&lt;/div&gt;</text></svg>",
+  "codeExamples": [
+    {
+      "title": "Embedding Expressions",
+      "useCase": "Dynamic content",
+      "code": "const name = 'Alice';\nconst element = (\n  <div className=\"welcome\">\n    <h1>Hello, {name}!</h1>\n    {unreadCount > 10 && <div className=\"alert\">High volume!</div>}\n  </div>\n);",
+      "description": "Curly braces embed any JS expression. Ternary and && work for conditionals."
+    },
+    {
+      "title": "Fragments",
+      "useCase": "Multiple elements without extra div",
+      "code": "function UserProfile({ user }) {\n  return (\n    <>\n      <h1>{user.name}</h1>\n      <p>{user.bio}</p>\n      {user.isAdmin && <span>Admin</span>}\n    </>\n  );\n}",
+      "description": "Fragments (<></>) group children without adding DOM nodes."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What does JSX compile to?",
+      "options": [
+        "HTML strings",
+        "React.createElement calls",
+        "Direct DOM manipulation",
+        "CSS"
+      ],
+      "answer": 1,
+      "explanation": "Compiles to createElement calls."
+    },
+    {
+      "question": "How to embed a variable in JSX?",
+      "options": [
+        "{{var}}",
+        "${var}",
+        "{var}",
+        "[var]"
+      ],
+      "answer": 2,
+      "explanation": "Use single curly braces."
+    },
+    {
+      "question": "Which HTML attribute is different in JSX?",
+      "options": [
+        "id",
+        "className (not class)",
+        "href",
+        "src"
+      ],
+      "answer": 1,
+      "explanation": "class becomes className."
+    },
+    {
+      "question": "How to return multiple elements without wrapper?",
+      "options": [
+        "Return array",
+        "Use fragment (<></>)",
+        "Comma separator",
+        "Not possible"
+      ],
+      "answer": 1,
+      "explanation": "Fragments group without DOM node."
+    },
+    {
+      "question": "What CANNOT be used in JSX braces?",
+      "options": [
+        "Ternary",
+        "array.map()",
+        "if/else statement",
+        "Function call"
+      ],
+      "answer": 2,
+      "explanation": "Only expressions, not statements."
+    },
+    {
+      "question": "How does JSX handle XSS?",
+      "options": [
+        "Doesn't escape",
+        "Escapes all values in braces",
+        "Uses CSP",
+        "Disables inline scripts"
+      ],
+      "answer": 1,
+      "explanation": "React escapes all rendered values."
+    }
+  ]
+};

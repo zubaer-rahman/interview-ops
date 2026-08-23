@@ -1,0 +1,179 @@
+export const mongodb_deleteone = {
+  "id": "mongodb-deleteone",
+  "title": "deleteOne()",
+  "difficulty": "beginner",
+  "estimatedMinutes": 15,
+  "tldr": [
+    "deleteOne() deletes the first document that matches a filter condition.",
+    "Returns DeleteResult with acknowledged (boolean) and deletedCount (0 or 1).",
+    "For deleting multiple documents, use deleteMany(). To remove all documents, drop the collection for better performance.",
+    "Use with caution: deleteOne is irreversible. Always verify the filter query in a findOne first during development."
+  ],
+  "laymanDefinition": "deleteOne() is like removing a single file from a filing cabinet. You specify which file to remove, and it's gone permanently — no recycle bin.",
+  "deepDive": [
+    {
+      "heading": "DeleteResult",
+      "text": "Returned object: { acknowledged: true, deletedCount: 1 }. acknowledged indicates write concern satisfied. deletedCount is the number of documents deleted (0 if no match, 1 if deleted)."
+    },
+    {
+      "heading": "Filter Requirements",
+      "text": "Must specify a filter. deleteOne({}) deletes the first document in the collection (not recommended). Always use a specific filter targeting a unique field. Test with findOne(filter) first to verify you\\'re deleting the right document."
+    },
+    {
+      "heading": "Error Handling",
+      "text": "Throws on invalid ObjectId format, network errors, or transaction conflicts. Always use try/catch. Check for deletedCount === 0 to handle no-match gracefully."
+    },
+    {
+      "heading": "Performance",
+      "text": "deleteOne by _id with index is very fast. Without an index, MongoDB must scan documents to find the match. For bulk deletion, use deleteMany. To clear all documents, drop the collection instead of deleteMany({})."
+    },
+    {
+      "heading": "Permanent Deletion",
+      "text": "Deletions are permanent. MongoDB does not have a recycle bin or soft-delete by default. Implement soft-delete with a boolean field (isDeleted: true) and TTL index for auto-cleanup if needed."
+    }
+  ],
+  "interviewAnswer": "deleteOne() is the standard method for single-document deletion. Always verify your filter to avoid accidental data loss.",
+  "interviewQuestions": [
+    {
+      "question": "What does deleteOne() return?",
+      "answer": "DeleteResult with acknowledged (boolean) and deletedCount (0 or 1)."
+    },
+    {
+      "question": "What happens if no document matches?",
+      "answer": "deletedCount is 0. No error is thrown. Check deletedCount to determine if deletion occurred."
+    },
+    {
+      "question": "What is the difference between deleteOne and deleteMany?",
+      "answer": "deleteOne deletes only the first matching document. deleteMany deletes all documents matching the filter."
+    },
+    {
+      "question": "Is deletion reversible?",
+      "answer": "No. MongoDB does not have a native undo or recycle bin. Consider soft-delete for recoverable deletions."
+    },
+    {
+      "question": "How do you delete a document by _id?",
+      "answer": "deleteOne({ _id: ObjectId(\"...\") }). Ensure the ObjectId is valid, otherwise an error is thrown."
+    },
+    {
+      "question": "What happens if you call deleteOne({})?",
+      "answer": "Deletes the first document in the collection based on natural order (usually insertion order). Dangerous in production."
+    },
+    {
+      "question": "How do you implement soft delete?",
+      "answer": "Add isDeleted: boolean field. Set isDeleted: true instead of deleting. Add TTL index on deletedAt field for auto-cleanup after retention period."
+    },
+    {
+      "question": "Is deleteOne atomic?",
+      "answer": "Yes. The delete operation is atomic at the document level. Other operations cannot see a partially deleted document."
+    },
+    {
+      "question": "What indexes help deleteOne performance?",
+      "answer": "An index on the filter field(s) enables efficient document lookup before deletion. Without an index, MongoDB scans the collection."
+    },
+    {
+      "question": "Can deleteOne be used in transactions?",
+      "answer": "Yes. deleteOne works within multi-document transactions (MongoDB 4.0+ replica sets). Supports commit/rollback."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"300\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">deleteOne()</text><rect x=\"10\" y=\"40\" width=\"130\" height=\"35\" rx=\"5\" fill=\"#47A248\" stroke=\"#47A248\" stroke-width=\"1.5\"/><text x=\"75\" y=\"56\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">deleteOne(filter)</text><text x=\"75\" y=\"69\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Find Document</text><line x1=\"140\" y1=\"58\" x2=\"170\" y2=\"58\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"180\" y=\"40\" width=\"130\" height=\"35\" rx=\"5\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1.5\"/><text x=\"245\" y=\"56\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Match Found?</text><text x=\"245\" y=\"69\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Check exists</text><line x1=\"310\" y1=\"58\" x2=\"340\" y2=\"58\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"350\" y=\"40\" width=\"100\" height=\"35\" rx=\"5\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1.5\"/><text x=\"400\" y=\"56\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Deleted!</text><text x=\"400\" y=\"69\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">deletedCount: 1</text><line x1=\"180\" y1=\"75\" x2=\"180\" y2=\"103\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"180\" y=\"105\" width=\"130\" height=\"25\" rx=\"5\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1.5\"/><text x=\"245\" y=\"121\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">No Match</text><text x=\"245\" y=\"124\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">deletedCount: 0</text><text x=\"240\" y=\"170\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">deleteOne(): Delete first matching document. Retur</text><text x=\"240\" y=\"182\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">ns deletedCount.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "Delete by ID",
+      "useCase": "Remove a user.",
+      "code": "const result = await db.collection('users').deleteOne({ _id: new ObjectId(userId) });\nif (result.deletedCount === 0) console.log('User not found');",
+      "description": "Deletes user by _id with not-found handling."
+    },
+    {
+      "title": "Delete with Filter",
+      "useCase": "Remove specific document.",
+      "code": "await db.collection('sessions').deleteOne({ sessionToken: \"abc123\", userId: userId });",
+      "description": "Deletes first session matching both token and userId."
+    },
+    {
+      "title": "Cascading Delete",
+      "useCase": "Delete user and related data.",
+      "code": "await db.collection('users').deleteOne({ _id: userId });\nawait db.collection('posts').deleteMany({ authorId: userId });",
+      "description": "Deletes user and all their posts. Application-level cascading."
+    },
+    {
+      "title": "Soft Delete Pattern",
+      "useCase": "Mark as deleted instead.",
+      "code": "await db.collection('users').updateOne(\n  { _id: userId },\n  { $set: { isDeleted: true, deletedAt: new Date() } }\n);\n// Queries filter: { isDeleted: { $ne: true } }",
+      "description": "Soft delete by setting a flag. Data remains recoverable."
+    },
+    {
+      "title": "With Write Concern",
+      "useCase": "Delete with majority ack.",
+      "code": "await db.collection('logs').deleteOne(\n  { _id: logId },\n  { writeConcern: { w: \"majority\" } }\n);",
+      "description": "Deletion acknowledged by majority of replica set members."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What does deleteOne() return?",
+      "options": [
+        "Boolean",
+        "DeleteResult",
+        "Deleted document",
+        "ObjectId"
+      ],
+      "answer": 1,
+      "explanation": "Returns DeleteResult with acknowledged and deletedCount."
+    },
+    {
+      "question": "What value is deletedCount when no match?",
+      "options": [
+        "-1",
+        "0",
+        "1",
+        "undefined"
+      ],
+      "answer": 1,
+      "explanation": "deletedCount is 0 when no document matches."
+    },
+    {
+      "question": "Which method deletes ALL matching documents?",
+      "options": [
+        "deleteOne",
+        "deleteMany",
+        "removeAll",
+        "clear"
+      ],
+      "answer": 1,
+      "explanation": "deleteMany deletes all documents matching the filter."
+    },
+    {
+      "question": "Is deleteOne reversible?",
+      "options": [
+        "Yes, with undo",
+        "No, permanent",
+        "Yes, within 24h",
+        "Depends on config"
+      ],
+      "answer": 1,
+      "explanation": "Deletions are permanent in MongoDB."
+    },
+    {
+      "question": "What is soft delete?",
+      "options": [
+        "Permanent deletion",
+        "Mark as deleted, keep data",
+        "Encrypted delete",
+        "Logging deletion"
+      ],
+      "answer": 1,
+      "explanation": "Soft delete sets a flag instead of removing data."
+    },
+    {
+      "question": "Which ID format throws an error?",
+      "options": [
+        "Valid ObjectId",
+        "Invalid ObjectId string",
+        "UUID",
+        "Integer"
+      ],
+      "answer": 1,
+      "explanation": "Invalid ObjectId string throws an error in deleteOne."
+    }
+  ]
+};

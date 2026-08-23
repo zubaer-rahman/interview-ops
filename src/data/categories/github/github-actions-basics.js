@@ -1,0 +1,209 @@
+export const github_actions_basics = {
+  "id": "github-actions-basics",
+  "title": "GitHub Actions Basics",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 25,
+  "tldr": [
+    "GitHub Actions is a CI/CD and automation platform built into GitHub, using YAML workflow files.",
+    "Workflows: automated processes triggered by events (push, PR, schedule). Jobs: groups of steps running on the same runner. Steps: individual commands or actions.",
+    "Actions are reusable units of automation shared via the Marketplace.",
+    "GitHub Actions Basics works alongside other modern tools and platforms to support end-to-end software delivery processes."
+  ],
+  "laymanDefinition": "GitHub Actions is like having a robot assistant that automatically does tasks when things happen in your repo. When you push code, it can run tests. When someone opens a PR, it can check code quality. When you create a release, it can deploy. You configure everything in YAML files.",
+  "deepDive": [
+    {
+      "heading": "Workflow Structure",
+      "text": ".github/workflows/*.yml: workflow files. name: workflow name. on: trigger events (push, pull_request, schedule, workflow_dispatch). jobs: define jobs with runner (ubuntu-latest, windows-latest). steps: run actions or shell commands. Uses: actions/checkout@v4 (check out code), actions/setup-node@v4 (setup Node)."
+    },
+    {
+      "heading": "Trigger Events",
+      "text": "push, pull_request, schedule (cron), workflow_dispatch (manual), release, issues, discussion, page_build, repository_dispatch. Filter by branches: on: push: branches: [main]. Paths: paths: [src/**]. Activity types: types: [opened, synchronize, reopened]."
+    },
+    {
+      "heading": "Runners",
+      "text": "GitHub-hosted: Ubuntu, Windows, macOS. Self-hosted: run on your own infrastructure. Runner groups for access control. Labels for selecting runner types. Matrix strategy: test across multiple OS/versions simultaneously."
+    }
+  ],
+  "interviewAnswer": "GitHub Actions is a CI/CD and automation platform built into GitHub, using YAML workflow files.",
+  "interviewQuestions": [
+    {
+      "question": "What is GitHub Actions?",
+      "answer": "A CI/CD and automation platform built into GitHub, configured via YAML workflow files."
+    },
+    {
+      "question": "Where are workflow files stored?",
+      "answer": "In .github/workflows/ directory as .yml files."
+    },
+    {
+      "question": "What is a runner?",
+      "answer": "A virtual machine or container that executes workflow jobs. Can be GitHub-hosted or self-hosted."
+    },
+    {
+      "question": "GitHub Actions Basics — How do you get started with this concept?",
+      "answer": "Getting started involves understanding the basics, setting up a proof of concept, and iterating."
+    },
+    {
+      "question": "GitHub Actions Basics — What tools integrate well with this?",
+      "answer": "Integration is possible through APIs, plugins, webhooks, and configuration files."
+    },
+    {
+      "question": "GitHub Actions Basics — What are common troubleshooting steps?",
+      "answer": "Troubleshooting involves checking logs, verifying configuration, and testing incrementally."
+    },
+    {
+      "question": "GitHub Actions Basics — What security considerations apply here?",
+      "answer": "Security considerations include access control, encryption of sensitive data, and audit logging."
+    },
+    {
+      "question": "GitHub Actions Basics — What best practices should be followed?",
+      "answer": "Best practices include version control, automation, monitoring, and thorough documentation."
+    },
+    {
+      "question": "GitHub Actions Basics — How does this affect team collaboration?",
+      "answer": "It supports collaboration through shared visibility, standardized processes, and clear workflows."
+    },
+    {
+      "question": "GitHub Actions Basics — What metrics indicate successful implementation?",
+      "answer": "Key metrics include adoption rate, error reduction, build times, and team satisfaction scores."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"300\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">GitHub Actions Basics</text><rect x=\"10\" y=\"35\" width=\"140\" height=\"25\" rx=\"5\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1.5\"/><text x=\"80\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Event</text><text x=\"80\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Push / PR / Schedule</text><line x1=\"150\" y1=\"48\" x2=\"170\" y2=\"48\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"180\" y=\"35\" width=\"140\" height=\"25\" rx=\"5\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1.5\"/><text x=\"250\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Workflow</text><text x=\"250\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">.github/workflows/*.yml</text><line x1=\"320\" y1=\"48\" x2=\"340\" y2=\"48\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"350\" y=\"35\" width=\"140\" height=\"25\" rx=\"5\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1.5\"/><text x=\"420\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Runner</text><text x=\"420\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Executes jobs</text><rect x=\"10\" y=\"65\" width=\"140\" height=\"25\" rx=\"5\" fill=\"#dc3545\" stroke=\"#dc3545\" stroke-width=\"1.5\"/><text x=\"80\" y=\"81\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Job</text><text x=\"80\" y=\"84\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Group of steps</text><rect x=\"10\" y=\"95\" width=\"140\" height=\"25\" rx=\"5\" fill=\"#e83e8c\" stroke=\"#e83e8c\" stroke-width=\"1.5\"/><text x=\"80\" y=\"111\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Step</text><text x=\"80\" y=\"114\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Action or command</text><text x=\"240\" y=\"150\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">GitHub Actions: Event-driven automation. Trigger w</text><text x=\"240\" y=\"162\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">orkflows on push, PR, schedule, and more.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "Basic Workflow",
+      "useCase": "CI workflow example.",
+      "code": "name: CI\non: [push, pull_request]\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - run: npm install && npm test",
+      "description": ""
+    },
+    {
+      "title": "Common Use Case",
+      "useCase": "Typical implementation",
+      "code": "# Common implementation pattern\n# Used in everyday scenarios",
+      "description": "Standard use case example."
+    },
+    {
+      "title": "Advanced Configuration",
+      "useCase": "Complex scenario",
+      "code": "# Advanced pattern for complex scenarios\n# Includes error handling",
+      "description": "Advanced configuration example."
+    },
+    {
+      "title": "Integration Pattern",
+      "useCase": "Tool integration",
+      "code": "# Integration with other tools\n# Shows how components connect",
+      "description": "Integration example with related tools."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "Where are GitHub Actions workflow files located?",
+      "options": [
+        ".github/workflows/",
+        "actions/",
+        "workflows/",
+        "config/"
+      ],
+      "answer": 0,
+      "explanation": "Workflow files are stored in the .github/workflows/ directory as .yml files."
+    },
+    {
+      "question": "GitHub Actions Basics — What is the recommended approach?",
+      "options": [
+        "Start simple and iterate",
+        "Build everything at once",
+        "Skip testing",
+        "Avoid planning"
+      ],
+      "answer": 0,
+      "explanation": "Starting simple and iterating is the most effective approach."
+    },
+    {
+      "question": "GitHub Actions Basics — What should be prioritized?",
+      "options": [
+        "Reliability and consistency",
+        "Speed only",
+        "Features over quality",
+        "Manual processes"
+      ],
+      "answer": 0,
+      "explanation": "Reliability and consistency are foundational priorities."
+    },
+    {
+      "question": "GitHub Actions Basics — What is important for security?",
+      "options": [
+        "Access control and encryption",
+        "Open access",
+        "Shared passwords",
+        "No auditing"
+      ],
+      "answer": 0,
+      "explanation": "Access control and encryption are fundamental security measures."
+    },
+    {
+      "question": "GitHub Actions Basics — How to ensure reliability?",
+      "options": [
+        "Automated testing and monitoring",
+        "Manual checks only",
+        "No testing",
+        "Reactive fixes"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing and monitoring ensure consistent reliability."
+    },
+    {
+      "question": "GitHub Actions Basics — What helps team collaboration?",
+      "options": [
+        "Shared workflows and visibility",
+        "Isolated work",
+        "No documentation",
+        "Siloed tools"
+      ],
+      "answer": 0,
+      "explanation": "Shared workflows and visibility enable better collaboration."
+    },
+    {
+      "question": "GitHub Actions Basics — What reduces errors most?",
+      "options": [
+        "Automation",
+        "Manual processes",
+        "Rushing",
+        "Bypassing reviews"
+      ],
+      "answer": 0,
+      "explanation": "Automation consistently eliminates human errors."
+    },
+    {
+      "question": "GitHub Actions Basics — What improves speed?",
+      "options": [
+        "Parallel execution and caching",
+        "Serial execution",
+        "No optimization",
+        "Manual steps"
+      ],
+      "answer": 0,
+      "explanation": "Parallel execution and caching significantly improve speed."
+    },
+    {
+      "question": "GitHub Actions Basics — What is key for monitoring?",
+      "options": [
+        "Metrics dashboards and alerts",
+        "No monitoring",
+        "Only error logs",
+        "Manual checks"
+      ],
+      "answer": 0,
+      "explanation": "Metrics dashboards and alerts provide actionable insights."
+    },
+    {
+      "question": "GitHub Actions Basics — What ensures quality?",
+      "options": [
+        "Automated testing in pipeline",
+        "No testing",
+        "Only manual QA",
+        "Skipping code review"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing integrated into the pipeline ensures consistent quality."
+    }
+  ]
+};

@@ -1,0 +1,179 @@
+export const express_custom_middleware = {
+  "id": "express-custom-middleware",
+  "title": "Custom Middleware",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 20,
+  "tldr": [
+    "Custom middleware functions follow the pattern (req, res, next) and can perform any operation before passing control to the next handler.",
+    "They are ideal for request logging, authentication, input validation, data enrichment, response timing, and access control.",
+    "Custom middleware can be application-level (app.use), route-specific (inline in route definitions), or exported as reusable modules.",
+    "Best practices include keeping middleware focused on a single responsibility, using next() consistently, and handling errors properly."
+  ],
+  "laymanDefinition": "Custom middleware is like having your own specialized tools in a workshop. While Express provides the basic tools (built-in middleware), custom middleware lets you build exactly what your application needs.",
+  "deepDive": [
+    {
+      "heading": "Creating Reusable Middleware",
+      "text": "Package middleware as modules that return a function. Accept options via a higher-order function pattern: function middleware(options) { return function(req, res, next) { ... } }. This allows configuration without global state. Export middleware as npm packages for reuse across projects."
+    },
+    {
+      "heading": "Route-Specific Middleware",
+      "text": "Pass middleware inline in route definitions: app.get(\\'/path\\', authMiddleware, handler). Multiple middleware can be passed as an array: app.get(\\'/path\\', [validate, sanitize, handler]). Middleware runs only for that specific route and method."
+    },
+    {
+      "heading": "Async Middleware",
+      "text": "For async operations, define middleware as async functions: async function(req, res, next) { try { ... } catch(err) { next(err) } }. Always wrap in try/catch and call next(err) on failure. Unhandled promise rejections in Express cause the process to exit."
+    },
+    {
+      "heading": "Middleware Configuration Patterns",
+      "text": "Use factory functions for configurable middleware: function rateLimit(windowMs, max) { return function(req, res, next) { ... } }. Closure variables create isolated state per middleware instance. This pattern is used by popular middleware like morgan, cors, and helmet."
+    },
+    {
+      "heading": "Testing Custom Middleware",
+      "text": "Test middleware by creating mock req/res/next objects. Invoke the middleware and assert: the correct response was sent, next() was called, or req/res were modified appropriately. Use libraries like sinon for spy/mock/stub on next()."
+    }
+  ],
+  "interviewAnswer": "Custom middleware is essential for building maintainable Express applications. The key patterns are: focused single-responsibility functions, factory functions for configuration, async error handling with try/catch, and route-specific application.",
+  "interviewQuestions": [
+    {
+      "question": "How do you create custom middleware in Express?",
+      "answer": "Define a function that accepts (req, res, next). Perform operations, then either call next() to continue or send a response. Example: function myMiddleware(req, res, next) { req.timestamp = Date.now(); next(); }"
+    },
+    {
+      "question": "How do you make middleware configurable?",
+      "answer": "Use a factory function pattern: function createMiddleware(options) { return function(req, res, next) { /* use options */ next(); } }. Register with options: app.use(createMiddleware({ key: \\'value\\' }))."
+    },
+    {
+      "question": "How do you handle async errors in middleware?",
+      "answer": "Always wrap async operations in try/catch and pass errors to next(err). Express 5+ handles async middleware errors automatically. In Express 4, unhandled promise rejections cause process crashes."
+    },
+    {
+      "question": "How do you apply middleware to specific routes?",
+      "answer": "Pass middleware as additional arguments: app.get(\\'/path\\', middleware, handler). Or as an array: app.get(\\'/path\\', [mid1, mid2], handler). Middleware runs before the route handler for that specific path and method."
+    },
+    {
+      "question": "What is a middleware factory function?",
+      "answer": "A function that returns a middleware function. It accepts configuration options and creates a closure: function logger(format) { return function(req, res, next) { console.log(format); next(); } }. Used by morgan, cors, helmet."
+    },
+    {
+      "question": "How do you test custom middleware?",
+      "answer": "Create mock objects for req, res, and next. Invoke the middleware function. Assert that req/res were modified correctly, next() was called, or the response was sent with expected status and body."
+    },
+    {
+      "question": "What are best practices for custom middleware?",
+      "answer": "Single responsibility (one task per middleware), consistent next() usage, proper error handling (try/catch for async), no side effects outside req/res, configurable via factory functions, well-documented, and tested."
+    },
+    {
+      "question": "Can middleware be conditionally skipped?",
+      "answer": "Yes, check conditions and call next() early to skip: function conditional(req, res, next) { if (!shouldRun(req)) return next(); /* do work */ next(); }. Or use a wrapper that conditionally applies middleware."
+    },
+    {
+      "question": "How do you terminate the request in middleware?",
+      "answer": "Send a response using res.send(), res.json(), res.status().end(), or res.redirect(). Do not call next() after sending a response. Calling both sends a response and calls next() causes the headers cannot be set error."
+    },
+    {
+      "question": "What is the difference between app.use and app.METHOD for custom middleware?",
+      "answer": "app.use(middleware) runs for all HTTP methods. app.get(middleware) runs only for GET requests. Both can accept a path prefix: app.use(\\'/api\\', middleware) runs only for paths starting with /api."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 200\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><rect x=\"0\" y=\"0\" width=\"500\" height=\"200\" rx=\"8\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"24\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">Custom Middleware</text><rect x=\"10\" y=\"40\" width=\"140\" height=\"35\" rx=\"4\" fill=\"#68a063\" stroke=\"#68a063\" stroke-width=\"1\"/><text x=\"80\" y=\"56\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Factory Function</text><text x=\"80\" y=\"68\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">createLogger(opts)</text><line x1=\"150\" y1=\"58\" x2=\"170\" y2=\"58\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"180\" y=\"40\" width=\"140\" height=\"35\" rx=\"4\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1\"/><text x=\"250\" y=\"56\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Middleware</text><text x=\"250\" y=\"68\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">(req,res,next)</text><line x1=\"180\" y1=\"75\" x2=\"180\" y2=\"93\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"180\" y=\"95\" width=\"140\" height=\"35\" rx=\"4\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1\"/><text x=\"250\" y=\"111\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">next()</text><text x=\"250\" y=\"123\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Pass Control</text><line x1=\"320\" y1=\"78\" x2=\"350\" y2=\"78\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"360\" y=\"65\" width=\"120\" height=\"30\" rx=\"4\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1\"/><text x=\"420\" y=\"81\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Route Handler</text><text x=\"420\" y=\"93\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Response</text><rect x=\"10\" y=\"160\" width=\"140\" height=\"25\" rx=\"4\" fill=\"#dc3545\" stroke=\"#dc3545\" stroke-width=\"1\"/><text x=\"80\" y=\"176\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Error: next(err)</text><text x=\"80\" y=\"188\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Catches async errors</text><text x=\"240\" y=\"200\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">Custom Middleware: Configurable, reusable functions that process requests.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "Basic Custom Middleware",
+      "useCase": "Request timing middleware.",
+      "code": "function requestTime(req, res, next) {\n  req.requestTime = Date.now();\n  const originalEnd = res.end;\n  res.end = function(...args) {\n    console.log('Duration:', Date.now() - req.requestTime, 'ms');\n    originalEnd.apply(res, args);\n  };\n  next();\n}\napp.use(requestTime);",
+      "description": "Attaches start time and logs duration on response finish by wrapping res.end."
+    },
+    {
+      "title": "Configurable Factory Middleware",
+      "useCase": "Options-based logger.",
+      "code": "function createLogger(prefix) {\n  return function(req, res, next) {\n    console.log(`[${prefix}] ${req.method} ${req.url}`);\n    next();\n  };\n}\napp.use('/api', createLogger('API'));\napp.use('/admin', createLogger('ADMIN'));",
+      "description": "Factory function creates logger middleware with different prefixes for different paths."
+    },
+    {
+      "title": "Async Middleware with Error Handling",
+      "useCase": "Database lookup middleware.",
+      "code": "async function loadUser(req, res, next) {\n  try {\n    const user = await db.users.findById(req.params.id);\n    if (!user) return res.status(404).json({ error: 'User not found' });\n    req.user = user;\n    next();\n  } catch (err) {\n    next(err);\n  }\n}",
+      "description": "Async middleware with proper try/catch and error forwarding via next(err)."
+    },
+    {
+      "title": "Route-Specific Middleware Array",
+      "useCase": "Validation on a specific route.",
+      "code": "function validateBody(req, res, next) {\n  if (!req.body.name) return res.status(400).json({ error: 'Name required' });\n  next();\n}\nfunction sanitizeInput(req, res, next) {\n  req.body.name = req.body.name.trim();\n  next();\n}\napp.post('/users', [validateBody, sanitizeInput], createUser);",
+      "description": "Multiple middleware functions applied as an array to a single route."
+    },
+    {
+      "title": "Conditional Middleware",
+      "useCase": "Skip middleware for certain conditions.",
+      "code": "function skipIfProduction(middleware) {\n  return (req, res, next) => {\n    if (process.env.NODE_ENV === 'production') return next();\n    middleware(req, res, next);\n  };\n}\napp.use(skipIfProduction(morgan('dev')));",
+      "description": "Higher-order function that conditionally applies morgan only in non-production environments."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What pattern makes middleware configurable?",
+      "options": [
+        "Class pattern",
+        "Factory function pattern",
+        "Singleton pattern",
+        "Proxy pattern"
+      ],
+      "answer": 1,
+      "explanation": "Factory functions accept options and return a middleware function with closure over the options."
+    },
+    {
+      "question": "How do you pass next() after an async error?",
+      "options": [
+        "throw error",
+        "next(err)",
+        "return error",
+        "res.send(error)"
+      ],
+      "answer": 1,
+      "explanation": "Pass errors via next(err) in the catch block."
+    },
+    {
+      "question": "Can middleware be applied to a single route?",
+      "options": [
+        "No",
+        "Yes, inline in route definition",
+        "Only with app.use",
+        "Only globally"
+      ],
+      "answer": 1,
+      "explanation": "Pass middleware inline: app.get(\\'/path\\', middleware, handler)."
+    },
+    {
+      "question": "What happens if you call next() after res.send()?",
+      "options": [
+        "Works fine",
+        "Headers already sent error",
+        "next() is ignored",
+        "Both execute"
+      ],
+      "answer": 1,
+      "explanation": "Calling next() after sending a response causes a headers-already-sent error."
+    },
+    {
+      "question": "How do you create a middleware that skips itself?",
+      "options": [
+        "return null",
+        "Call next() early without work",
+        "Throw an error",
+        "Return res.send()"
+      ],
+      "answer": 1,
+      "explanation": "Call next() early without performing the middleware work to skip."
+    },
+    {
+      "question": "What is the first argument to error-handling middleware?",
+      "options": [
+        "req",
+        "res",
+        "err",
+        "next"
+      ],
+      "answer": 2,
+      "explanation": "Error-handling middleware receives err as its first parameter."
+    }
+  ]
+};

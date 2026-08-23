@@ -1,0 +1,179 @@
+export const oop_single_responsibility = {
+  "id": "oop-single-responsibility",
+  "title": "Single Responsibility",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 15,
+  "tldr": [
+    "The Single Responsibility Principle (SRP) states that a class should have only one reason to change — one clearly defined responsibility.",
+    "A class with multiple responsibilities becomes coupled: a change to one responsibility may break another.",
+    "SRP leads to smaller, more focused classes that are easier to understand, test, and maintain.",
+    "Identifying responsibilities: if you describe a class using \"and\", it likely violates SRP."
+  ],
+  "laymanDefinition": "SRP is like a restaurant kitchen. The chef cooks (one job), the server takes orders (another job), the dishwasher cleans (another job). If the chef also had to take orders and wash dishes, changing the order process would affect cooking. Each role has one responsibility and one reason to change.",
+  "deepDive": [
+    {
+      "heading": "Identifying Responsibilities",
+      "text": "A responsibility is a reason to change. Common responsibilities: data storage, formatting, business logic, validation, communication, rendering. If a class does multiple of these, changes to one affect the others. Symptom: using \"and\" to describe what a class does."
+    },
+    {
+      "heading": "SRP and Testing",
+      "text": "Classes with single responsibility are easier to test because they have fewer dependencies and fewer behaviors to verify. A class handling data, formatting, and email requires tests for all three. Separated classes each have focused test suites. Mocking is also simpler."
+    },
+    {
+      "heading": "God Classes (Anti-Pattern)",
+      "text": "A \"God class\" knows too much and does too much — it has accumulated many responsibilities over time. Symptoms: hundreds of lines, dozens of methods, many imports, hard to test. Fix: identify distinct responsibilities and extract them into separate classes."
+    },
+    {
+      "heading": "SRP at Method Level",
+      "text": "SRP applies to methods too: each method should do one thing. Methods doing multiple things (parsing, validating, computing, formatting) should be broken down. Single-responsibility methods are easier to name, understand, test, and reuse."
+    },
+    {
+      "heading": "Cohesion and SRP",
+      "text": "Cohesion measures how closely elements within a class are related. SRP promotes high cohesion: all members of a class should be closely related to its single responsibility. Low cohesion (unrelated methods in the same class) is a warning sign."
+    }
+  ],
+  "interviewAnswer": "SRP: one class, one responsibility, one reason to change. If a class does \"and\", split it. SRP improves testability, maintainability, and reduces the impact of changes. Watch for God classes — extract responsibilities. Apply SRP at the method level too.",
+  "interviewQuestions": [
+    {
+      "question": "What is the Single Responsibility Principle?",
+      "answer": "A class should have only one reason to change — one clearly defined responsibility."
+    },
+    {
+      "question": "What is a \"reason to change\"?",
+      "answer": "A stakeholder or actor who would require a change. Different actors = different responsibilities."
+    },
+    {
+      "question": "What is a God class?",
+      "answer": "A class with too many responsibilities — hard to maintain, test, and understand."
+    },
+    {
+      "question": "How does SRP improve testing?",
+      "answer": "Smaller, focused classes have fewer dependencies and behaviors to test. Simpler mocks."
+    },
+    {
+      "question": "What is cohesion?",
+      "answer": "How closely related the elements within a class are. SRP promotes high cohesion."
+    },
+    {
+      "question": "What is a sign of SRP violation?",
+      "answer": "Describing a class using \"and\" (e.g., \"validates data and sends emails\")."
+    },
+    {
+      "question": "Does SRP apply to methods?",
+      "answer": "Yes. Each method should do one thing. A method doing multiple things should be split."
+    },
+    {
+      "question": "How does SRP relate to separation of concerns?",
+      "answer": "SRP is separation of concerns at the class level. Each concern is a separate responsibility."
+    },
+    {
+      "question": "What is the benefit of SRP?",
+      "answer": "More maintainable, testable, understandable code. Changes are isolated to specific classes."
+    },
+    {
+      "question": "Can a class have too little responsibility?",
+      "answer": "Yes — over-splitting leads to unnecessary complexity. Balance SRP with pragmatism."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"300\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">Single Responsibility</text><rect x=\"10\" y=\"35\" width=\"130\" height=\"25\" rx=\"5\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1.5\"/><text x=\"75\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Class: ReportData</text><text x=\"75\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Stores data</text><rect x=\"10\" y=\"65\" width=\"130\" height=\"25\" rx=\"5\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1.5\"/><text x=\"75\" y=\"81\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Class: ReportFormat</text><text x=\"75\" y=\"84\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Formats output</text><rect x=\"10\" y=\"95\" width=\"130\" height=\"25\" rx=\"5\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1.5\"/><text x=\"75\" y=\"111\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Class: ReportSave</text><text x=\"75\" y=\"114\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Persists data</text><rect x=\"10\" y=\"125\" width=\"130\" height=\"25\" rx=\"5\" fill=\"#dc3545\" stroke=\"#dc3545\" stroke-width=\"1.5\"/><text x=\"75\" y=\"141\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Class: EmailReport</text><text x=\"75\" y=\"144\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Sends email</text><line x1=\"140\" y1=\"48\" x2=\"170\" y2=\"48\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"140\" y1=\"78\" x2=\"170\" y2=\"78\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"140\" y1=\"108\" x2=\"170\" y2=\"108\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"140\" y1=\"138\" x2=\"170\" y2=\"138\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"180\" y=\"35\" width=\"200\" height=\"130\" rx=\"5\" fill=\"#17a2b8\" stroke=\"#17a2b8\" stroke-width=\"1.5\"/><text x=\"280\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Single Responsibility</text><text x=\"280\" y=\"137\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">One class = one job. Split when clas</text><text x=\"280\" y=\"148\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">s does \"and\". God class = anti-patte</text><text x=\"280\" y=\"159\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">rn.</text><text x=\"240\" y=\"200\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">Single Responsibility Principle: One class, one re</text><text x=\"240\" y=\"212\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">sponsibility, one reason to change.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "SRP Violation Example",
+      "useCase": "A class doing too much.",
+      "code": "class Invoice {\n  constructor(data) { this.data = data; this.taxRate = 0.1; }\n  calculateTotal() {}\n  formatDisplay() {}\n  toJSON() {}\n  saveToDatabase() {}\n  sendEmail() {}\n  generatePDF() {}\n  logActivity() {}\n}\n// 7+ responsibilities — changes to email could break total calculation",
+      "description": "SRP violation: Invoice has 7+ responsibilities. Changes to one concern could affect others."
+    },
+    {
+      "title": "SRP Refactored",
+      "useCase": "Separated responsibilities.",
+      "code": "class Invoice {\n  constructor(data) { this.data = data; }\n  calculateTotal(taxRate) {\n    return this.data.items.reduce((s,i)=>s+i.price*i.qty,0)*(1+taxRate);\n  }\n}\nclass InvoiceFormatter { toJSON(i) { return JSON.stringify(i.data); } }\nclass InvoiceRepository { constructor(db) { this.db = db; } async save(i) {} }\nclass EmailService { async sendInvoice(i, email) {} }\nclass PDFGenerator { generate(i) {} }",
+      "description": "SRP applied: each class has one responsibility. Changes are isolated."
+    },
+    {
+      "title": "SRP Violation at Method Level",
+      "useCase": "Methods should do one thing.",
+      "code": "function processOrder(order) {\n  if (!order.items?.length) throw new Error(\"No items\");\n  if (!order.customer?.email) throw new Error(\"No email\");\n  let total = order.items.reduce((s,i)=>s+i.price*i.qty,0);\n  total *= (1 + (order.taxRate || 0.1));\n  db.save({ ...order, total });\n  email.send(order.customer.email, \"Confirmation\", `Total: $${total}`);\n}",
+      "description": "Method-level SRP violation: processOrder validates, calculates, persists, and notifies."
+    },
+    {
+      "title": "Method-Level SRP Fixed",
+      "useCase": "Small focused methods.",
+      "code": "function validateOrder(order) {\n  if (!order.items?.length) throw new Error(\"No items\");\n  if (!order.customer?.email) throw new Error(\"No email\");\n}\nfunction calculateTotal(order) {\n  const s = order.items.reduce((sum,i)=>sum+i.price*i.qty,0);\n  return s*(1+(order.taxRate||0.1));\n}\nasync function processOrder(order) {\n  validateOrder(order);\n  const total = calculateTotal(order);\n  await db.save({...order,total});\n  await email.send(order.customer.email, \"Confirmation\", `Total: $${total}`);\n}",
+      "description": "Each method has one responsibility. processOrder orchestrates — delegating to focused methods."
+    },
+    {
+      "title": "Identifying SRP Violations with Cohesion",
+      "useCase": "Measuring class focus.",
+      "code": "class UserManager {\n  createUser(data) {}\n  updateUser(id,data) {}\n  deleteUser(id) {}\n  sendWelcomeEmail(user) {}\n  sendPasswordReset(user) {}\n  generateUserReport() {}\n  exportToCSV() {}\n}\n// Better:\nclass UserRepository { /* CRUD */ }\nclass EmailService { /* email */ }\nclass ReportGenerator { /* reports */ }",
+      "description": "Low cohesion = SRP violation. Group related operations; separate unrelated concerns."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What is the core idea of SRP?",
+      "options": [
+        "A class should be small",
+        "A class should have one reason to change",
+        "A class should have one method",
+        "A class should be public"
+      ],
+      "answer": 1,
+      "explanation": "SRP: a class should have only one reason to change."
+    },
+    {
+      "question": "What is a God class?",
+      "options": [
+        "A class that does too much",
+        "A very large class",
+        "An abstract class",
+        "A class with no methods"
+      ],
+      "answer": 0,
+      "explanation": "A God class has too many responsibilities — an anti-pattern."
+    },
+    {
+      "question": "What is cohesion?",
+      "options": [
+        "Class size",
+        "How related class members are",
+        "Number of methods",
+        "Dependency count"
+      ],
+      "answer": 1,
+      "explanation": "Cohesion measures how closely related the members of a class are."
+    },
+    {
+      "question": "Does SRP apply to methods?",
+      "options": [
+        "No",
+        "Yes — methods should do one thing",
+        "Only for constructors",
+        "Only for private methods"
+      ],
+      "answer": 1,
+      "explanation": "SRP applies at method level too: each method should have a single, focused responsibility."
+    },
+    {
+      "question": "What is a sign of SRP violation?",
+      "options": [
+        "Short class",
+        "\"And\" in class description",
+        "Single method",
+        "Few imports"
+      ],
+      "answer": 1,
+      "explanation": "If you describe a class using \"and\", it likely has multiple responsibilities."
+    },
+    {
+      "question": "How does SRP improve testing?",
+      "options": [
+        "More tests needed",
+        "Focused tests with fewer dependencies",
+        "Faster tests",
+        "No tests needed"
+      ],
+      "answer": 1,
+      "explanation": "Single-responsibility classes have fewer dependencies and behaviors to test."
+    }
+  ]
+};

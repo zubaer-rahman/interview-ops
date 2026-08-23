@@ -1,0 +1,217 @@
+export const k8s_worker_node = {
+  "id": "k8s-worker-node",
+  "title": "Worker Node",
+  "difficulty": "beginner",
+  "estimatedMinutes": 10,
+  "file": "k8s-worker-node.json",
+  "interviewAnswer": "A Worker Node is a computer in the cluster that actually runs your applications. If the Control Plane is the brain, Worker Nodes are the muscles. Each Worker Node has three essential components: kubelet (the node agent that follows Control Plane orders), kube-proxy (handles networking rules), and a container runtime (like containerd) that runs the actual containers. You can add or remove Worker Nodes to scale the cluster capacity up or down.",
+  "tldr": [
+    "Worker Nodes host Pods and provide the compute, memory, and storage resources for application workloads",
+    "Each Node runs three core components: kubelet, kube-proxy, and a container runtime (containerd/CRI-O)",
+    "Nodes report their capacity, allocated resources, and health status to the Control Plane via kubelet heartbeats",
+    "Worker Nodes can be physical servers, virtual machines, or cloud instances — Kubernetes abstracts the differences",
+    "Node health is monitored by the Node Controller; unhealthy Nodes have their Pods evicted after a timeout"
+  ],
+  "deepDive": [
+    {
+      "heading": "Node Registration and Lifecycle",
+      "text": "When a new Worker Node joins the cluster, kubelet registers itself with the API Server using a bootstrap token or certificate. The Node object appears in the cluster with labels (e.g., node-role, instance type, region) and taints. Administrators can cordon (mark unschedulable), drain (evict Pods), or delete nodes as needed. When a node is deleted, its Pods are rescheduled onto remaining nodes."
+    },
+    {
+      "heading": "Resource Management on Nodes",
+      "text": "Each Node reports its total capacity (CPU cores, memory, max Pods). Kubelet manages resource reservations: system-reserved (for OS and system daemons) and kube-reserved (for kubelet, kube-proxy, container runtime). The rest is allocatable for Pods. Kubelet evicts Pods when resources run low, starting with lowest priority Pods when disk pressure, memory pressure, or PID pressure is detected."
+    },
+    {
+      "heading": "Node Conditions and Health",
+      "text": "Kubelet periodically updates Node conditions: Ready (node is healthy), DiskPressure (disk space low), MemoryPressure (memory low), PIDPressure (too many processes), NetworkUnavailable (network not configured). If Ready becomes Unknown for more than 40 seconds, the Node Controller marks the node unreachable. After 5 minutes, Pods on the unreachable node are evicted."
+    }
+  ],
+  "interviewQuestions": [
+    {
+      "question": "What components run on every Worker Node?",
+      "answer": "Every Worker Node runs kubelet (node agent), kube-proxy (network proxy), and a container runtime (containerd, CRI-O, or others via CRI)."
+    },
+    {
+      "question": "How does a node join a cluster?",
+      "answer": "A node joins by running kubelet with a join token or bootstrap certificate. Kubelet presents credentials to the API Server, which authenticates and adds the Node object to the cluster."
+    },
+    {
+      "question": "What happens when a node runs out of memory?",
+      "answer": "Kubelet starts evicting Pods based on QoS class: BestEffort Pods first, then Burstable, finally Guaranteed. The Pods are terminated and rescheduled on available nodes if possible."
+    },
+    {
+      "question": "What is the difference between cordon and drain?",
+      "answer": "Cordon marks a node as unschedulable so no new Pods are assigned. Drain evicts existing Pods from the node before maintenance. Drain typically includes cordon as a first step."
+    },
+    {
+      "question": "How does kubelet ensure containers are healthy?",
+      "answer": "Kubelet runs liveness probes (checks if container is alive — restart if fails), readiness probes (checks if container is ready to serve traffic — remove from Service if fails), and startup probes (for slow-starting containers)."
+    },
+    {
+      "question": "What is a taint on a Worker Node?",
+      "answer": "A taint is a label that repels Pods unless they have a matching toleration. For example, a GPU node might have a taint so that only GPU workloads are scheduled there."
+    },
+    {
+      "question": "How many Pods can a single node run?",
+      "answer": "The default max is 110 Pods per node (configurable via kubelet --max-pods flag). Cloud providers often set lower limits (e.g., AWS EKS limits based on instance type ENI limits)."
+    },
+    {
+      "question": "What is a static Pod?",
+      "answer": "A static Pod is managed directly by kubelet from a manifest file on the node (usually in /etc/kubernetes/manifests/). kubelet watches this directory and creates/deletes Pods accordingly. Used for Control Plane components."
+    },
+    {
+      "question": "Can a node run different container runtimes?",
+      "answer": "No, each node uses a single container runtime. The runtime is configured in kubelet via the --container-runtime flag. All Pods on that node use the same runtime."
+    },
+    {
+      "question": "How does node-to-node networking work?",
+      "answer": "Nodes communicate through the cluster network fabric implemented by the CNI plugin. Each node gets an IP range (Pod CIDR) assigned, and the CNI plugin handles routing between these ranges across the cluster."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What is the default maximum number of Pods per node?",
+      "options": [
+        "50",
+        "110",
+        "250",
+        "500"
+      ],
+      "answer": 1,
+      "explanation": "The default max Pods per node in Kubernetes is 110, configurable via kubelet --max-pods."
+    },
+    {
+      "question": "Which component on the Worker Node manages containers?",
+      "options": [
+        "kube-proxy",
+        "kubelet",
+        "container runtime",
+        "kube-scheduler"
+      ],
+      "answer": 1,
+      "explanation": "The container runtime (containerd, CRI-O) handles pulling images and running containers under kubelet direction."
+    },
+    {
+      "question": "What does cordoning a node accomplish?",
+      "options": [
+        "Deletes the node",
+        "Marks node unschedulable",
+        "Evicts all Pods",
+        "Restarts kubelet"
+      ],
+      "answer": 1,
+      "explanation": "Cordoning marks a node unschedulable so no new Pods are scheduled onto it, while existing Pods continue running."
+    },
+    {
+      "question": "Which kubelet probe determines if a container should be restarted?",
+      "options": [
+        "Readiness probe",
+        "Liveness probe",
+        "Startup probe",
+        "Health probe"
+      ],
+      "answer": 1,
+      "explanation": "A failing liveness probe causes kubelet to restart the container. A failing readiness probe only removes traffic."
+    },
+    {
+      "question": "What triggers Pod eviction on a Worker Node?",
+      "options": [
+        "API Server command",
+        "Resource pressure (memory/disk)",
+        "Scheduler decision",
+        "etcd state change"
+      ],
+      "answer": 1,
+      "explanation": "Kubelet evicts Pods when it detects memory pressure, disk pressure, or PID pressure on the node."
+    },
+    {
+      "question": "Which component handles Service-to-Pod traffic on a node?",
+      "options": [
+        "kubelet",
+        "kube-proxy",
+        "container runtime",
+        "kube-scheduler"
+      ],
+      "answer": 1,
+      "explanation": "kube-proxy maintains iptables or IPVS rules on each node to route Service traffic to Pods."
+    },
+    {
+      "question": "What is the Node Ready condition?",
+      "options": [
+        "Node is full",
+        "Node is healthy and ready",
+        "Node is shutting down",
+        "Node has new Pods"
+      ],
+      "answer": 1,
+      "explanation": "The Ready condition indicates the Node is healthy and can accept new Pods."
+    },
+    {
+      "question": "How does a node get its Pod CIDR range?",
+      "options": [
+        "CNI plugin assigns it",
+        "kubelet auto-generates",
+        "API Server assigns via node controller",
+        "Manual configuration"
+      ],
+      "answer": 2,
+      "explanation": "The node controller assigns Pod CIDR ranges to nodes when using the Controller Manager with --allocate-node-cidrs=true."
+    },
+    {
+      "question": "What QoS class gets evicted first under memory pressure?",
+      "options": [
+        "Guaranteed",
+        "Burstable",
+        "BestEffort",
+        "All equally"
+      ],
+      "answer": 2,
+      "explanation": "BestEffort Pods (no resource requests/limits) are evicted first under resource pressure."
+    },
+    {
+      "question": "What is a static Pod?",
+      "options": [
+        "A Pod managed by API Server",
+        "A Pod with no replicas",
+        "A Pod managed by kubelet from local manifests",
+        "A paused Pod"
+      ],
+      "answer": 2,
+      "explanation": "Static Pods are created by kubelet from manifest files in /etc/kubernetes/manifests/, used for Control Plane components."
+    }
+  ],
+  "codeExamples": [
+    {
+      "title": "Get Node Details",
+      "useCase": "View worker node capacity and status",
+      "code": "kubectl get node <node-name> -o wide\nkubectl describe node <node-name>",
+      "description": "Shows node status, capacity, allocatable resources, conditions, and running Pods."
+    },
+    {
+      "title": "Taint a Node",
+      "useCase": "Reserve a node for specific workloads",
+      "code": "kubectl taint nodes <node-name> dedicated=gpu:NoSchedule\nkubectl describe node <node-name> | findstr Taints",
+      "description": "Adds a taint that prevents Pods without matching toleration from scheduling on this node."
+    },
+    {
+      "title": "Cordon and Drain a Node",
+      "useCase": "Prepare node for maintenance or decommission",
+      "code": "kubectl cordon <node-name>\nkubectl drain <node-name> --ignore-daemonsets --delete-emptydir-data",
+      "description": "Marks node unschedulable and evicts Pods for maintenance."
+    },
+    {
+      "title": "Label a Node",
+      "useCase": "Add custom labels for node selection",
+      "code": "kubectl label nodes <node-name> topology.kubernetes.io/zone=us-east-1a\nkubectl get nodes --show-labels",
+      "description": "Adds labels that can be used for nodeSelector, affinity, or topology constraints."
+    },
+    {
+      "title": "Check Node Resource Usage",
+      "useCase": "Monitor node CPU/memory utilization",
+      "code": "kubectl top node <node-name>\nkubectl describe node <node-name> | findstr -A5 \"Allocated resources\"",
+      "description": "Shows current resource usage and allocated resources on the node."
+    }
+  ],
+  "laymanDefinition": "A Worker Node is a computer in the cluster that actually runs your applications. If the Control Plane is the brain, Worker Nodes are the muscles. Each Worker Node has three essential components: kubelet (the node agent that follows Control Plane orders), kube-proxy (handles networking rules), and a container runtime (like containerd) that runs the actual containers. You can add or remove Worker Nodes to scale the cluster capacity up or down.",
+  "diagramSvg": "<svg viewBox=\"0 0 500 280\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"280\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">Worker Node</text><rect x=\"20\" y=\"45\" width=\"460\" height=\"60\" rx=\"5\" fill=\"#e8f4f8\" stroke=\"#ccc\" stroke-width=\"1.5\"/><text x=\"250\" y=\"80\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Worker Node</text><text x=\"250\" y=\"155\" font-size=\"10\" fill=\"#555\" text-anchor=\"middle\">Worker Nodes host Pods and provide the compute, me</text><text x=\"250\" y=\"168\" font-size=\"10\" fill=\"#555\" text-anchor=\"middle\">mory, and storage resources for application worklo</text><text x=\"250\" y=\"181\" font-size=\"10\" fill=\"#555\" text-anchor=\"middle\">ads</text></svg>"
+};

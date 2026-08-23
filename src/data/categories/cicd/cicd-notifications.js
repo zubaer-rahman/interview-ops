@@ -1,0 +1,209 @@
+export const cicd_notifications = {
+  "id": "cicd-notifications",
+  "title": "Pipeline Notifications",
+  "difficulty": "beginner",
+  "estimatedMinutes": 10,
+  "tldr": [
+    "Pipeline notifications alert teams about pipeline results: success, failure, or status changes.",
+    "Channels: Slack, email, Discord, Microsoft Teams, SMS/PagerDuty (critical failures).",
+    "Notifications should be actionable — not noise. Failed builds page on-call; success messages go to team channel.",
+    "Effective pipeline notifications keep teams informed with actionable alerts without creating noise."
+  ],
+  "laymanDefinition": "Pipeline notifications are like automated status updates sent to your team. \"Tests passed!\" goes to the team chat. \"Deploy failed!\" pages the on-call engineer. The key is notifying the right people through the right channels with the right urgency.",
+  "deepDive": [
+    {
+      "heading": "Notification Types",
+      "text": "Success: post to team channel, deploy summary. Failure: @mention author, page on-call if production. Pending: optional, running status. Cancelled: log for audit. Warning: test flakiness, threshold warnings. Custom: deployment approval requests."
+    },
+    {
+      "heading": "Tools and Integration",
+      "text": "Slack: incoming webhooks, Slack API (chat.postMessage). GitHub commit status: green/red/yellow checks. Email: SMTP or email API (SendGrid). PagerDuty, OpsGenie: critical alerts with escalation. Webhook: custom endpoints."
+    },
+    {
+      "heading": "Best Practices",
+      "text": "Notify on: prod deployment failure, build failure on main. Don\\'t notify on: every dev branch commit success. Use @mentions to direct attention. Include: commit message, author, link to pipeline, error summary. Rate limit: avoid notification storms."
+    }
+  ],
+  "interviewAnswer": "Pipeline notifications alert teams about pipeline results: success, failure, or status changes.",
+  "interviewQuestions": [
+    {
+      "question": "What is the most critical notification?",
+      "answer": "Production deployment failure — should page on-call engineer."
+    },
+    {
+      "question": "What should notifications include?",
+      "answer": "Human-readable summary: what failed, who, which commit, link to logs."
+    },
+    {
+      "question": "How to avoid notification fatigue?",
+      "answer": "Notify only on actionable events. Don\\'t spam on every branch success. Use appropriate channels for severity."
+    },
+    {
+      "question": "Pipeline Notifications — How do you get started with this concept?",
+      "answer": "Getting started involves understanding the basics, setting up a proof of concept, and iterating."
+    },
+    {
+      "question": "Pipeline Notifications — What tools integrate well with this?",
+      "answer": "Integration is possible through APIs, plugins, webhooks, and configuration files."
+    },
+    {
+      "question": "Pipeline Notifications — What are common troubleshooting steps?",
+      "answer": "Troubleshooting involves checking logs, verifying configuration, and testing incrementally."
+    },
+    {
+      "question": "Pipeline Notifications — What security considerations apply here?",
+      "answer": "Security considerations include access control, encryption of sensitive data, and audit logging."
+    },
+    {
+      "question": "Pipeline Notifications — What best practices should be followed?",
+      "answer": "Best practices include version control, automation, monitoring, and thorough documentation."
+    },
+    {
+      "question": "Pipeline Notifications — How does this affect team collaboration?",
+      "answer": "It supports collaboration through shared visibility, standardized processes, and clear workflows."
+    },
+    {
+      "question": "Pipeline Notifications — What metrics indicate successful implementation?",
+      "answer": "Key metrics include adoption rate, error reduction, build times, and team satisfaction scores."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"300\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">Pipeline Notifications</text><rect x=\"10\" y=\"35\" width=\"140\" height=\"25\" rx=\"5\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1.5\"/><text x=\"80\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Pipeline Run</text><text x=\"80\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Build completes</text><line x1=\"150\" y1=\"48\" x2=\"170\" y2=\"48\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"180\" y=\"35\" width=\"140\" height=\"25\" rx=\"5\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1.5\"/><text x=\"250\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Success?</text><text x=\"250\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Slack team channel</text><rect x=\"180\" y=\"65\" width=\"140\" height=\"25\" rx=\"5\" fill=\"#dc3545\" stroke=\"#dc3545\" stroke-width=\"1.5\"/><text x=\"250\" y=\"81\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Failure?</text><text x=\"250\" y=\"84\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Page on-call</text><text x=\"240\" y=\"130\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">Pipeline Notifications: Success → team chat. Failu</text><text x=\"240\" y=\"142\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">re → page on-call. Actionable, not noisy.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "Slack Notification",
+      "useCase": "Post build status to Slack.",
+      "code": "- name: Notify Slack\n  uses: slackapi/slack-github-action@v1\n  with:\n    payload: '{\"text\":\"Build ${{ job.status }}\"}'\n  env:\n    SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}",
+      "description": ""
+    },
+    {
+      "title": "Common Use Case",
+      "useCase": "Typical implementation",
+      "code": "# Common implementation pattern\n# Used in everyday scenarios",
+      "description": "Standard use case example."
+    },
+    {
+      "title": "Advanced Configuration",
+      "useCase": "Complex scenario",
+      "code": "# Advanced pattern for complex scenarios\n# Includes error handling",
+      "description": "Advanced configuration example."
+    },
+    {
+      "title": "Integration Pattern",
+      "useCase": "Tool integration",
+      "code": "# Integration with other tools\n# Shows how components connect",
+      "description": "Integration example with related tools."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What notification should page the on-call engineer?",
+      "options": [
+        "Testing complete",
+        "Build success",
+        "Production deployment failure",
+        "Dependency update available"
+      ],
+      "answer": 2,
+      "explanation": "Production deployment failures are critical incidents that should page the on-call engineer immediately."
+    },
+    {
+      "question": "Pipeline Notifications — What is the recommended approach?",
+      "options": [
+        "Start simple and iterate",
+        "Build everything at once",
+        "Skip testing",
+        "Avoid planning"
+      ],
+      "answer": 0,
+      "explanation": "Starting simple and iterating is the most effective approach."
+    },
+    {
+      "question": "Pipeline Notifications — What should be prioritized?",
+      "options": [
+        "Reliability and consistency",
+        "Speed only",
+        "Features over quality",
+        "Manual processes"
+      ],
+      "answer": 0,
+      "explanation": "Reliability and consistency are foundational priorities."
+    },
+    {
+      "question": "Pipeline Notifications — What is important for security?",
+      "options": [
+        "Access control and encryption",
+        "Open access",
+        "Shared passwords",
+        "No auditing"
+      ],
+      "answer": 0,
+      "explanation": "Access control and encryption are fundamental security measures."
+    },
+    {
+      "question": "Pipeline Notifications — How to ensure reliability?",
+      "options": [
+        "Automated testing and monitoring",
+        "Manual checks only",
+        "No testing",
+        "Reactive fixes"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing and monitoring ensure consistent reliability."
+    },
+    {
+      "question": "Pipeline Notifications — What helps team collaboration?",
+      "options": [
+        "Shared workflows and visibility",
+        "Isolated work",
+        "No documentation",
+        "Siloed tools"
+      ],
+      "answer": 0,
+      "explanation": "Shared workflows and visibility enable better collaboration."
+    },
+    {
+      "question": "Pipeline Notifications — What reduces errors most?",
+      "options": [
+        "Automation",
+        "Manual processes",
+        "Rushing",
+        "Bypassing reviews"
+      ],
+      "answer": 0,
+      "explanation": "Automation consistently eliminates human errors."
+    },
+    {
+      "question": "Pipeline Notifications — What improves speed?",
+      "options": [
+        "Parallel execution and caching",
+        "Serial execution",
+        "No optimization",
+        "Manual steps"
+      ],
+      "answer": 0,
+      "explanation": "Parallel execution and caching significantly improve speed."
+    },
+    {
+      "question": "Pipeline Notifications — What is key for monitoring?",
+      "options": [
+        "Metrics dashboards and alerts",
+        "No monitoring",
+        "Only error logs",
+        "Manual checks"
+      ],
+      "answer": 0,
+      "explanation": "Metrics dashboards and alerts provide actionable insights."
+    },
+    {
+      "question": "Pipeline Notifications — What ensures quality?",
+      "options": [
+        "Automated testing in pipeline",
+        "No testing",
+        "Only manual QA",
+        "Skipping code review"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing integrated into the pipeline ensures consistent quality."
+    }
+  ]
+};

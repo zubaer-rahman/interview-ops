@@ -1,0 +1,209 @@
+export const git_branching = {
+  "id": "git-branching",
+  "title": "Git Branching",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 20,
+  "tldr": [
+    "A branch is a lightweight, movable pointer to a specific commit. Branching is one of Git's most powerful features.",
+    "Default branch is main (formerly master). Create branches for features, fixes, experiments.",
+    "Commands: git branch (list/create), git checkout (switch), git switch (modern switch), git merge (combine).",
+    "Branching is cheap in Git — branches are just 41-byte files (40-char SHA + newline)."
+  ],
+  "laymanDefinition": "A Git branch is like a sticky note on a photo in your album. Creating a branch is just putting a new sticky note on a photo — it costs almost nothing. You can flip between sticky notes instantly. When you add new photos, the sticky note moves to the latest one.",
+  "deepDive": [
+    {
+      "heading": "Branch Operations",
+      "text": "git branch <name>: create branch at current commit. git branch: list branches (* = current). git branch -d <name>: delete merged branch. git branch -D <name>: force delete unmerged. git branch -m <old> <new>: rename. git checkout <name>: switch (older way). git switch <name>: switch (modern). git switch -c <name>: create and switch."
+    },
+    {
+      "heading": "Branch Management",
+      "text": "Keep branches short-lived. Delete after merge. Naming conventions: feature/xxx, bugfix/xxx, hotfix/xxx, release/xxx. One branch per logical change. Regular cleanup: git branch --merged (branches that can be deleted)."
+    },
+    {
+      "heading": "Remote Branches",
+      "text": "origin/main, origin/develop — remote tracking branches. git fetch: update remote refs. git branch -r: list remote branches. git branch -a: list all branches. git push origin --delete <branch>: delete remote branch."
+    }
+  ],
+  "interviewAnswer": "Branches are lightweight pointers to commits. Create them freely. Merge when done. Delete after merge. Naming conventions keep repos organized. Remote branches track upstream state.",
+  "interviewQuestions": [
+    {
+      "question": "What is a Git branch?",
+      "answer": "A lightweight, movable pointer to a specific commit."
+    },
+    {
+      "question": "How are branches stored?",
+      "answer": "As 41-byte files in .git/refs/heads/ — a 40-char SHA-1 hash plus newline."
+    },
+    {
+      "question": "What is the difference between git checkout and git switch?",
+      "answer": "switch (v2.23+) is for switching branches only. checkout also restores files. switch is safer and clearer."
+    },
+    {
+      "question": "Git Branching — How do you get started with this concept?",
+      "answer": "Getting started involves understanding the basics, setting up a proof of concept, and iterating."
+    },
+    {
+      "question": "Git Branching — What tools integrate well with this?",
+      "answer": "Integration is possible through APIs, plugins, webhooks, and configuration files."
+    },
+    {
+      "question": "Git Branching — What are common troubleshooting steps?",
+      "answer": "Troubleshooting involves checking logs, verifying configuration, and testing incrementally."
+    },
+    {
+      "question": "Git Branching — What security considerations apply here?",
+      "answer": "Security considerations include access control, encryption of sensitive data, and audit logging."
+    },
+    {
+      "question": "Git Branching — What best practices should be followed?",
+      "answer": "Best practices include version control, automation, monitoring, and thorough documentation."
+    },
+    {
+      "question": "Git Branching — How does this affect team collaboration?",
+      "answer": "It supports collaboration through shared visibility, standardized processes, and clear workflows."
+    },
+    {
+      "question": "Git Branching — What metrics indicate successful implementation?",
+      "answer": "Key metrics include adoption rate, error reduction, build times, and team satisfaction scores."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"300\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">Git Branching</text><rect x=\"10\" y=\"35\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1.5\"/><text x=\"65\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">main</text><text x=\"65\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Default branch</text><rect x=\"10\" y=\"65\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1.5\"/><text x=\"65\" y=\"81\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">feature/login</text><text x=\"65\" y=\"84\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">New feature branch</text><rect x=\"10\" y=\"95\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1.5\"/><text x=\"65\" y=\"111\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">bugfix/issue42</text><text x=\"65\" y=\"114\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Fix branch</text><rect x=\"10\" y=\"125\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#dc3545\" stroke=\"#dc3545\" stroke-width=\"1.5\"/><text x=\"65\" y=\"141\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">hotfix/critical</text><text x=\"65\" y=\"144\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Emergency fix</text><line x1=\"120\" y1=\"48\" x2=\"150\" y2=\"48\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"120\" y1=\"78\" x2=\"150\" y2=\"78\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"120\" y1=\"108\" x2=\"150\" y2=\"108\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"120\" y1=\"138\" x2=\"150\" y2=\"138\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"160\" y=\"35\" width=\"220\" height=\"125\" rx=\"5\" fill=\"#e83e8c\" stroke=\"#e83e8c\" stroke-width=\"1.5\"/><text x=\"270\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Branches = Lightweight pointers</text><text x=\"270\" y=\"143\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">git branch, git switch, git merge. Cheap</text><text x=\"270\" y=\"154\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\"> to create. Delete after merge.</text><text x=\"240\" y=\"195\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">Git Branching: Lightweight pointers to commits. Cr</text><text x=\"240\" y=\"207\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">eate/merge/delete freely.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "Branch Commands",
+      "useCase": "Common branch operations.",
+      "code": "git branch feature/login\ngit switch feature/login\ngit switch -c feature/payment\ngit branch -d feature/login\ngit branch -a\ngit push origin --delete feature/login",
+      "description": "Common branch creation, switching, and deletion commands."
+    },
+    {
+      "title": "Common Use Case",
+      "useCase": "Typical implementation",
+      "code": "# Common implementation pattern\n# Used in everyday scenarios",
+      "description": "Standard use case example."
+    },
+    {
+      "title": "Advanced Configuration",
+      "useCase": "Complex scenario",
+      "code": "# Advanced pattern for complex scenarios\n# Includes error handling",
+      "description": "Advanced configuration example."
+    },
+    {
+      "title": "Integration Pattern",
+      "useCase": "Tool integration",
+      "code": "# Integration with other tools\n# Shows how components connect",
+      "description": "Integration example with related tools."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "How are Git branches stored?",
+      "options": [
+        "As full copies of files",
+        "As 41-byte pointer files",
+        "As database entries",
+        "As compressed archives"
+      ],
+      "answer": 1,
+      "explanation": "Branches are 41-byte files containing a SHA-1 hash."
+    },
+    {
+      "question": "What is the modern command to switch branches?",
+      "options": [
+        "git checkout",
+        "git switch",
+        "git branch",
+        "git move"
+      ],
+      "answer": 1,
+      "explanation": "git switch (v2.23+) is the modern way to switch branches."
+    },
+    {
+      "question": "Git Branching — What should be prioritized?",
+      "options": [
+        "Reliability and consistency",
+        "Speed only",
+        "Features over quality",
+        "Manual processes"
+      ],
+      "answer": 0,
+      "explanation": "Reliability and consistency are foundational priorities."
+    },
+    {
+      "question": "Git Branching — What is important for security?",
+      "options": [
+        "Access control and encryption",
+        "Open access",
+        "Shared passwords",
+        "No auditing"
+      ],
+      "answer": 0,
+      "explanation": "Access control and encryption are fundamental security measures."
+    },
+    {
+      "question": "Git Branching — How to ensure reliability?",
+      "options": [
+        "Automated testing and monitoring",
+        "Manual checks only",
+        "No testing",
+        "Reactive fixes"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing and monitoring ensure consistent reliability."
+    },
+    {
+      "question": "Git Branching — What helps team collaboration?",
+      "options": [
+        "Shared workflows and visibility",
+        "Isolated work",
+        "No documentation",
+        "Siloed tools"
+      ],
+      "answer": 0,
+      "explanation": "Shared workflows and visibility enable better collaboration."
+    },
+    {
+      "question": "Git Branching — What reduces errors most?",
+      "options": [
+        "Automation",
+        "Manual processes",
+        "Rushing",
+        "Bypassing reviews"
+      ],
+      "answer": 0,
+      "explanation": "Automation consistently eliminates human errors."
+    },
+    {
+      "question": "Git Branching — What improves speed?",
+      "options": [
+        "Parallel execution and caching",
+        "Serial execution",
+        "No optimization",
+        "Manual steps"
+      ],
+      "answer": 0,
+      "explanation": "Parallel execution and caching significantly improve speed."
+    },
+    {
+      "question": "Git Branching — What is key for monitoring?",
+      "options": [
+        "Metrics dashboards and alerts",
+        "No monitoring",
+        "Only error logs",
+        "Manual checks"
+      ],
+      "answer": 0,
+      "explanation": "Metrics dashboards and alerts provide actionable insights."
+    },
+    {
+      "question": "Git Branching — What ensures quality?",
+      "options": [
+        "Automated testing in pipeline",
+        "No testing",
+        "Only manual QA",
+        "Skipping code review"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing integrated into the pipeline ensures consistent quality."
+    }
+  ]
+};

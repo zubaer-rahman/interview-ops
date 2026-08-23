@@ -1,0 +1,213 @@
+export const cicd_code_quality = {
+  "id": "cicd-code-quality",
+  "title": "Linting & Code Quality",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 15,
+  "tldr": [
+    "Linting analyzes source code for programmatic and stylistic errors, enforcing consistent coding standards.",
+    "Code quality tools go beyond linting to measure complexity, duplication, security, and maintainability.",
+    "Integrate linting early in the pipeline — fail fast on style issues before running expensive tests.",
+    "Code quality gates in the pipeline prevent technical debt and security issues from reaching production."
+  ],
+  "laymanDefinition": "Linting is like a spell-checker and style-guide enforcer for code. It catches: missing semicolons, unused variables, incorrect indentation, potential bugs. Code quality tools are like a report card—they give your code a score for maintainability, security, and complexity.",
+  "deepDive": [
+    {
+      "heading": "Linting Tools",
+      "text": "JavaScript: ESLint (configurable rules), Prettier (formatting). TypeScript: typescript-eslint. Python: flake8, pylint, black. CSS: stylelint. Docker: hadolint. YAML: yamllint. Markdown: markdownlint. Pre-commit hooks: lint before commit."
+    },
+    {
+      "heading": "Code Quality Tools",
+      "text": "Complexity: cyclomatic complexity, cognitive complexity. Duplication: copy-paste detection (CPD). Security: SonarQube, CodeQL, Snyk. Coverage: minimum coverage thresholds. Maintainability index: numerical score. Technical debt: estimated effort to fix issues."
+    },
+    {
+      "heading": "CI/CD Integration",
+      "text": "Run linting first (fastest checks). Fail pipeline on lint errors. Enforce formatting (Prettier as gate). Publish quality reports as artifacts. Use quality gates to block merges below threshold."
+    },
+    {
+      "heading": "SonarQube",
+      "text": "Popular code quality platform. Quality Gates: pass/fail based on metrics (coverage, bugs, vulnerabilities, code smells, duplication). Supports 30+ languages. PR decoration: annotations in PR diff. CI integration: sonar-scanner command."
+    }
+  ],
+  "interviewAnswer": "Linting analyzes source code for programmatic and stylistic errors, enforcing consistent coding standards.",
+  "interviewQuestions": [
+    {
+      "question": "What is linting?",
+      "answer": "Automated analysis of source code to detect programming errors, bugs, and stylistic inconsistencies."
+    },
+    {
+      "question": "What is Prettier?",
+      "answer": "An opinionated code formatter that enforces consistent style automatically."
+    },
+    {
+      "question": "What is a SonarQube Quality Gate?",
+      "answer": "A set of threshold conditions (coverage, bugs, etc.) that code must meet to pass quality checks."
+    },
+    {
+      "question": "Linting & Code Quality — How do you get started with this concept?",
+      "answer": "Getting started involves understanding the basics, setting up a proof of concept, and iterating."
+    },
+    {
+      "question": "Linting & Code Quality — What tools integrate well with this?",
+      "answer": "Integration is possible through APIs, plugins, webhooks, and configuration files."
+    },
+    {
+      "question": "Linting & Code Quality — What are common troubleshooting steps?",
+      "answer": "Troubleshooting involves checking logs, verifying configuration, and testing incrementally."
+    },
+    {
+      "question": "Linting & Code Quality — What security considerations apply here?",
+      "answer": "Security considerations include access control, encryption of sensitive data, and audit logging."
+    },
+    {
+      "question": "Linting & Code Quality — What best practices should be followed?",
+      "answer": "Best practices include version control, automation, monitoring, and thorough documentation."
+    },
+    {
+      "question": "Linting & Code Quality — How does this affect team collaboration?",
+      "answer": "It supports collaboration through shared visibility, standardized processes, and clear workflows."
+    },
+    {
+      "question": "Linting & Code Quality — What metrics indicate successful implementation?",
+      "answer": "Key metrics include adoption rate, error reduction, build times, and team satisfaction scores."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"300\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">Linting & Code Quality</text><rect x=\"10\" y=\"35\" width=\"140\" height=\"25\" rx=\"5\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1.5\"/><text x=\"80\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">ESLint</text><text x=\"80\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Code analysis</text><rect x=\"10\" y=\"65\" width=\"140\" height=\"25\" rx=\"5\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1.5\"/><text x=\"80\" y=\"81\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Prettier</text><text x=\"80\" y=\"84\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Formatting</text><rect x=\"10\" y=\"95\" width=\"140\" height=\"25\" rx=\"5\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1.5\"/><text x=\"80\" y=\"111\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">SonarQube</text><text x=\"80\" y=\"114\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Quality metrics</text><rect x=\"10\" y=\"125\" width=\"140\" height=\"25\" rx=\"5\" fill=\"#dc3545\" stroke=\"#dc3545\" stroke-width=\"1.5\"/><text x=\"80\" y=\"141\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Quality Gate</text><text x=\"80\" y=\"144\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Pass/fail threshold</text><text x=\"240\" y=\"170\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">Linting & Code Quality: ESLint, Prettier, SonarQub</text><text x=\"240\" y=\"182\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">e. Automated code analysis gates the pipeline.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "Lint in CI",
+      "useCase": "Run linting and formatting checks.",
+      "code": "npm run lint\nnpx prettier --check .\nnpx sonar-scanner",
+      "description": ""
+    },
+    {
+      "title": "Common Use Case",
+      "useCase": "Typical implementation",
+      "code": "# Common implementation pattern\n# Used in everyday scenarios",
+      "description": "Standard use case example."
+    },
+    {
+      "title": "Advanced Configuration",
+      "useCase": "Complex scenario",
+      "code": "# Advanced pattern for complex scenarios\n# Includes error handling",
+      "description": "Advanced configuration example."
+    },
+    {
+      "title": "Integration Pattern",
+      "useCase": "Tool integration",
+      "code": "# Integration with other tools\n# Shows how components connect",
+      "description": "Integration example with related tools."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "Where should linting run in the pipeline?",
+      "options": [
+        "At the end",
+        "In the first stage (fail fast)",
+        "After deployment",
+        "Never in CI"
+      ],
+      "answer": 1,
+      "explanation": "Linting should run early (first stage) as it provides fast feedback on common issues."
+    },
+    {
+      "question": "Linting & Code Quality — What is the recommended approach?",
+      "options": [
+        "Start simple and iterate",
+        "Build everything at once",
+        "Skip testing",
+        "Avoid planning"
+      ],
+      "answer": 0,
+      "explanation": "Starting simple and iterating is the most effective approach."
+    },
+    {
+      "question": "Linting & Code Quality — What should be prioritized?",
+      "options": [
+        "Reliability and consistency",
+        "Speed only",
+        "Features over quality",
+        "Manual processes"
+      ],
+      "answer": 0,
+      "explanation": "Reliability and consistency are foundational priorities."
+    },
+    {
+      "question": "Linting & Code Quality — What is important for security?",
+      "options": [
+        "Access control and encryption",
+        "Open access",
+        "Shared passwords",
+        "No auditing"
+      ],
+      "answer": 0,
+      "explanation": "Access control and encryption are fundamental security measures."
+    },
+    {
+      "question": "Linting & Code Quality — How to ensure reliability?",
+      "options": [
+        "Automated testing and monitoring",
+        "Manual checks only",
+        "No testing",
+        "Reactive fixes"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing and monitoring ensure consistent reliability."
+    },
+    {
+      "question": "Linting & Code Quality — What helps team collaboration?",
+      "options": [
+        "Shared workflows and visibility",
+        "Isolated work",
+        "No documentation",
+        "Siloed tools"
+      ],
+      "answer": 0,
+      "explanation": "Shared workflows and visibility enable better collaboration."
+    },
+    {
+      "question": "Linting & Code Quality — What reduces errors most?",
+      "options": [
+        "Automation",
+        "Manual processes",
+        "Rushing",
+        "Bypassing reviews"
+      ],
+      "answer": 0,
+      "explanation": "Automation consistently eliminates human errors."
+    },
+    {
+      "question": "Linting & Code Quality — What improves speed?",
+      "options": [
+        "Parallel execution and caching",
+        "Serial execution",
+        "No optimization",
+        "Manual steps"
+      ],
+      "answer": 0,
+      "explanation": "Parallel execution and caching significantly improve speed."
+    },
+    {
+      "question": "Linting & Code Quality — What is key for monitoring?",
+      "options": [
+        "Metrics dashboards and alerts",
+        "No monitoring",
+        "Only error logs",
+        "Manual checks"
+      ],
+      "answer": 0,
+      "explanation": "Metrics dashboards and alerts provide actionable insights."
+    },
+    {
+      "question": "Linting & Code Quality — What ensures quality?",
+      "options": [
+        "Automated testing in pipeline",
+        "No testing",
+        "Only manual QA",
+        "Skipping code review"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing integrated into the pipeline ensures consistent quality."
+    }
+  ]
+};

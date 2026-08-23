@@ -1,0 +1,179 @@
+export const express_api_versioning = {
+  "id": "express-api-versioning",
+  "title": "API Versioning",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 20,
+  "tldr": [
+    "API versioning allows your API to evolve and introduce breaking changes without disrupting existing clients. Multiple versions can coexist simultaneously.",
+    "Common strategies: URL prefix (/api/v1/, /api/v2/), custom request header (Accept: application/vnd.myapp.v1+json), query parameter (?version=1), and subdomain (v1.api.example.com).",
+    "Express supports versioning through multiple routers, conditional middleware, or dedicated versioned route files.",
+    "Best practices: version from day one, deprecate with notice, maintain backward compatibility when possible, document changes between versions."
+  ],
+  "laymanDefinition": "API versioning is like having different editions of a textbook. The 2nd edition adds new chapters and corrections, but the 1st edition is still available for students who already started using it.",
+  "deepDive": [
+    {
+      "heading": "URL Prefix Versioning",
+      "text": "Most common approach: /api/v1/users, /api/v2/users. In Express, create separate routers for each version: const v1Router = require(\\'./routes/v1\\'); const v2Router = require(\\'./routes/v2\\'); app.use(\\'/api/v1\\', v1Router); app.use(\\'/api/v2\\', v2Router). Simple, explicit, cache-friendly."
+    },
+    {
+      "heading": "Header-Based Versioning",
+      "text": "Client specifies version via Accept header or custom header: Accept: application/vnd.myapp.v2+json. Middleware reads the header and routes to the appropriate handler. Keeps URLs clean. More complex to implement and test. Less visible to developers compared to URL versioning."
+    },
+    {
+      "heading": "Query Parameter Versioning",
+      "text": "Client includes version in query: /api/users?version=2. Middleware checks req.query.version and routes accordingly. Simple but pollutes URLs, caching can be problematic, and version becomes part of the cache key. Not recommended for public APIs."
+    },
+    {
+      "heading": "Implementation Patterns",
+      "text": "Pattern 1: Separate routers per version (recommended). Pattern 2: Version check middleware that selects handler. Pattern 3: Single router with versioned controllers. Pattern 1 is cleanest: version files are independent, easy to deprecate, and changes are isolated."
+    },
+    {
+      "heading": "Version Deprecation Strategy",
+      "text": "Communicate deprecation via response headers (Sunset, Deprecation). Maintain old versions for a defined period (6-12 months). Log client usage to understand adoption. Redirect old versions to documentation with migration guides. Eventually return 410 Gone for fully deprecated versions."
+    }
+  ],
+  "interviewAnswer": "API versioning is essential for maintaining backward compatibility as your API evolves. URL prefix versioning with separate Express routers is the most practical approach. Plan deprecation with clear timelines and communication.",
+  "interviewQuestions": [
+    {
+      "question": "Why is API versioning important?",
+      "answer": "It allows you to make breaking changes to your API (new fields, removed endpoints, changed behavior) without disrupting existing clients. Clients can migrate at their own pace while the old version remains functional."
+    },
+    {
+      "question": "What are the main API versioning strategies?",
+      "answer": "URL prefix (/api/v1/), header-based (Accept header), query parameter (?version=1), and subdomain (v1.api.example.com). URL prefix is most common for Express APIs due to its simplicity and explicit visibility."
+    },
+    {
+      "question": "How do you implement URL versioning in Express?",
+      "answer": "Create separate router files for each version. Mount at version-specific prefixes: app.use(\\'/api/v1\\', v1Router); app.use(\\'/api/v2\\', v2Router). Each router is independent and can evolve separately."
+    },
+    {
+      "question": "What is header-based versioning?",
+      "answer": "The client specifies the desired version in an HTTP header (Accept: application/vnd.myapp.v2+json). Middleware parses the header and routes to the appropriate controller or version handler. URLs remain clean but the version is less discoverable."
+    },
+    {
+      "question": "How do you deprecate an API version?",
+      "answer": "Add Sunset and Deprecation headers to responses. Log deprecated version usage to identify clients. Maintain old version for a defined period (e.g., 6 months minimum). Provide clear migration guides. Announce deprecation timeline well in advance."
+    },
+    {
+      "question": "What is the best Express pattern for versioning?",
+      "answer": "Separate routers per version. Each version gets its own directory with routes, controllers, validators, and middleware. This isolates changes, makes deprecation easy (just remove the router), and allows different middleware per version."
+    },
+    {
+      "question": "How do you handle shared logic across versions?",
+      "answer": "Extract common logic into shared modules (utils/, middleware/, validators/). Import into version-specific routers. Avoid sharing controllers across versions as they tend to diverge. Use adapters to transform data between versions if needed."
+    },
+    {
+      "question": "What headers indicate API deprecation?",
+      "answer": "Deprecation: true (indicates the version is deprecated). Sunset: HTTP-date (when the version will be removed). Link: <https://docs.example.com/migration>; rel=\"deprecation\" (link to migration guide). These help clients prepare for removal."
+    },
+    {
+      "question": "How do you handle default versioning for unversioned requests?",
+      "answer": "Create a default router (e.g., /api) that redirects or serves the latest version. Or return a 300 Multiple Choices with available versions. Better to require explicit versioning from day one."
+    },
+    {
+      "question": "What are the downsides of query parameter versioning?",
+      "answer": "URL pollution (version clutters query string), caching issues (version must be part of cache key), less RESTful (version is not part of the resource identifier), and easier for clients to forget to include."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 200\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><rect x=\"0\" y=\"0\" width=\"500\" height=\"200\" rx=\"8\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"24\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">API Versioning</text><rect x=\"10\" y=\"40\" width=\"120\" height=\"35\" rx=\"4\" fill=\"#68a063\" stroke=\"#68a063\" stroke-width=\"1\"/><text x=\"70\" y=\"56\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">/api/v1/users</text><text x=\"70\" y=\"68\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Version 1 Router</text><rect x=\"10\" y=\"90\" width=\"120\" height=\"35\" rx=\"4\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1\"/><text x=\"70\" y=\"106\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">/api/v2/users</text><text x=\"70\" y=\"118\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Version 2 Router</text><rect x=\"10\" y=\"140\" width=\"120\" height=\"35\" rx=\"4\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1\"/><text x=\"70\" y=\"156\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">/api/v3/users</text><text x=\"70\" y=\"168\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Version 3 Router</text><line x1=\"130\" y1=\"58\" x2=\"160\" y2=\"58\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"130\" y1=\"108\" x2=\"160\" y2=\"108\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"130\" y1=\"158\" x2=\"160\" y2=\"158\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"170\" y=\"40\" width=\"140\" height=\"160\" rx=\"4\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1\"/><text x=\"240\" y=\"56\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Express App</text><text x=\"240\" y=\"68\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Mounts versioned routers independently</text><text x=\"240\" y=\"230\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">API Versioning: URL-prefix versioning with independent Express routers per version.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "URL Prefix Versioning",
+      "useCase": "Separate routers per version.",
+      "code": "// routes/v1/users.js\nconst router = require('express').Router();\nrouter.get('/', v1Controller.list);\nrouter.post('/', v1Validation.create, v1Controller.create);\nmodule.exports = router;\n\n// app.js\napp.use('/api/v1', require('./routes/v1/users'));\napp.use('/api/v2', require('./routes/v2/users'));",
+      "description": "Clean separation: v1 and v2 routes in dedicated files, mounted at different URL prefixes."
+    },
+    {
+      "title": "Header-Based Versioning Middleware",
+      "useCase": "Routing via Accept header.",
+      "code": "const versionRouter = require('express').Router();\n\nversionRouter.all('*', (req, res, next) => {\n  const accept = req.headers['accept'] || '';\n  if (accept.includes('vnd.myapp.v2')) {\n    req.version = 2;\n  } else {\n    req.version = 1;\n  }\n  next();\n});\n\napp.use('/api', versionRouter);",
+      "description": "Parses Accept header to set req.version. Controllers use req.version to branch behavior."
+    },
+    {
+      "title": "Versioned Response Transformation",
+      "useCase": "Return different data per version.",
+      "code": "function userResponse(user, version) {\n  const base = { id: user.id, name: user.name };\n  if (version >= 2) {\n    return { ...base, email: user.email, role: user.role };\n  }\n  return base;\n}\n\nrouter.get('/:id', (req, res) => {\n  const user = users[req.params.id];\n  res.json(userResponse(user, req.version || 1));\n});",
+      "description": "Response shape changes based on version. v1 returns minimal fields, v2 adds email and role."
+    },
+    {
+      "title": "Deprecation Headers Middleware",
+      "useCase": "Notifying clients of deprecation.",
+      "code": "function deprecated(version, sunsetDate) {\n  return (req, res, next) => {\n    if (req.path.startsWith(`/api/v${version}`)) {\n      res.set('Deprecation', 'true');\n      res.set('Sunset', new Date(sunsetDate).toUTCString());\n      res.set('Link', '<https://docs.example.com/migration>; rel=\"deprecation\"');\n    }\n    next();\n  };\n}\napp.use(deprecated(1, '2025-06-01'));",
+      "description": "Adds deprecation headers to all v1 responses, informing clients about sunset date and migration guide."
+    },
+    {
+      "title": "Shared Logic Across Versions",
+      "useCase": "Reusable validation and middleware.",
+      "code": "// shared/validators.js\nfunction validateEmail(email) {\n  return /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email);\n}\n\n// routes/v1/users.js\nconst { validateEmail } = require('../shared/validators');\n\n// routes/v2/users.js\nconst { validateEmail } = require('../shared/validators');",
+      "description": "Shared modules are imported by all version routers. Common logic stays in one place without duplication."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What is the most common API versioning strategy for Express?",
+      "options": [
+        "Header-based",
+        "URL prefix",
+        "Query parameter",
+        "Subdomain"
+      ],
+      "answer": 1,
+      "explanation": "URL prefix versioning (/api/v1/, /api/v2/) is the most common approach for Express APIs."
+    },
+    {
+      "question": "How should shared logic be handled across versions?",
+      "options": [
+        "Duplicated per version",
+        "Extracted to shared modules",
+        "In the main app.js",
+        "In environment config"
+      ],
+      "answer": 1,
+      "explanation": "Shared logic should be extracted to shared modules and imported by each version router."
+    },
+    {
+      "question": "What header indicates an API version is deprecated?",
+      "options": [
+        "Warning",
+        "Deprecation",
+        "Sunset",
+        "X-Deprecated"
+      ],
+      "answer": 1,
+      "explanation": "The Deprecation header indicates that a version is deprecated."
+    },
+    {
+      "question": "What header indicates when a deprecated version will be removed?",
+      "options": [
+        "Sunset",
+        "Expires",
+        "Retry-After",
+        "Remove-At"
+      ],
+      "answer": 0,
+      "explanation": "The Sunset header specifies when a deprecated version will be removed (HTTP-date format)."
+    },
+    {
+      "question": "Which versioning approach pollutes URLs?",
+      "options": [
+        "Header-based",
+        "URL prefix",
+        "Query parameter",
+        "Subdomain"
+      ],
+      "answer": 2,
+      "explanation": "Query parameter versioning (?version=1) pollutes the URL with version information."
+    },
+    {
+      "question": "Why separate version routers are recommended?",
+      "options": [
+        "They share code",
+        "Changes are isolated per version",
+        "They are faster",
+        "They reduce memory"
+      ],
+      "answer": 1,
+      "explanation": "Separate routers isolate changes per version, making deprecation and maintenance simpler."
+    }
+  ]
+};

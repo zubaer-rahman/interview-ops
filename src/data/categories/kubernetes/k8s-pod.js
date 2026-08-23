@@ -1,0 +1,217 @@
+export const k8s_pod = {
+  "id": "k8s-pod",
+  "title": "Pod",
+  "difficulty": "beginner",
+  "estimatedMinutes": 10,
+  "file": "k8s-pod.json",
+  "interviewAnswer": "A Pod is the smallest deployable unit in Kubernetes, wrapping one or more containers that share storage, network, and a runtime specification. Think of a Pod as a logical host for containers — they share the same IP, port space, and can communicate via localhost. Most commonly a Pod runs a single container, but multi-container Pods enable sidecar patterns where helper containers (logging, proxying) support the main application container.",
+  "tldr": [
+    "A Pod is the smallest and simplest Kubernetes object, representing a single running process or group of tightly coupled processes",
+    "Containers within a Pod share the same network namespace (IP, port space), IPC namespace, and can share volumes for data exchange",
+    "Pods are typically managed by higher-level controllers (Deployments, StatefulSets, DaemonSets) rather than created directly",
+    "Each Pod gets a unique cluster-internal IP address, but Pods are ephemeral — designed to be created and destroyed without data loss",
+    "Init containers run to completion before app containers start, ideal for setup tasks like database migrations or permission checks"
+  ],
+  "deepDive": [
+    {
+      "heading": "Pod Configuration",
+      "text": "A Pod is defined with apiVersion: v1, kind: Pod, and spec containing containers (image, ports, env, resources, volumeMounts), restartPolicy (Always, OnFailure, Never), and scheduling constraints (nodeSelector, affinity, tolerations). Resource requests set minimum guarantees, limits set maximum allowed — CPU is compressible (throttled), memory is not (container killed if exceeded)."
+    },
+    {
+      "heading": "Multi-Container Patterns",
+      "text": "Sidecar pattern adds a helper container (Istio proxy, Fluentd logger) alongside the main container. Adapter pattern transforms main container output for external systems. Ambassador pattern proxies network connections to external services. All patterns leverage shared network (localhost communication) and shared volumes for data exchange."
+    },
+    {
+      "heading": "Pod Lifecycle",
+      "text": "Phases: Pending (accepted, waiting for scheduling/image), Running (at least one container running), Succeeded (all containers exited 0), Failed (non-zero exit), Unknown (node unreachable). Container states within a Pod: Waiting (image pull, config), Running, Terminated. Probes (liveness, readiness, startup) control restart and traffic routing behavior."
+    }
+  ],
+  "interviewQuestions": [
+    {
+      "question": "What is a Pod in Kubernetes?",
+      "answer": "A Pod is the smallest deployable unit — a group of one or more containers that share network, storage, and a runtime specification. Containers in a Pod are always co-located and co-scheduled."
+    },
+    {
+      "question": "Can a Pod run multiple containers?",
+      "answer": "Yes. Common patterns include sidecar (logging, proxy), adapter, and ambassador. Containers share localhost networking and can share volumes."
+    },
+    {
+      "question": "What is the Pod restart policy?",
+      "answer": "Always (restart continuously, default for controllers), OnFailure (restart on non-zero exit), Never (never restart). Applies to all containers in the Pod."
+    },
+    {
+      "question": "What are init containers?",
+      "answer": "Init containers run before main app containers, sequentially to completion. If one fails, the Pod restarts it. Used for setup tasks: db migrations, waiting for dependencies, permission setup."
+    },
+    {
+      "question": "What is the default termination grace period?",
+      "answer": "30 seconds. After SIGTERM, if containers do not exit, SIGKILL is sent. Configurable via terminationGracePeriodSeconds."
+    },
+    {
+      "question": "How do resource requests and limits work?",
+      "answer": "Requests are minimum guaranteed resources (used by scheduler). Limits are maximum allowed (enforced via cgroups). CPU throttles when exceeded, memory kills the container (OOMKilled)."
+    },
+    {
+      "question": "What are Pod probes?",
+      "answer": "Liveness probe (restart container if fails), Readiness probe (remove from Service if fails), Startup probe (delays liveness/readiness for slow-starting containers)."
+    },
+    {
+      "question": "How do containers in a Pod communicate?",
+      "answer": "Via localhost (shared network namespace) and shared volumes. They see each other as processes on the same machine."
+    },
+    {
+      "question": "What happens when a Pod is deleted?",
+      "answer": "preStop hook runs, SIGTERM sent, grace period wait, then SIGKILL. Pod is removed from etcd. Controllers detect the missing Pod and create a replacement."
+    },
+    {
+      "question": "What is the difference between a Pod and a Deployment?",
+      "answer": "A Pod is a single instance. A Deployment manages ReplicaSets for multiple Pod replicas with rolling updates and rollbacks. Direct Pods are not auto-replaced."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What is the smallest deployable unit in Kubernetes?",
+      "options": [
+        "Container",
+        "Pod",
+        "Deployment",
+        "Service"
+      ],
+      "answer": 1,
+      "explanation": "A Pod is the smallest and simplest Kubernetes object."
+    },
+    {
+      "question": "Which phase means a Pod is waiting for scheduling?",
+      "options": [
+        "Running",
+        "Pending",
+        "Succeeded",
+        "ContainerCreating"
+      ],
+      "answer": 1,
+      "explanation": "Pending means the Pod is accepted but not yet fully running (scheduling, image pull)."
+    },
+    {
+      "question": "What do containers in a Pod share?",
+      "options": [
+        "Nothing",
+        "Network namespace and optionally storage",
+        "Only env vars",
+        "Only CPU"
+      ],
+      "answer": 1,
+      "explanation": "Containers share the network namespace (IP, ports) and can share volumes."
+    },
+    {
+      "question": "What is the purpose of init containers?",
+      "options": [
+        "Run in parallel with main",
+        "Run before main for setup",
+        "Monitor main containers",
+        "Clean up after exit"
+      ],
+      "answer": 1,
+      "explanation": "Init containers run sequentially before main containers and must complete successfully."
+    },
+    {
+      "question": "What is the default termination grace period?",
+      "options": [
+        "10s",
+        "30s",
+        "60s",
+        "120s"
+      ],
+      "answer": 1,
+      "explanation": "Default grace period is 30 seconds between SIGTERM and SIGKILL."
+    },
+    {
+      "question": "Which restart policy is used for batch jobs?",
+      "options": [
+        "Always",
+        "OnFailure",
+        "Never",
+        "UnlessStopped"
+      ],
+      "answer": 1,
+      "explanation": "OnFailure restarts only on non-zero exit, appropriate for batch jobs."
+    },
+    {
+      "question": "What happens when memory limit is exceeded?",
+      "options": [
+        "Throttled",
+        "Container killed (OOMKilled)",
+        "Pod evicted",
+        "Container restarted"
+      ],
+      "answer": 1,
+      "explanation": "Memory is not compressible. The container is killed with OOMKilled status."
+    },
+    {
+      "question": "Which probe determines if a container should receive traffic?",
+      "options": [
+        "Liveness",
+        "Readiness",
+        "Startup",
+        "Health"
+      ],
+      "answer": 1,
+      "explanation": "Readiness probe controls whether the Pod gets traffic from Services."
+    },
+    {
+      "question": "What is the command to create a Pod from YAML?",
+      "options": [
+        "kubectl run",
+        "kubectl create -f",
+        "kubectl apply",
+        "kubectl start"
+      ],
+      "answer": 1,
+      "explanation": "kubectl create -f <file.yaml> creates resources from a manifest file."
+    },
+    {
+      "question": "What is the maximum containers in a Pod?",
+      "options": [
+        "1",
+        "10",
+        "No hard limit (practical limits apply)",
+        "100"
+      ],
+      "answer": 2,
+      "explanation": "No hard API limit exists, but practical limits depend on kubelet resources and port availability."
+    }
+  ],
+  "codeExamples": [
+    {
+      "title": "Create a Pod",
+      "useCase": "Deploy a simple nginx Pod",
+      "code": "kubectl run nginx-pod --image=nginx --restart=Never",
+      "description": "Creates a single Pod running nginx."
+    },
+    {
+      "title": "Get Pod Details",
+      "useCase": "Inspect Pod status",
+      "code": "kubectl get pods -o wide\nkubectl describe pod <pod-name>",
+      "description": "Shows Pod status, node, IP, and events."
+    },
+    {
+      "title": "View Pod Logs",
+      "useCase": "Debug application issues",
+      "code": "kubectl logs <pod-name> --tail=100 -f",
+      "description": "Streams last 100 log lines from the Pod."
+    },
+    {
+      "title": "Execute Command in Pod",
+      "useCase": "Interactive debugging",
+      "code": "kubectl exec -it <pod-name> -- /bin/sh",
+      "description": "Opens an interactive shell inside the container."
+    },
+    {
+      "title": "Delete a Pod",
+      "useCase": "Remove a Pod",
+      "code": "kubectl delete pod <pod-name>",
+      "description": "Gracefully deletes the Pod."
+    }
+  ],
+  "laymanDefinition": "A Pod is the smallest deployable unit in Kubernetes, wrapping one or more containers that share storage, network, and a runtime specification. Think of a Pod as a logical host for containers — they share the same IP, port space, and can communicate via localhost. Most commonly a Pod runs a single container, but multi-container Pods enable sidecar patterns where helper containers (logging, proxying) support the main application container.",
+  "diagramSvg": "<svg viewBox=\"0 0 500 280\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"280\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">Pod</text><rect x=\"20\" y=\"45\" width=\"460\" height=\"60\" rx=\"5\" fill=\"#e8f4f8\" stroke=\"#ccc\" stroke-width=\"1.5\"/><text x=\"250\" y=\"80\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Pod</text><text x=\"250\" y=\"155\" font-size=\"10\" fill=\"#555\" text-anchor=\"middle\">A Pod is the smallest and simplest Kubernetes obje</text><text x=\"250\" y=\"168\" font-size=\"10\" fill=\"#555\" text-anchor=\"middle\">ct, representing a single running process or group</text><text x=\"250\" y=\"181\" font-size=\"10\" fill=\"#555\" text-anchor=\"middle\"> of tightly coupled processes</text></svg>"
+};

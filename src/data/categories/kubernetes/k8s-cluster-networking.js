@@ -1,0 +1,202 @@
+export const k8s_cluster_networking = {
+  "id": "k8s-cluster-networking",
+  "title": "Cluster Networking",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 15,
+  "file": "k8s-cluster-networking.json",
+  "interviewAnswer": "Cluster networking connects all Pods, Services, and Nodes. Every Pod gets a unique IP and can communicate with any other Pod without NAT. Fundamental requirements: all Pods can communicate with all other Pods, all Nodes can communicate with all Pods (and vice versa), no NAT.",
+  "tldr": [
+    "Every Pod has a unique IP, all Pods communicate without NAT",
+    "CNI plugin implements the network (Calico, Flannel, Cilium)",
+    "kube-proxy handles Service-to-Pod routing",
+    "CoreDNS provides service discovery"
+  ],
+  "deepDive": [
+    {
+      "heading": "Kubernetes Networking Model",
+      "text": "Pods on same node: communicate via cbr0 bridge (CNI creates virtual ethernet pairs). Pods on different nodes: traffic routed between nodes via CNI overlay (VXLAN, IPIP) or BGP. Service traffic: kube-proxy translates ClusterIP:Port to Pod IP iptables rules."
+    },
+    {
+      "heading": "Network Requirements",
+      "text": "All nodes must have a route to every Pod IP (CNI handles this). No port mapping needed on hosts. Pod-to-Pod communication is direct IP. Node-to-Pod is direct. Services provide stable virtual IPs. Network Policies allow firewall rules."
+    },
+    {
+      "heading": "Common Use Cases",
+      "text": "Cluster Networking applies to build automation, continuous integration, test execution, deployment orchestration, and infrastructure management. Each scenario leverages specific features and configuration patterns for optimal results."
+    }
+  ],
+  "interviewQuestions": [
+    {
+      "question": "Kubernetes networking model?",
+      "answer": "Every Pod gets unique IP, all can communicate without NAT."
+    },
+    {
+      "question": "CNI role?",
+      "answer": "Implements Pod networking: IP allocation, routing between nodes."
+    },
+    {
+      "question": "kube-proxy role?",
+      "answer": "Implements Service ClusterIP routing via iptables/IPVS."
+    },
+    {
+      "question": "CoreDNS role?",
+      "answer": "Service discovery — resolves service names to ClusterIPs."
+    },
+    {
+      "question": "Cluster Networking — What tools integrate well with this?",
+      "answer": "Integration is possible through APIs, plugins, webhooks, and configuration files."
+    },
+    {
+      "question": "Cluster Networking — What are common troubleshooting steps?",
+      "answer": "Troubleshooting involves checking logs, verifying configuration, and testing incrementally."
+    },
+    {
+      "question": "Cluster Networking — What security considerations apply here?",
+      "answer": "Security considerations include access control, encryption of sensitive data, and audit logging."
+    },
+    {
+      "question": "Cluster Networking — What best practices should be followed?",
+      "answer": "Best practices include version control, automation, monitoring, and thorough documentation."
+    },
+    {
+      "question": "Cluster Networking — How does this affect team collaboration?",
+      "answer": "It supports collaboration through shared visibility, standardized processes, and clear workflows."
+    },
+    {
+      "question": "Cluster Networking — What metrics indicate successful implementation?",
+      "answer": "Key metrics include adoption rate, error reduction, build times, and team satisfaction scores."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "Pod IP scope?",
+      "options": [
+        "Node-local",
+        "Cluster-wide unique",
+        "Host-only"
+      ],
+      "answer": 1
+    },
+    {
+      "question": "CNI is?",
+      "options": [
+        "Optional",
+        "Required for Pod networking",
+        "Only for cloud"
+      ],
+      "answer": 1
+    },
+    {
+      "question": "Service routing implemented by?",
+      "options": [
+        "CNI",
+        "kube-proxy",
+        "CoreDNS"
+      ],
+      "answer": 1
+    },
+    {
+      "question": "NAT Pod-to-Pod?",
+      "options": [
+        "Required",
+        "No NAT",
+        "Optional"
+      ],
+      "answer": 1
+    },
+    {
+      "question": "Cluster Networking — How to ensure reliability?",
+      "options": [
+        "Automated testing and monitoring",
+        "Manual checks only",
+        "No testing",
+        "Reactive fixes"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing and monitoring ensure consistent reliability."
+    },
+    {
+      "question": "Cluster Networking — What helps team collaboration?",
+      "options": [
+        "Shared workflows and visibility",
+        "Isolated work",
+        "No documentation",
+        "Siloed tools"
+      ],
+      "answer": 0,
+      "explanation": "Shared workflows and visibility enable better collaboration."
+    },
+    {
+      "question": "Cluster Networking — What reduces errors most?",
+      "options": [
+        "Automation",
+        "Manual processes",
+        "Rushing",
+        "Bypassing reviews"
+      ],
+      "answer": 0,
+      "explanation": "Automation consistently eliminates human errors."
+    },
+    {
+      "question": "Cluster Networking — What improves speed?",
+      "options": [
+        "Parallel execution and caching",
+        "Serial execution",
+        "No optimization",
+        "Manual steps"
+      ],
+      "answer": 0,
+      "explanation": "Parallel execution and caching significantly improve speed."
+    },
+    {
+      "question": "Cluster Networking — What is key for monitoring?",
+      "options": [
+        "Metrics dashboards and alerts",
+        "No monitoring",
+        "Only error logs",
+        "Manual checks"
+      ],
+      "answer": 0,
+      "explanation": "Metrics dashboards and alerts provide actionable insights."
+    },
+    {
+      "question": "Cluster Networking — What ensures quality?",
+      "options": [
+        "Automated testing in pipeline",
+        "No testing",
+        "Only manual QA",
+        "Skipping code review"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing integrated into the pipeline ensures consistent quality."
+    }
+  ],
+  "codeExamples": [
+    {
+      "title": "Check Pod Networking",
+      "useCase": "Verify Pod IPs",
+      "code": "kubectl get pods -o wide",
+      "description": "Shows Pod IPs and nodes."
+    },
+    {
+      "title": "Test Pod Connectivity",
+      "useCase": "Verify cross-node",
+      "code": "kubectl exec pod-a -- ping <pod-b-ip>",
+      "description": "Tests Pod-to-Pod connectivity."
+    },
+    {
+      "title": "Check kube-proxy Mode",
+      "useCase": "View proxy mode",
+      "code": "kubectl get configmap kube-proxy -n kube-system -o yaml | grep mode",
+      "description": "Shows iptables or IPVS mode."
+    },
+    {
+      "title": "Integration Pattern",
+      "useCase": "Tool integration",
+      "code": "# Integration with other tools\n# Shows how components connect",
+      "description": "Integration example with related tools."
+    }
+  ],
+  "laymanDefinition": "Cluster networking connects all Pods, Services, and Nodes. Every Pod gets a unique IP and can communicate with any other Pod without NAT. Fundamental requirements: all Pods can communicate with all other Pods, all Nodes can communicate with all Pods (and vice versa), no NAT.",
+  "diagramSvg": "<svg viewBox=\"0 0 500 280\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"280\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">Cluster Networking</text><rect x=\"20\" y=\"45\" width=\"460\" height=\"60\" rx=\"5\" fill=\"#e8f4f8\" stroke=\"#ccc\" stroke-width=\"1.5\"/><text x=\"250\" y=\"80\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Cluster Networking</text><text x=\"250\" y=\"155\" font-size=\"10\" fill=\"#555\" text-anchor=\"middle\">Every Pod has a unique IP, all Pods communicate wi</text><text x=\"250\" y=\"168\" font-size=\"10\" fill=\"#555\" text-anchor=\"middle\">thout NAT</text></svg>"
+};

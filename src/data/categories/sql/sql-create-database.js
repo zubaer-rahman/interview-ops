@@ -1,0 +1,179 @@
+export const sql_create_database = {
+  "id": "sql-create-database",
+  "title": "CREATE & DROP Database",
+  "difficulty": "beginner",
+  "estimatedMinutes": 15,
+  "tldr": [
+    "CREATE DATABASE creates a new database. DROP DATABASE permanently deletes a database and all its data.",
+    "Use IF NOT EXISTS / IF EXISTS to avoid errors when database already exists or does not exist.",
+    "Database naming conventions: lowercase, underscores, meaningful names. Avoid SQL reserved words.",
+    "PostgreSQL uses CREATE DATABASE with encoding, locale, and template options. MySQL uses simpler syntax."
+  ],
+  "laymanDefinition": "Creating a database is like setting up a new filing cabinet. Dropping it is like throwing that cabinet into a shredder — everything inside is gone forever.",
+  "deepDive": [
+    {
+      "heading": "CREATE DATABASE Syntax",
+      "text": "PostgreSQL: CREATE DATABASE dbname WITH ENCODING \\'UTF8\\' LC_COLLATE \\'en_US.UTF-8\\'. MySQL: CREATE DATABASE dbname CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci. Most basic: CREATE DATABASE dbname;"
+    },
+    {
+      "heading": "DROP DATABASE",
+      "text": "DROP DATABASE dbname; — permanently deletes the database. Cannot be undone. All tables, data, indexes, views, functions dropped. PostgreSQL requires you to disconnect all connections first with pg_stat_activity."
+    },
+    {
+      "heading": "IF EXISTS / IF NOT EXISTS",
+      "text": "CREATE DATABASE IF NOT EXISTS dbname; — creates only if not existing, skips without error. DROP DATABASE IF EXISTS dbname; — drops only if exists, skips without error. Prevents script failures."
+    },
+    {
+      "heading": "Database Templates (PostgreSQL)",
+      "text": "PostgreSQL creates databases from a template. Default: template1. You can create custom templates. Options include encoding, locale, and collation settings that are copied from the template."
+    },
+    {
+      "heading": "Connection Management",
+      "text": "Cannot drop a database while connections exist. PostgreSQL: use pg_terminate_backend() or ALTER DATABASE dbname ALLOW_CONNECTIONS = false first. MySQL: DROP DATABASE works while connected to another database."
+    }
+  ],
+  "interviewAnswer": "Creating and dropping databases are foundational DDL operations. Always use IF EXISTS / IF NOT EXISTS in scripts and be extremely careful with DROP.",
+  "interviewQuestions": [
+    {
+      "question": "How do you create a database in PostgreSQL?",
+      "answer": "CREATE DATABASE dbname; Or with options: CREATE DATABASE dbname ENCODING \\'UTF8\\'."
+    },
+    {
+      "question": "What does DROP DATABASE do?",
+      "answer": "Permanently deletes the database and all its data. Cannot be recovered without a backup."
+    },
+    {
+      "question": "What is IF NOT EXISTS?",
+      "answer": "A clause that prevents an error if the database already exists. Creates only if not present."
+    },
+    {
+      "question": "Can you drop a database with active connections?",
+      "answer": "No. PostgreSQL requires terminating connections first. MySQL allows dropping while on a different database."
+    },
+    {
+      "question": "What is a template database?",
+      "answer": "PostgreSQL creates databases from a template (default template1). Templates can have custom settings."
+    },
+    {
+      "question": "How do you list databases?",
+      "answer": "PostgreSQL: \\l or SELECT datname FROM pg_database. MySQL: SHOW DATABASES."
+    },
+    {
+      "question": "What naming conventions are recommended?",
+      "answer": "Lowercase, underscores, meaningful names. Avoid SQL reserved words (SELECT, TABLE, etc.)."
+    },
+    {
+      "question": "How do you switch databases?",
+      "answer": "PostgreSQL: \\c dbname. MySQL: USE dbname."
+    },
+    {
+      "question": "What is the maximum database name length?",
+      "answer": "63 characters by default in PostgreSQL (can be increased). MySQL allows up to 64 characters."
+    },
+    {
+      "question": "How do you create a database with a specific encoding?",
+      "answer": "PostgreSQL: CREATE DATABASE dbname ENCODING \\'UTF8\\' LC_COLLATE \\'en_US.UTF-8\\'. MySQL: CREATE DATABASE dbname CHARACTER SET utf8mb4."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"300\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">CREATE & DROP Database</text><rect x=\"10\" y=\"40\" width=\"130\" height=\"30\" rx=\"5\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1.5\"/><text x=\"75\" y=\"56\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">CREATE DATABASE</text><text x=\"75\" y=\"64\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">New Database</text><line x1=\"140\" y1=\"55\" x2=\"170\" y2=\"55\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"180\" y=\"40\" width=\"130\" height=\"30\" rx=\"5\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1.5\"/><text x=\"245\" y=\"56\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">IF NOT EXISTS</text><text x=\"245\" y=\"64\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Skip if exists</text><line x1=\"310\" y1=\"55\" x2=\"340\" y2=\"55\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"350\" y=\"40\" width=\"130\" height=\"30\" rx=\"5\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1.5\"/><text x=\"415\" y=\"56\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Ready</text><text x=\"415\" y=\"64\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Use Database</text><line x1=\"180\" y1=\"70\" x2=\"180\" y2=\"100\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"180\" y=\"105\" width=\"130\" height=\"30\" rx=\"5\" fill=\"#dc3545\" stroke=\"#dc3545\" stroke-width=\"1.5\"/><text x=\"245\" y=\"121\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">DROP DATABASE</text><text x=\"245\" y=\"129\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Permanent Delete</text><text x=\"240\" y=\"170\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">CREATE/DROP Database: Foundational DDL. Handle wit</text><text x=\"240\" y=\"182\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">h care.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "Create Basic Database",
+      "useCase": "Simple creation.",
+      "code": "CREATE DATABASE company;",
+      "description": "Creates a database named company with default settings."
+    },
+    {
+      "title": "Create with Options (PostgreSQL)",
+      "useCase": "Specify encoding and locale.",
+      "code": "CREATE DATABASE company\n  ENCODING 'UTF8'\n  LC_COLLATE 'en_US.UTF-8'\n  LC_CTYPE 'en_US.UTF-8';",
+      "description": "Creates database with specific encoding and locale settings."
+    },
+    {
+      "title": "Drop with IF EXISTS",
+      "useCase": "Safe dropping.",
+      "code": "DROP DATABASE IF EXISTS old_database;",
+      "description": "Drops only if exists, prevents error."
+    },
+    {
+      "title": "List and Connect",
+      "useCase": "PostgreSQL commands.",
+      "code": "\\l -- list all databases\n\\c company -- connect to company database\n\n-- SQL equivalent:\nSELECT datname FROM pg_database;",
+      "description": "Lists databases and connects to one in PostgreSQL."
+    },
+    {
+      "title": "MySQL Version",
+      "useCase": "MySQL-specific syntax.",
+      "code": "CREATE DATABASE IF NOT EXISTS company\n  CHARACTER SET utf8mb4\n  COLLATE utf8mb4_unicode_ci;\nSHOW DATABASES;\nUSE company;",
+      "description": "MySQL version with character set and collation."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What does CREATE DATABASE do?",
+      "options": [
+        "Creates a table",
+        "Creates a new database",
+        "Creates a user",
+        "Creates a schema"
+      ],
+      "answer": 1,
+      "explanation": "CREATE DATABASE creates a new database."
+    },
+    {
+      "question": "What does DROP DATABASE do?",
+      "options": [
+        "Removes all tables",
+        "Permanently deletes the database",
+        "Disconnects users",
+        "Archives the data"
+      ],
+      "answer": 1,
+      "explanation": "DROP DATABASE permanently deletes the entire database."
+    },
+    {
+      "question": "What does IF NOT EXISTS prevent?",
+      "options": [
+        "Duplicate data",
+        "Error if DB already exists",
+        "SQL injection",
+        "Data loss"
+      ],
+      "answer": 1,
+      "explanation": "IF NOT EXISTS prevents error when database already exists."
+    },
+    {
+      "question": "What command lists databases in PostgreSQL?",
+      "options": [
+        "SHOW DATABASES",
+        "\\l",
+        "LIST DB",
+        "SELECT databases"
+      ],
+      "answer": 1,
+      "explanation": "\\l lists databases in PostgreSQL."
+    },
+    {
+      "question": "What is the default PostgreSQL template database?",
+      "options": [
+        "template0",
+        "template1",
+        "postgres",
+        "default"
+      ],
+      "answer": 1,
+      "explanation": "template1 is the default template database."
+    },
+    {
+      "question": "What is the max database name length in PostgreSQL?",
+      "options": [
+        "32",
+        "63",
+        "128",
+        "256"
+      ],
+      "answer": 1,
+      "explanation": "63 characters is the default maximum name length."
+    }
+  ]
+};

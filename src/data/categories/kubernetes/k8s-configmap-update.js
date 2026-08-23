@@ -1,0 +1,202 @@
+export const k8s_configmap_update = {
+  "id": "k8s-configmap-update",
+  "title": "Update ConfigMap",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 10,
+  "file": "k8s-configmap-update.json",
+  "interviewAnswer": "ConfigMaps can be updated via edit, patch, or apply (unless immutable). Volume-mount consumers auto-update (~1 min). Env var consumers require Pod restart. Rolling restart picks up new configs.",
+  "tldr": [
+    "kubectl edit, patch, apply to update data",
+    "Immutable ConfigMaps reject all modifications",
+    "Volume mounts auto-update (~1 min kubelet sync)",
+    "Env vars static — require Pod recreation"
+  ],
+  "deepDive": [
+    {
+      "heading": "Update Methods",
+      "text": "kubectl edit configmap, kubectl patch configmap -p '{\"data\":{\"key\":\"val\"}}', kubectl apply. For volume mounts, content updates after kubelet sync period."
+    },
+    {
+      "heading": "Triggering Rollout",
+      "text": "kubectl rollout restart deployment restarts Pods for env var updates. ConfigMap changes alone do NOT trigger rollouts. Tools like Reloader (stakater) auto-roll on ConfigMap changes."
+    },
+    {
+      "heading": "Common Use Cases",
+      "text": "Update ConfigMap applies to build automation, continuous integration, test execution, deployment orchestration, and infrastructure management. Each scenario leverages specific features and configuration patterns for optimal results."
+    }
+  ],
+  "interviewQuestions": [
+    {
+      "question": "How to update a ConfigMap?",
+      "answer": "kubectl edit, patch, or create --dry-run -o yaml | apply."
+    },
+    {
+      "question": "Env vars updated?",
+      "answer": "No. Static. Pods must be restarted."
+    },
+    {
+      "question": "Volume mount updates?",
+      "answer": "Yes, with kubelet sync delay (~1 min)."
+    },
+    {
+      "question": "Restart Pods for changes?",
+      "answer": "kubectl rollout restart deployment/<name>."
+    },
+    {
+      "question": "Update ConfigMap — What tools integrate well with this?",
+      "answer": "Integration is possible through APIs, plugins, webhooks, and configuration files."
+    },
+    {
+      "question": "Update ConfigMap — What are common troubleshooting steps?",
+      "answer": "Troubleshooting involves checking logs, verifying configuration, and testing incrementally."
+    },
+    {
+      "question": "Update ConfigMap — What security considerations apply here?",
+      "answer": "Security considerations include access control, encryption of sensitive data, and audit logging."
+    },
+    {
+      "question": "Update ConfigMap — What best practices should be followed?",
+      "answer": "Best practices include version control, automation, monitoring, and thorough documentation."
+    },
+    {
+      "question": "Update ConfigMap — How does this affect team collaboration?",
+      "answer": "It supports collaboration through shared visibility, standardized processes, and clear workflows."
+    },
+    {
+      "question": "Update ConfigMap — What metrics indicate successful implementation?",
+      "answer": "Key metrics include adoption rate, error reduction, build times, and team satisfaction scores."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "Immutable ConfigMap?",
+      "options": [
+        "Can be updated",
+        "Cannot be updated",
+        "Updated on restart"
+      ],
+      "answer": 1
+    },
+    {
+      "question": "Volume mount update delay?",
+      "options": [
+        "Instant",
+        "~1 min",
+        "~5 min"
+      ],
+      "answer": 1
+    },
+    {
+      "question": "Rollout restart command?",
+      "options": [
+        "kubectl restart",
+        "kubectl rollout restart",
+        "kubectl redeploy"
+      ],
+      "answer": 1
+    },
+    {
+      "question": "Env var update requires?",
+      "options": [
+        "Pod restart",
+        "kubectl sync",
+        "kubelet restart"
+      ],
+      "answer": 0
+    },
+    {
+      "question": "Update ConfigMap — How to ensure reliability?",
+      "options": [
+        "Automated testing and monitoring",
+        "Manual checks only",
+        "No testing",
+        "Reactive fixes"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing and monitoring ensure consistent reliability."
+    },
+    {
+      "question": "Update ConfigMap — What helps team collaboration?",
+      "options": [
+        "Shared workflows and visibility",
+        "Isolated work",
+        "No documentation",
+        "Siloed tools"
+      ],
+      "answer": 0,
+      "explanation": "Shared workflows and visibility enable better collaboration."
+    },
+    {
+      "question": "Update ConfigMap — What reduces errors most?",
+      "options": [
+        "Automation",
+        "Manual processes",
+        "Rushing",
+        "Bypassing reviews"
+      ],
+      "answer": 0,
+      "explanation": "Automation consistently eliminates human errors."
+    },
+    {
+      "question": "Update ConfigMap — What improves speed?",
+      "options": [
+        "Parallel execution and caching",
+        "Serial execution",
+        "No optimization",
+        "Manual steps"
+      ],
+      "answer": 0,
+      "explanation": "Parallel execution and caching significantly improve speed."
+    },
+    {
+      "question": "Update ConfigMap — What is key for monitoring?",
+      "options": [
+        "Metrics dashboards and alerts",
+        "No monitoring",
+        "Only error logs",
+        "Manual checks"
+      ],
+      "answer": 0,
+      "explanation": "Metrics dashboards and alerts provide actionable insights."
+    },
+    {
+      "question": "Update ConfigMap — What ensures quality?",
+      "options": [
+        "Automated testing in pipeline",
+        "No testing",
+        "Only manual QA",
+        "Skipping code review"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing integrated into the pipeline ensures consistent quality."
+    }
+  ],
+  "codeExamples": [
+    {
+      "title": "Edit ConfigMap",
+      "useCase": "Modify value",
+      "code": "kubectl edit configmap app-config",
+      "description": "Opens editor to modify."
+    },
+    {
+      "title": "Patch ConfigMap",
+      "useCase": "Update key-value",
+      "code": "kubectl patch configmap app-config -p '{\"data\":{\"LOG_LEVEL\":\"debug\"}}'",
+      "description": "Patches LOG_LEVEL to debug."
+    },
+    {
+      "title": "Rollout Restart",
+      "useCase": "Pick up changes",
+      "code": "kubectl rollout restart deployment/web",
+      "description": "Restarts Pods for env var changes."
+    },
+    {
+      "title": "Integration Pattern",
+      "useCase": "Tool integration",
+      "code": "# Integration with other tools\n# Shows how components connect",
+      "description": "Integration example with related tools."
+    }
+  ],
+  "laymanDefinition": "ConfigMaps can be updated via edit, patch, or apply (unless immutable). Volume-mount consumers auto-update (~1 min). Env var consumers require Pod restart. Rolling restart picks up new configs.",
+  "diagramSvg": "<svg viewBox=\"0 0 500 280\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"280\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">Update ConfigMap</text><rect x=\"20\" y=\"45\" width=\"460\" height=\"60\" rx=\"5\" fill=\"#e8f4f8\" stroke=\"#ccc\" stroke-width=\"1.5\"/><text x=\"250\" y=\"80\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Update ConfigMap</text><text x=\"250\" y=\"155\" font-size=\"10\" fill=\"#555\" text-anchor=\"middle\">kubectl edit, patch, apply to update data</text></svg>"
+};

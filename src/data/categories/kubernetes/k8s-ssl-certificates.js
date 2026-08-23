@@ -1,0 +1,202 @@
+export const k8s_ssl_certificates = {
+  "id": "k8s-ssl-certificates",
+  "title": "SSL Certificates",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 10,
+  "file": "k8s-ssl-certificates.json",
+  "interviewAnswer": "SSL certificate management in Kubernetes involves creation, storage, renewal, and revocation. Use TLS Secrets for storage, cert-manager for automation, and proper certificate chain configuration.",
+  "tldr": [
+    "Stored as kubernetes.io/tls Secrets (tls.crt + tls.key)",
+    "cert-manager automates Let's Encrypt (ACME protocol)",
+    "ClusterIssuer for cluster-wide certificate issuers",
+    "Certificates auto-renew before expiry (30 days default)"
+  ],
+  "deepDive": [
+    {
+      "heading": "cert-manager Issuers",
+      "text": "Issuer (namespace-scoped) vs ClusterIssuer (cluster-wide). ACME issuers: Let's Encrypt (staging/prod), HTTP01 (HTTP challenge), DNS01 (DNS record challenge). Self-signed, CA, Vault issuers also supported."
+    },
+    {
+      "heading": "Certificate Resource",
+      "text": "Certificate CRD: secretName, issuerRef, commonName, dnsNames, duration, renewBefore. cert-manager watches, provisions, stores as TLS Secret, and renews before expiry."
+    },
+    {
+      "heading": "Common Use Cases",
+      "text": "SSL Certificates applies to build automation, continuous integration, test execution, deployment orchestration, and infrastructure management. Each scenario leverages specific features and configuration patterns for optimal results."
+    }
+  ],
+  "interviewQuestions": [
+    {
+      "question": "How are SSL certs stored?",
+      "answer": "As kubernetes.io/tls Secrets with tls.crt and tls.key."
+    },
+    {
+      "question": "What automates certificates?",
+      "answer": "cert-manager with Issuer/ClusterIssuer and Certificate CRDs."
+    },
+    {
+      "question": "cert-manager issuer types?",
+      "answer": "ACME (Let's Encrypt), CA, SelfSigned, Vault."
+    },
+    {
+      "question": "Renewal window?",
+      "answer": "30 days before expiry (renewBefore field in Certificate)."
+    },
+    {
+      "question": "SSL Certificates — What tools integrate well with this?",
+      "answer": "Integration is possible through APIs, plugins, webhooks, and configuration files."
+    },
+    {
+      "question": "SSL Certificates — What are common troubleshooting steps?",
+      "answer": "Troubleshooting involves checking logs, verifying configuration, and testing incrementally."
+    },
+    {
+      "question": "SSL Certificates — What security considerations apply here?",
+      "answer": "Security considerations include access control, encryption of sensitive data, and audit logging."
+    },
+    {
+      "question": "SSL Certificates — What best practices should be followed?",
+      "answer": "Best practices include version control, automation, monitoring, and thorough documentation."
+    },
+    {
+      "question": "SSL Certificates — How does this affect team collaboration?",
+      "answer": "It supports collaboration through shared visibility, standardized processes, and clear workflows."
+    },
+    {
+      "question": "SSL Certificates — What metrics indicate successful implementation?",
+      "answer": "Key metrics include adoption rate, error reduction, build times, and team satisfaction scores."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "cert-manager CRD for issuer?",
+      "options": [
+        "Issuer",
+        "ClusterIssuer",
+        "Both"
+      ],
+      "answer": 2
+    },
+    {
+      "question": "ACME challenge types?",
+      "options": [
+        "HTTP01,DNS01",
+        "TLS01,HTTP01",
+        "DNS01,TLS01"
+      ],
+      "answer": 0
+    },
+    {
+      "question": "Certificate field for names?",
+      "options": [
+        "dnsNames",
+        "domains",
+        "hosts"
+      ],
+      "answer": 0
+    },
+    {
+      "question": "ClusterIssuer scope?",
+      "options": [
+        "Namespace",
+        "Cluster-wide",
+        "Region"
+      ],
+      "answer": 1
+    },
+    {
+      "question": "SSL Certificates — How to ensure reliability?",
+      "options": [
+        "Automated testing and monitoring",
+        "Manual checks only",
+        "No testing",
+        "Reactive fixes"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing and monitoring ensure consistent reliability."
+    },
+    {
+      "question": "SSL Certificates — What helps team collaboration?",
+      "options": [
+        "Shared workflows and visibility",
+        "Isolated work",
+        "No documentation",
+        "Siloed tools"
+      ],
+      "answer": 0,
+      "explanation": "Shared workflows and visibility enable better collaboration."
+    },
+    {
+      "question": "SSL Certificates — What reduces errors most?",
+      "options": [
+        "Automation",
+        "Manual processes",
+        "Rushing",
+        "Bypassing reviews"
+      ],
+      "answer": 0,
+      "explanation": "Automation consistently eliminates human errors."
+    },
+    {
+      "question": "SSL Certificates — What improves speed?",
+      "options": [
+        "Parallel execution and caching",
+        "Serial execution",
+        "No optimization",
+        "Manual steps"
+      ],
+      "answer": 0,
+      "explanation": "Parallel execution and caching significantly improve speed."
+    },
+    {
+      "question": "SSL Certificates — What is key for monitoring?",
+      "options": [
+        "Metrics dashboards and alerts",
+        "No monitoring",
+        "Only error logs",
+        "Manual checks"
+      ],
+      "answer": 0,
+      "explanation": "Metrics dashboards and alerts provide actionable insights."
+    },
+    {
+      "question": "SSL Certificates — What ensures quality?",
+      "options": [
+        "Automated testing in pipeline",
+        "No testing",
+        "Only manual QA",
+        "Skipping code review"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing integrated into the pipeline ensures consistent quality."
+    }
+  ],
+  "codeExamples": [
+    {
+      "title": "Create ClusterIssuer",
+      "useCase": "Let's Encrypt prod issuer",
+      "code": "kubectl apply -f cluster-issuer.yaml",
+      "description": "Creates Let's Encrypt ClusterIssuer."
+    },
+    {
+      "title": "Create Certificate",
+      "useCase": "Request cert from issuer",
+      "code": "kubectl apply -f certificate.yaml",
+      "description": "Requests and stores TLS Secret."
+    },
+    {
+      "title": "Advanced Configuration",
+      "useCase": "Complex scenario",
+      "code": "# Advanced pattern for complex scenarios\n# Includes error handling",
+      "description": "Advanced configuration example."
+    },
+    {
+      "title": "Integration Pattern",
+      "useCase": "Tool integration",
+      "code": "# Integration with other tools\n# Shows how components connect",
+      "description": "Integration example with related tools."
+    }
+  ],
+  "laymanDefinition": "SSL certificate management in Kubernetes involves creation, storage, renewal, and revocation. Use TLS Secrets for storage, cert-manager for automation, and proper certificate chain configuration.",
+  "diagramSvg": "<svg viewBox=\"0 0 500 280\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"280\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">SSL Certificates</text><rect x=\"20\" y=\"45\" width=\"460\" height=\"60\" rx=\"5\" fill=\"#e8f4f8\" stroke=\"#ccc\" stroke-width=\"1.5\"/><text x=\"250\" y=\"80\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">SSL Certificates</text><text x=\"250\" y=\"155\" font-size=\"10\" fill=\"#555\" text-anchor=\"middle\">Stored as kubernetes.io/tls Secrets (tls.crt + tls</text><text x=\"250\" y=\"168\" font-size=\"10\" fill=\"#555\" text-anchor=\"middle\">.key)</text></svg>"
+};

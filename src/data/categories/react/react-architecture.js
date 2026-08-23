@@ -1,0 +1,167 @@
+export const react_architecture = {
+  "id": "react-architecture",
+  "title": "React SPA Architecture",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 25,
+  "tldr": [
+    "React SPAs load a single HTML page and dynamically update content via JavaScript, avoiding full page reloads.",
+    "The architecture uses a component tree, virtual DOM, and a unidirectional data flow (parent to child via props).",
+    "Client-side routing (e.g., React Router) manages URL changes and renders the correct component tree without server round-trips.",
+    "State management solutions (Context API, Redux) handle cross-component data sharing across the SPA."
+  ],
+  "laymanDefinition": "Think of a React SPA like a multi-room museum inside a single building. When you enter, you get a map (the initial HTML). Instead of leaving the building to see each new exhibit, you just walk to a different room.",
+  "deepDive": [
+    {
+      "heading": "Single HTML Shell",
+      "text": "The server sends a minimal HTML file with a single root <code>&lt;div id=\"root\"&gt;&lt;/div&gt;</code>. React renders the entire UI into this div."
+    },
+    {
+      "heading": "Component Tree Architecture",
+      "text": "React applications are structured as a tree of components. Data flows down via props, and actions flow up via callbacks."
+    },
+    {
+      "heading": "Client-Side Routing",
+      "text": "React Router enables navigation without page reloads using the History API."
+    },
+    {
+      "heading": "State Management Layer",
+      "text": "For complex SPAs with global state, libraries like Redux or Zustand provide a centralized store."
+    },
+    {
+      "heading": "Build & Deployment Considerations",
+      "text": "Critical: configure the server to serve index.html for all routes (fallback) so deep links work on refresh."
+    }
+  ],
+  "interviewAnswer": "React SPA architecture centers on a single HTML host page where React renders a component tree into a root DOM node. Client-side routing (React Router) intercepts URL changes and swaps components without full page reloads.",
+  "interviewQuestions": [
+    {
+      "question": "What is a Single Page Application (SPA)?",
+      "answer": "An SPA loads a single HTML page and dynamically updates content via JavaScript. React implements this by rendering a component tree into a root DOM element."
+    },
+    {
+      "question": "How does client-side routing work?",
+      "answer": "React Router uses the History API (pushState, replaceState) and a popstate event listener to update the URL and render matching components."
+    },
+    {
+      "question": "Advantages and disadvantages of SPA?",
+      "answer": "Advantages: faster navigation, smoother UX, reduced server load. Disadvantages: larger initial bundle, SEO challenges, JavaScript dependency."
+    },
+    {
+      "question": "Explain unidirectional data flow.",
+      "answer": "Data flows from parent to child through props. Children use callback functions to communicate upward."
+    },
+    {
+      "question": "How do you handle deep linking?",
+      "answer": "The server must serve index.html for all routes (catch-all fallback). React Router renders the correct component on initial load."
+    },
+    {
+      "question": "What is code splitting?",
+      "answer": "Dividing the bundle into smaller chunks loaded on demand. React.lazy() and Suspense enable component-level splitting."
+    },
+    {
+      "question": "Compare SSR vs CSR.",
+      "answer": "CSR renders in browser after JS loads. SSR renders HTML on server, sending a fully populated page for better SEO."
+    },
+    {
+      "question": "How to manage auth state across a SPA?",
+      "answer": "Store tokens in localStorage or cookies, sync with global state on app init. Use protected route wrappers."
+    },
+    {
+      "question": "Role of a bundler in a React SPA?",
+      "answer": "Bundles source code (JSX, ES modules, CSS) into optimized static files handling transpilation, code splitting, and tree shaking."
+    },
+    {
+      "question": "Explain the 'root' div concept.",
+      "answer": "The HTML shell has &lt;div id=\"root\"&gt;. ReactDOM.createRoot().render() attaches the component tree to this element."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 700 480\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:700px;\"><defs><marker id=\"arrB\" markerWidth=\"10\" markerHeight=\"7\" refX=\"10\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,10 3.5,0 7\" fill=\"#6c9fff\"/></marker></defs><rect x=\"10\" y=\"10\" width=\"680\" height=\"460\" rx=\"10\" fill=\"var(--bg-card)\" stroke=\"var(--border)\" stroke-width=\"1\"/><text x=\"350\" y=\"38\" text-anchor=\"middle\" fill=\"#e8eaed\" font-size=\"14\" font-weight=\"bold\">React SPA Architecture</text><rect x=\"180\" y=\"55\" width=\"340\" height=\"50\" rx=\"6\" fill=\"#1a1d28\" stroke=\"#6c9fff\" stroke-width=\"1.5\"/><text x=\"350\" y=\"78\" text-anchor=\"middle\" fill=\"#6c9fff\" font-size=\"12\" font-weight=\"bold\">&lt;div id=\"root\"&gt; - HTML Shell</text><text x=\"350\" y=\"95\" text-anchor=\"middle\" fill=\"#9aa0b0\" font-size=\"10\">Single HTML page served by server</text><line x1=\"350\" y1=\"105\" x2=\"350\" y2=\"130\" stroke=\"#34d399\" stroke-width=\"2\" marker-end=\"url(#arrB)\"/><rect x=\"180\" y=\"130\" width=\"340\" height=\"40\" rx=\"6\" fill=\"#1a1d28\" stroke=\"#34d399\" stroke-width=\"1.5\"/><text x=\"350\" y=\"155\" text-anchor=\"middle\" fill=\"#34d399\" font-size=\"12\" font-weight=\"bold\">ReactDOM.createRoot().render(&lt;App/&gt;)</text><line x1=\"350\" y1=\"170\" x2=\"350\" y2=\"195\" stroke=\"#fbbf24\" stroke-width=\"2\" marker-end=\"url(#arrB)\"/><rect x=\"60\" y=\"195\" width=\"580\" height=\"60\" rx=\"6\" fill=\"#1a1d28\" stroke=\"#fbbf24\" stroke-width=\"1.5\"/><text x=\"350\" y=\"218\" text-anchor=\"middle\" fill=\"#fbbf24\" font-size=\"12\" font-weight=\"bold\">Component Tree: App &gt; Header / Sidebar / Main / Footer</text><line x1=\"350\" y1=\"255\" x2=\"350\" y2=\"280\" stroke=\"#f87171\" stroke-width=\"2\" marker-end=\"url(#arrB)\"/><rect x=\"60\" y=\"280\" width=\"580\" height=\"50\" rx=\"6\" fill=\"#1a1d28\" stroke=\"#f87171\" stroke-width=\"1.5\"/><text x=\"350\" y=\"303\" text-anchor=\"middle\" fill=\"#f87171\" font-size=\"12\" font-weight=\"bold\">React Router: /home, /users, /products, /settings</text><line x1=\"350\" y1=\"330\" x2=\"350\" y2=\"355\" stroke=\"#e5c07b\" stroke-width=\"2\" marker-end=\"url(#arrB)\"/><rect x=\"100\" y=\"355\" width=\"500\" height=\"50\" rx=\"6\" fill=\"#1a1d28\" stroke=\"#e5c07b\" stroke-width=\"1.5\"/><text x=\"350\" y=\"378\" text-anchor=\"middle\" fill=\"#e5c07b\" font-size=\"12\" font-weight=\"bold\">State Layer: Context API / Redux / Zustand</text><line x1=\"350\" y1=\"405\" x2=\"350\" y2=\"430\" stroke=\"#98c379\" stroke-width=\"2\" marker-end=\"url(#arrB)\"/><rect x=\"180\" y=\"430\" width=\"340\" height=\"30\" rx=\"6\" fill=\"#2a2f45\" stroke=\"#98c379\" stroke-width=\"1\"/><text x=\"350\" y=\"450\" text-anchor=\"middle\" fill=\"#98c379\" font-size=\"11\" font-weight=\"bold\">API Calls: fetch / axios</text></svg>",
+  "codeExamples": [
+    {
+      "title": "Basic SPA Structure with Router",
+      "useCase": "Application Shell",
+      "code": "import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';\nfunction App() {\n  return (\n    <BrowserRouter>\n      <nav><Link to=\"/\">Home</Link><Link to=\"/users\">Users</Link></nav>\n      <Routes>\n        <Route path=\"/\" element={<Home />} />\n        <Route path=\"/users\" element={<Users />} />\n      </Routes>\n    </BrowserRouter>\n  );\n}\nReactDOM.createRoot(document.getElementById('root')).render(<App />);",
+      "description": "BrowserRouter wraps the app. Routes define which component renders for each path."
+    },
+    {
+      "title": "API Fetching with Loading State",
+      "useCase": "Data Integration",
+      "code": "function Users() {\n  const [users, setUsers] = useState([]);\n  const [loading, setLoading] = useState(true);\n  useEffect(() => {\n    fetch('/api/users').then(res => res.json()).then(data => {\n      setUsers(data);\n      setLoading(false);\n    });\n  }, []);\n  if (loading) return <div>Loading...</div>;\n  return <ul>{users.map(u => <li key={u.id}>{u.name}</li>)}</ul>;\n}",
+      "description": "Fetch data on mount, show loading state, then render."
+    },
+    {
+      "title": "Protected Route",
+      "useCase": "Auth Guard",
+      "code": "function PrivateRoute({ children }) {\n  const { user } = useContext(AuthContext);\n  if (!user) return <Navigate to=\"/login\" replace />;\n  return children;\n}",
+      "description": "Checks auth state and redirects if not logged in."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What is a Single Page Application?",
+      "options": [
+        "Multiple HTML pages pre-rendered",
+        "Single HTML page updates dynamically via JS",
+        "No routing used",
+        "All server-side rendering"
+      ],
+      "answer": 1,
+      "explanation": "An SPA loads one HTML page and dynamically rewrites content."
+    },
+    {
+      "question": "How does client-side routing work?",
+      "options": [
+        "Server redirects",
+        "History API + matching components",
+        "Hidden iframe",
+        "Hash fragments only"
+      ],
+      "answer": 1,
+      "explanation": "React Router uses the History API."
+    },
+    {
+      "question": "What server config is needed for deep linking?",
+      "options": [
+        "None",
+        "Serve index.html for all routes",
+        "Redirect to 404",
+        "Each route needs its own HTML"
+      ],
+      "answer": 1,
+      "explanation": "Without fallback, server returns 404 for non-root paths."
+    },
+    {
+      "question": "What is a disadvantage of SPAs?",
+      "options": [
+        "Reduced server load",
+        "Larger initial bundle",
+        "Faster navigation",
+        "Desktop-like UX"
+      ],
+      "answer": 1,
+      "explanation": "All app code must download before first render."
+    },
+    {
+      "question": "What is code splitting?",
+      "options": [
+        "Split code into repos",
+        "Load chunks on demand",
+        "Split components into apps",
+        "Remove libraries"
+      ],
+      "answer": 1,
+      "explanation": "Reduces initial bundle size."
+    },
+    {
+      "question": "Where to store auth tokens for persistence?",
+      "options": [
+        "Local component state",
+        "localStorage/cookies synced with global state",
+        "Redux only",
+        "Text file on server"
+      ],
+      "answer": 1,
+      "explanation": "State is lost on refresh; persist in localStorage."
+    }
+  ]
+};

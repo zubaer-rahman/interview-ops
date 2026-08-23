@@ -1,0 +1,179 @@
+export const sql_lateral_joins = {
+  "id": "sql-lateral-joins",
+  "title": "LATERAL Joins",
+  "difficulty": "advanced",
+  "estimatedMinutes": 25,
+  "tldr": [
+    "LATERAL allows a subquery in the FROM clause to reference columns from preceding FROM items, enabling row-by-row subquery execution.",
+    "Without LATERAL, subqueries in FROM execute independently. With LATERAL, they can reference columns from tables/CTEs listed before them.",
+    "LATERAL is powerful for: top-N per group, applying functions per row, and complex joins that depend on outer row values.",
+    "PostgreSQL, Oracle, and SQL Server support LATERAL. MySQL does not support it (before 8.0.14)."
+  ],
+  "laymanDefinition": "A regular subquery in FROM is like a caterer who brings the same food to every table regardless of who is sitting there. A LATERAL subquery is like a chef who asks each table what they want and customizes the dish individually based on the table's preferences.",
+  "deepDive": [
+    {
+      "heading": "Basic LATERAL Syntax",
+      "text": "SELECT * FROM table1 t1, LATERAL (SELECT * FROM table2 WHERE t2.id = t1.id) sub. The LATERAL subquery runs once for each row in t1. Can also use JOIN LATERAL ... ON true for explicit join syntax."
+    },
+    {
+      "heading": "Top-N Per Group with LATERAL",
+      "text": "SELECT d.name, sub.* FROM departments d, LATERAL (SELECT * FROM employees WHERE dept_id = d.id ORDER BY salary DESC LIMIT 3) sub. Gets top 3 earners per department without complex window functions."
+    },
+    {
+      "heading": "LATERAL with Set-Returning Functions",
+      "text": "SELECT t.id, f.value FROM table t, LATERAL jsonb_array_elements(t.data) AS f(value). Expands JSON arrays per row. Also works with generate_series, unnest, and other set-returning functions."
+    },
+    {
+      "heading": "LATERAL vs Correlated Subquery",
+      "text": "LATERAL subqueries can return multiple columns and rows (like a table). Correlated subqueries in WHERE/SELECT return scalar values. LATERAL in FROM can reference multiple preceding tables."
+    },
+    {
+      "heading": "Multiple LATERAL Subqueries",
+      "text": "SELECT * FROM table t, LATERAL (SELECT ... WHERE ... = t.id) sub1, LATERAL (SELECT ... WHERE ... = sub1.id) sub2. Each subsequent LATERAL can reference all preceding FROM items."
+    }
+  ],
+  "interviewAnswer": "LATERAL is one of PostgreSQL's most powerful features. It enables per-row subquery execution, top-N per group queries, and clean expansion of array/JSON data. It often replaces complex window functions and correlated subqueries with more readable code.",
+  "interviewQuestions": [
+    {
+      "question": "What is LATERAL?",
+      "answer": "A keyword that allows a FROM subquery to reference columns from preceding FROM items, enabling per-row execution."
+    },
+    {
+      "question": "How is LATERAL different from a regular subquery?",
+      "answer": "Regular subqueries in FROM execute independently. LATERAL subqueries can reference columns from tables listed before them."
+    },
+    {
+      "question": "What is the LATERAL syntax?",
+      "answer": "FROM table1 t1, LATERAL (SELECT ... WHERE col = t1.col) sub. Or: FROM table1 t1 JOIN LATERAL (...) sub ON true."
+    },
+    {
+      "question": "What is a common use for LATERAL?",
+      "answer": "Top-N per group: for each department, get top 3 employees by salary. Best performing employees per team, etc."
+    },
+    {
+      "question": "How does LATERAL work with set-returning functions?",
+      "answer": "LATERAL is automatically applied when using set-returning functions in FROM: FROM table, jsonb_array_elements(data)."
+    },
+    {
+      "question": "Can you have multiple LATERAL subqueries?",
+      "answer": "Yes. Each subsequent one can reference all preceding FROM items including previous LATERAL subqueries."
+    },
+    {
+      "question": "Does MySQL support LATERAL?",
+      "answer": "MySQL 8.0.14+ supports LATERAL (limited). Not fully supported in older versions."
+    },
+    {
+      "question": "What is the alternative to LATERAL for top-N?",
+      "answer": "Window functions with ROW_NUMBER() in a subquery/CTE, then filter WHERE rn <= N. LATERAL is often more readable."
+    },
+    {
+      "question": "Can LATERAL reference CTEs?",
+      "answer": "Yes. WITH cte AS (...) SELECT * FROM cte, LATERAL (SELECT ... WHERE ... = cte.id)."
+    },
+    {
+      "question": "Can LATERAL return multiple rows?",
+      "answer": "Yes. LATERAL subqueries can return multiple rows, causing the outer query to multiply rows (like JOIN)."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"300\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">LATERAL Joins</text><rect x=\"10\" y=\"35\" width=\"120\" height=\"25\" rx=\"5\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1.5\"/><text x=\"70\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">FROM t1, LATERAL</text><text x=\"70\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Row-by-row</text><line x1=\"130\" y1=\"48\" x2=\"160\" y2=\"48\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"170\" y=\"35\" width=\"120\" height=\"25\" rx=\"5\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1.5\"/><text x=\"230\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Top-N/Group</text><text x=\"230\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Per group LIMIT</text><rect x=\"170\" y=\"65\" width=\"120\" height=\"25\" rx=\"5\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1.5\"/><text x=\"230\" y=\"81\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Set-Return</text><text x=\"230\" y=\"84\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">jsonb, unnest</text><rect x=\"170\" y=\"95\" width=\"120\" height=\"25\" rx=\"5\" fill=\"#dc3545\" stroke=\"#dc3545\" stroke-width=\"1.5\"/><text x=\"230\" y=\"111\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Multiple</text><text x=\"230\" y=\"114\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Chain LATERALs</text><rect x=\"10\" y=\"100\" width=\"120\" height=\"25\" rx=\"5\" fill=\"#e83e8c\" stroke=\"#e83e8c\" stroke-width=\"1.5\"/><text x=\"70\" y=\"116\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">vs Correlated</text><text x=\"70\" y=\"119\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Multi-row/col</text><line x1=\"290\" y1=\"48\" x2=\"320\" y2=\"48\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"290\" y1=\"78\" x2=\"320\" y2=\"78\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"290\" y1=\"108\" x2=\"320\" y2=\"108\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"330\" y=\"35\" width=\"150\" height=\"100\" rx=\"5\" fill=\"#17a2b8\" stroke=\"#17a2b8\" stroke-width=\"1.5\"/><text x=\"405\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">LATERAL Joins</text><text x=\"405\" y=\"107\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Row-by-row subqueries that </text><text x=\"405\" y=\"118\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">can reference preceding FRO</text><text x=\"405\" y=\"129\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">M items.</text><text x=\"240\" y=\"195\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">LATERAL: Per-row subquery execution for top-N per </text><text x=\"240\" y=\"207\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">group and set-returning functions.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "Top-N Per Department",
+      "useCase": "3 highest paid per dept.",
+      "code": "SELECT d.department_name, sub.name, sub.salary\nFROM departments d,\nLATERAL (\n  SELECT name, salary\n  FROM employees\n  WHERE dept_id = d.id\n  ORDER BY salary DESC\n  LIMIT 3\n) sub\nORDER BY d.department_name, sub.salary DESC;",
+      "description": "Gets top 3 employees per department using LATERAL. Cleaner than ROW_NUMBER() approach."
+    },
+    {
+      "title": "LATERAL with JSONB",
+      "useCase": "Expand JSON arrays per row.",
+      "code": "CREATE TABLE orders (\n  id INT,\n  items JSONB -- [{\"product\": \"A\", \"qty\": 2}, {\"product\": \"B\", \"qty\": 1}]\n);\n\nSELECT o.id, item->>'product' AS product,\n  (item->>'qty')::INT AS quantity\nFROM orders o,\nLATERAL jsonb_array_elements(o.items) AS item;",
+      "description": "Expands JSON array into rows using LATERAL with set-returning function."
+    },
+    {
+      "title": "LATERAL with generate_series",
+      "useCase": "Fill missing dates.",
+      "code": "-- Generate last 7 days for each product\nSELECT p.name, d.date\nFROM products p,\nLATERAL generate_series(\n  CURRENT_DATE - 6, CURRENT_DATE, '1 day'\n) AS d(date)\nWHERE p.status = 'active'\nORDER BY p.name, d.date;",
+      "description": "Creates date/product cross-product using LATERAL with generate_series."
+    },
+    {
+      "title": "Multiple LATERAL References",
+      "useCase": "Chained subqueries.",
+      "code": "SELECT e.name, e.salary,\n  sub1.dept_avg, sub2.company_max\nFROM employees e,\nLATERAL (\n  SELECT AVG(salary) AS dept_avg\n  FROM employees WHERE dept_id = e.dept_id\n) sub1,\nLATERAL (\n  SELECT MAX(salary) AS company_max\n  FROM employees\n) sub2;",
+      "description": "Each LATERAL subquery builds on the previous, computing per-row statistics."
+    },
+    {
+      "title": "LATERAL with LIMIT for Recommendations",
+      "useCase": "Related products.",
+      "code": "SELECT c.name AS customer, rp.name AS recommended\nFROM customers c,\nLATERAL (\n  SELECT DISTINCT p2.name\n  FROM orders o1\n  JOIN order_items oi1 ON o1.id = oi1.order_id\n  JOIN products p1 ON oi1.product_id = p1.id\n  JOIN order_items oi2 ON oi1.product_id <> oi2.product_id\n  JOIN products p2 ON oi2.product_id = p2.id\n  JOIN orders o2 ON oi2.order_id = o2.id\n  WHERE o1.customer_id = c.id\n  AND o2.customer_id = c.id\n  ORDER BY RANDOM()\n  LIMIT 3\n) rp;",
+      "description": "Recommends 3 related products per customer based on purchase history."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What keyword enables per-row subqueries in FROM?",
+      "options": [
+        "CROSS",
+        "LATERAL",
+        "ROW",
+        "PER ROW"
+      ],
+      "answer": 1,
+      "explanation": "LATERAL allows FROM subqueries to reference preceding columns."
+    },
+    {
+      "question": "What is LATERAL commonly used for?",
+      "options": [
+        "Simple filtering",
+        "Top-N per group",
+        "Bulk updates",
+        "Table creation"
+      ],
+      "answer": 1,
+      "explanation": "LATERAL excels at top-N per group queries."
+    },
+    {
+      "question": "Can LATERAL return multiple rows?",
+      "options": [
+        "Yes",
+        "No",
+        "Only one column",
+        "Only scalars"
+      ],
+      "answer": 0,
+      "explanation": "LATERAL subqueries can return multiple rows like a joined table."
+    },
+    {
+      "question": "What databases support LATERAL?",
+      "options": [
+        "MySQL only",
+        "PostgreSQL, Oracle, SQL Server",
+        "SQLite only",
+        "All databases"
+      ],
+      "answer": 1,
+      "explanation": "PostgreSQL, Oracle, and SQL Server support LATERAL."
+    },
+    {
+      "question": "How does LATERAL differ from a correlated subquery?",
+      "options": [
+        "Same thing",
+        "LATERAL can return multiple cols/rows",
+        "Correlated is faster",
+        "LATERAL is only for WHERE"
+      ],
+      "answer": 1,
+      "explanation": "LATERAL can return multiple columns and rows; correlated scalar subqueries return single values."
+    },
+    {
+      "question": "Is LATERAL automatic with set-returning functions?",
+      "options": [
+        "Yes",
+        "No",
+        "Only in PostgreSQL",
+        "Only in Oracle"
+      ],
+      "answer": 0,
+      "explanation": "Set-returning functions in FROM automatically use LATERAL behavior."
+    }
+  ]
+};

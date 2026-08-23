@@ -1,0 +1,228 @@
+export const prototype_chain = {
+  "title": "Prototype Chain",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 30,
+  "tldr": [
+    "The <strong>prototype chain</strong> is the linked sequence of objects through which JavaScript resolves property accesses on an object.",
+    "Every object has an internal <code>[[Prototype]]</code> reference, forming a chain that ends at <code>Object.prototype</code> whose <code>[[Prototype]]</code> is <code>null</code>.",
+    "Property lookup follows the chain: own property → prototype → prototype's prototype → ... → <code>null</code> → <code>undefined</code>.",
+    "The chain enables memory-efficient <strong>property sharing</strong> and dynamic inheritance — changes to a prototype are reflected in all inheriting objects at runtime."
+  ],
+  "laymanDefinition": "Imagine a family tree. If you need a specific book, you first check your own bookshelf. If it's not there, you check your parent's bookshelf. If still not found, you check your grandparent's bookshelf, and so on until you run out of relatives. The prototype chain works exactly like this: JavaScript checks the object itself, then its parent prototype, then its grandparent, all the way up to Object.prototype, and finally null. At each step, the moment the property is found, the search stops. This is how all JavaScript objects can share methods like toString() and hasOwnProperty() without each object storing a copy.",
+  "deepDive": [
+    {
+      "heading": "How the Prototype Chain Is Formed",
+      "text": "The prototype chain is formed when objects are created. Object literals ({}) automatically get Object.prototype as their [[Prototype]]. Arrays get Array.prototype. Functions get Function.prototype. When you use Object.create(proto), you explicitly set the [[Prototype]]. When you use new Constructor(), the new object's [[Prototype]] is set to Constructor.prototype. Each of these prototype objects has its own [[Prototype]], creating a chain that eventually reaches Object.prototype."
+    },
+    {
+      "heading": "Property Lookup Algorithm in Detail",
+      "list": [
+        "1. The engine calls the internal [[Get]] operation on the object with the property name.",
+        "2. It checks if the object has an <strong>own property</strong> with that name. If yes, return its value.",
+        "3. If not, get the object's [[Prototype]] (its prototype object).",
+        "4. If the prototype is null, return undefined.",
+        "5. Recursively apply [[Get]] on the prototype object (go to step 2)."
+      ]
+    },
+    {
+      "heading": "Prototype Chain and Method Sharing",
+      "text": "Methods defined on Constructor.prototype are not copied to each instance — they are inherited via the prototype chain. This means all instances share the same function object, saving significant memory. For example, Array.prototype.push is a single function object shared by every array. When you call [].push(1), JavaScript walks the chain: the empty array does not have own property 'push', so it looks up Array.prototype, finds it there, and calls it with the array as 'this'."
+    },
+    {
+      "heading": "Modifying the Chain at Runtime",
+      "text": "One of the most powerful (and dangerous) features of prototype chains is that you can modify them at runtime. Adding a method to Array.prototype instantly makes it available to all arrays, even existing ones. This is why extending built-in prototypes is controversial — it can lead to naming collisions and unexpected behavior in third-party code. However, for your own constructor functions, dynamic prototype modification is a legitimate technique."
+    },
+    {
+      "heading": "Performance Considerations",
+      "text": "Deeper prototype chains have a performance cost because property lookup traverses more objects. Modern JavaScript engines optimize this with inline caching (IC), which memorizes the shape of objects and the location of properties in the chain. However, certain operations like Object.setPrototypeOf() or deleting properties can de-optimize these caches. For best performance, keep prototype chains shallow (2-3 levels) and avoid mutating prototypes after objects have been created."
+    }
+  ],
+  "interviewAnswer": "The prototype chain is the mechanism by which JavaScript resolves property access on objects. Each object has an internal [[Prototype]] reference to another object. When a property is accessed, JavaScript first checks the object's own properties. If not found, it follows the [[Prototype]] reference and checks the parent object, continuing recursively until the property is found or the chain ends at null (returning undefined). This is prototypal inheritance in action — objects inherit from objects. The chain is formed implicitly (e.g., object literals inherit from Object.prototype) or explicitly (via Object.create, constructor functions with new, or class extends). Understanding the prototype chain is crucial for debugging property resolution issues, implementing inheritance patterns, and writing efficient JavaScript code.",
+  "interviewQuestions": [
+    {
+      "question": "What is the prototype chain?",
+      "answer": "The prototype chain is a linked sequence of objects where each object has a reference to its prototype (parent object). When you access a property, JavaScript walks this chain until the property is found or null is reached. It's how inheritance works in JavaScript."
+    },
+    {
+      "question": "How does JavaScript resolve property access on an object?",
+      "answer": "JavaScript uses the [[Get]] internal method: 1) Check own properties. 2) If not found, follow [[Prototype]] to the prototype object. 3) Repeat until the property is found or the prototype is null. 4) Return undefined if not found anywhere."
+    },
+    {
+      "question": "What is the difference between the prototype chain of an object literal and an array?",
+      "answer": "An object literal's prototype chain is: obj → Object.prototype → null. An array's chain is: arr → Array.prototype → Object.prototype → null. The array's chain has an extra level (Array.prototype) which provides array-specific methods like push, pop, map, etc."
+    },
+    {
+      "question": "Can you modify the prototype chain after objects are created?",
+      "answer": "Yes, you can modify prototypes at any time. Adding a method to Array.prototype instantly makes it available to all array instances, even existing ones. You can also use Object.setPrototypeOf(), though this is discouraged for performance reasons."
+    },
+    {
+      "question": "What is the end of every prototype chain?",
+      "answer": "The end is null. Object.prototype is typically the last object in most chains, and its [[Prototype]] is null. When property lookup reaches null without finding the property, JavaScript returns undefined."
+    },
+    {
+      "question": "How does the 'instanceof' operator use the prototype chain?",
+      "answer": "The 'instanceof' operator checks the prototype chain of the left operand against the .prototype property of the right operand (a constructor function). It walks the left operand's prototype chain to see if Constructor.prototype appears anywhere. If found, it returns true."
+    },
+    {
+      "question": "What is property shadowing in the prototype chain?",
+      "answer": "Shadowing occurs when an object has an own property with the same name as a property on its prototype. The own property takes precedence and 'shadows' the inherited one. To restore access to the prototype property, you must delete the own property."
+    },
+    {
+      "question": "How do you explicitly traverse the prototype chain?",
+      "answer": "Use Object.getPrototypeOf() repeatedly: <code>let proto = Object.getPrototypeOf(obj);\nwhile (proto) {\n  console.log(proto.constructor.name);\n  proto = Object.getPrototypeOf(proto);\n}</code> The deprecated __proto__ property also works but is not recommended."
+    },
+    {
+      "question": "What is the relationship between class extends and the prototype chain?",
+      "answer": "Class 'extends' sets up the prototype chain for both instances and the class itself. ChildClass.prototype.[[Prototype]] is set to ParentClass.prototype (instance method inheritance). And ChildClass.[[Prototype]] is set to ParentClass (static method inheritance via the prototype chain)."
+    },
+    {
+      "question": "Why is modifying built-in prototypes (like Array.prototype) discouraged?",
+      "answer": "Modifying built-in prototypes can cause naming collisions with future JavaScript versions, break assumptions made by libraries or frameworks, and lead to unexpected behavior in code that iterates over properties. It's generally safer to use utility functions or wrapper classes instead."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 700 500\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:700px;\"><defs><marker id=\"arrow\" markerWidth=\"10\" markerHeight=\"7\" refX=\"10\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0, 10 3.5, 0 7\" fill=\"#6c9fff\"/></marker><marker id=\"arrowChain\" markerWidth=\"10\" markerHeight=\"7\" refX=\"10\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0, 10 3.5, 0 7\" fill=\"#fbbf24\"/></marker><linearGradient id=\"g1\" x1=\"0%\" y1=\"0%\" x2=\"100%\" y2=\"100%\"><stop offset=\"0%\" style=\"stop-color:#2a2f45\"/><stop offset=\"100%\" style=\"stop-color:#1a1d28\"/></linearGradient></defs><rect x=\"10\" y=\"10\" width=\"680\" height=\"480\" rx=\"10\" fill=\"var(--bg-card)\" stroke=\"var(--border)\" stroke-width=\"1\"/><text x=\"350\" y=\"40\" text-anchor=\"middle\" fill=\"#e8eaed\" font-size=\"15\" font-weight=\"bold\">Prototype Chain Property Lookup</text><text x=\"350\" y=\"62\" text-anchor=\"middle\" fill=\"#888\" font-size=\"12\">obj.toString() -- Property [[Get]] algorithm</text><!-- Step boxes --><rect x=\"175\" y=\"80\" width=\"350\" height=\"55\" rx=\"6\" fill=\"url(#g1)\" stroke=\"#98c379\" stroke-width=\"1.5\"/><text x=\"350\" y=\"102\" text-anchor=\"middle\" fill=\"#98c379\" font-size=\"13\" font-weight=\"bold\">Step 1: Check obj own properties</text><text x=\"350\" y=\"122\" text-anchor=\"middle\" fill=\"#aaa\" font-size=\"12\">'toString' not found on obj</text><!-- Arrow down --><line x1=\"350\" y1=\"135\" x2=\"350\" y2=\"155\" stroke=\"#fbbf24\" stroke-width=\"2\" marker-end=\"url(#arrowChain)\"/><rect x=\"175\" y=\"155\" width=\"350\" height=\"55\" rx=\"6\" fill=\"url(#g1)\" stroke=\"#fbbf24\" stroke-width=\"1.5\"/><text x=\"350\" y=\"177\" text-anchor=\"middle\" fill=\"#fbbf24\" font-size=\"13\" font-weight=\"bold\">Step 2: Follow [[Prototype]]</text><text x=\"350\" y=\"197\" text-anchor=\"middle\" fill=\"#aaa\" font-size=\"12\">Check obj's prototype (parent object)</text><line x1=\"350\" y1=\"210\" x2=\"350\" y2=\"230\" stroke=\"#fbbf24\" stroke-width=\"2\" marker-end=\"url(#arrowChain)\"/><rect x=\"125\" y=\"230\" width=\"450\" height=\"55\" rx=\"6\" fill=\"url(#g1)\" stroke=\"#6c9fff\" stroke-width=\"1.5\"/><text x=\"350\" y=\"252\" text-anchor=\"middle\" fill=\"#6c9fff\" font-size=\"13\" font-weight=\"bold\">Step 3: Check parent's own properties</text><text x=\"350\" y=\"272\" text-anchor=\"middle\" fill=\"#98c379\" font-size=\"12\">'toString' FOUND! Return it.</text><line x1=\"350\" y1=\"285\" x2=\"350\" y2=\"310\" stroke=\"#fbbf24\" stroke-width=\"2\" marker-end=\"url(#arrowChain)\"/><rect x=\"125\" y=\"310\" width=\"450\" height=\"45\" rx=\"6\" fill=\"url(#g1)\" stroke=\"#aaa\" stroke-width=\"1\" stroke-dasharray=\"4\"/><text x=\"350\" y=\"330\" text-anchor=\"middle\" fill=\"#aaa\" font-size=\"12\">If not found: Continue up chain (grandparent, etc.)</text><line x1=\"350\" y1=\"355\" x2=\"350\" y2=\"375\" stroke=\"#fbbf24\" stroke-width=\"2\" marker-end=\"url(#arrowChain)\"/><rect x=\"175\" y=\"375\" width=\"350\" height=\"40\" rx=\"20\" fill=\"url(#g1)\" stroke=\"#f87171\" stroke-width=\"1.5\"/><text x=\"350\" y=\"400\" text-anchor=\"middle\" fill=\"#f87171\" font-size=\"13\" font-weight=\"bold\">null reached → return undefined</text><text x=\"350\" y=\"445\" text-anchor=\"middle\" fill=\"#888\" font-size=\"11\">Search stops at the first match or at null (whichever comes first)</text></svg>",
+  "codeExamples": [
+    {
+      "title": "Walking the Prototype Chain Manually",
+      "useCase": "Debugging Inheritance",
+      "code": "const grandparent = { a: 1 };\nconst parent = Object.create(grandparent);\nparent.b = 2;\nconst child = Object.create(parent);\nchild.c = 3;\n\nfunction walkChain(obj) {\n  let proto = obj;\n  let depth = 0;\n  while (proto) {\n    const own = Object.keys(proto);\n    console.log(`Level ${depth}:`, own.length ? own : '[no own props]');\n    proto = Object.getPrototypeOf(proto);\n    depth++;\n  }\n  console.log('Chain ends at null');\n}\n\nwalkChain(child);\n// Level 0: ['c']\n// Level 1: ['b']\n// Level 2: ['a']\n// Level 3: [no own props]  (Object.prototype)\n// Chain ends at null",
+      "description": "Object.getPrototypeOf() lets you manually traverse the chain. Starting from child, we see each level's own properties until reaching null."
+    },
+    {
+      "title": "instanceof and the Prototype Chain",
+      "useCase": "Type Checking",
+      "code": "function Animal() {}\nfunction Dog() {}\n\n// Set up inheritance: Dog.prototype inherits from Animal.prototype\nDog.prototype = Object.create(Animal.prototype);\nDog.prototype.constructor = Dog;\n\nconst d = new Dog();\n\nconsole.log(d instanceof Dog);    // true\nconsole.log(d instanceof Animal); // true\nconsole.log(d instanceof Object); // true\nconsole.log(d instanceof Array);  // false\n\n// instanceof walks d's prototype chain looking for Constructor.prototype",
+      "description": "instanceof walks the left operand's prototype chain to see if the right operand's .prototype appears anywhere in it."
+    },
+    {
+      "title": "Dynamic Prototype Modification",
+      "useCase": "Runtime Inheritance Changes",
+      "code": "function User(name) {\n  this.name = name;\n}\n\nconst u1 = new User('Alice');\nconst u2 = new User('Bob');\n\n// Add method after instances exist\nUser.prototype.sayHi = function() {\n  return `Hi, I'm ${this.name}`;\n};\n\nconsole.log(u1.sayHi()); // 'Hi, I'm Alice' (works!)\nconsole.log(u2.sayHi()); // 'Hi, I'm Bob' (works!)\n\n// Even works on pre-existing instances via prototype chain lookup",
+      "description": "Adding a method to User.prototype after u1 and u2 are created still works because property lookup walks the chain dynamically at access time."
+    },
+    {
+      "title": "Property Shadowing in the Chain",
+      "useCase": "Overriding Inherited Behavior",
+      "code": "const base = { version: '1.0', getVersion() { return this.version; } };\nconst extended = Object.create(base);\n\nconsole.log(extended.getVersion()); // '1.0' (inherited)\n\nextended.version = '2.0'; // shadowing\nconsole.log(extended.getVersion()); // '2.0' (own property used)\nconsole.log(base.version);          // '1.0' (unaffected)\n\ndelete extended.version;\nconsole.log(extended.getVersion()); // '1.0' (inherited again)",
+      "description": "Creating an own property with the same name as an inherited property shadows (hides) the prototype version. Deleting it restores access to the inherited value."
+    },
+    {
+      "title": "Prototype Chain with Built-in Types",
+      "useCase": "Understanding Array/String/Function Chains",
+      "code": "const arr = [1, 2, 3];\n\nconsole.log(Object.getPrototypeOf(arr) === Array.prototype);   // true\nconsole.log(Object.getPrototypeOf(Array.prototype) === Object.prototype); // true\nconsole.log(Object.getPrototypeOf(Object.prototype)); // null\n\n// Chain: arr → Array.prototype → Object.prototype → null\n\nconst fn = function() {};\nconsole.log(Object.getPrototypeOf(fn) === Function.prototype); // true\n// Chain: fn → Function.prototype → Object.prototype → null\n\nconst str = 'hello';\n// Strings get auto-boxed: str → String.prototype → Object.prototype → null",
+      "description": "Built-in types have their own prototype objects (Array.prototype, Function.prototype, String.prototype, etc.) that provide type-specific methods."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What happens when you access a property that doesn't exist anywhere on the prototype chain?",
+      "options": [
+        "JavaScript throws a ReferenceError",
+        "The engine returns undefined",
+        "The engine returns null",
+        "It creates the property automatically"
+      ],
+      "answer": 1,
+      "explanation": "When property lookup reaches null (the end of the chain) without finding the property, JavaScript returns undefined."
+    },
+    {
+      "question": "What is the prototype chain of a plain object literal {}?",
+      "options": [
+        "{} → null",
+        "{} → Object.prototype → null",
+        "{} → Array.prototype → null",
+        "{} → Function.prototype → null"
+      ],
+      "answer": 1,
+      "explanation": "Object literals automatically get Object.prototype as their [[Prototype]], and Object.prototype's [[Prototype]] is null."
+    },
+    {
+      "question": "What will the following log? const arr = [1]; arr.__proto__ = null; console.log(arr.push);",
+      "options": [
+        "The push function",
+        "undefined",
+        "TypeError",
+        "null"
+      ],
+      "answer": 1,
+      "explanation": "Setting __proto__ to null breaks the prototype chain. Array methods like push are on Array.prototype, which is no longer reachable."
+    },
+    {
+      "question": "How does 'extends' in class syntax affect the prototype chain?",
+      "options": [
+        "It creates a copy of parent methods",
+        "It sets ChildClass.prototype.[[Prototype]] to ParentClass.prototype",
+        "It merges the constructor functions",
+        "It has no effect on the prototype chain"
+      ],
+      "answer": 1,
+      "explanation": "The 'extends' keyword sets the child class's .prototype's [[Prototype]] to the parent class's .prototype, linking the prototype chains for instance method inheritance."
+    },
+    {
+      "question": "What is the prototype chain of a function?",
+      "options": [
+        "fn → Object.prototype → null",
+        "fn → Function.prototype → null",
+        "fn → Function.prototype → Object.prototype → null",
+        "fn → null"
+      ],
+      "answer": 2,
+      "explanation": "Functions inherit from Function.prototype, which in turn inherits from Object.prototype, forming a two-level chain."
+    },
+    {
+      "question": "If you add a method to Array.prototype after creating an array, will the existing array have access to it?",
+      "options": [
+        "No, only new arrays get it",
+        "Yes, all existing arrays see it immediately",
+        "Only if you call Object.setPrototypeOf again",
+        "It throws an error"
+      ],
+      "answer": 1,
+      "explanation": "Prototype chains are live. Adding a method to Array.prototype instantly makes it available to all arrays, including existing ones, via dynamic property lookup."
+    },
+    {
+      "question": "What does the 'in' operator check?",
+      "options": [
+        "Only own properties",
+        "Only inherited properties",
+        "Both own and inherited properties via the prototype chain",
+        "Enumerable properties only"
+      ],
+      "answer": 2,
+      "explanation": "The 'in' operator walks the full prototype chain, returning true if the property exists at any level (own or inherited)."
+    },
+    {
+      "question": "What is the correct way to traverse the prototype chain?",
+      "options": [
+        "Using obj.__proto__.__proto__",
+        "Repeated calls to Object.getPrototypeOf()",
+        "Using obj.prototype",
+        "The prototype chain cannot be traversed"
+      ],
+      "answer": 1,
+      "explanation": "Object.getPrototypeOf() is the standard API for getting an object's prototype. Calling it repeatedly traverses the chain."
+    },
+    {
+      "question": "Which of the following would NOT appear in an array's prototype chain?",
+      "options": [
+        "Array.prototype",
+        "Object.prototype",
+        "Function.prototype",
+        "null"
+      ],
+      "answer": 2,
+      "explanation": "An array's chain is: arr → Array.prototype → Object.prototype → null. Function.prototype is only in a function's chain, not an array's."
+    },
+    {
+      "question": "What happens when you delete a property that shadows a prototype property?",
+      "options": [
+        "Both the own and prototype properties are deleted",
+        "The own property is removed, revealing the prototype property",
+        "The operation is ignored",
+        "The prototype chain is broken"
+      ],
+      "answer": 1,
+      "explanation": "Delete removes only the own property. After deletion, property lookup falls through to the prototype chain, revealing the inherited property again."
+    }
+  ]
+};

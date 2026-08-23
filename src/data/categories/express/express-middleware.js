@@ -1,0 +1,179 @@
+export const express_middleware = {
+  "id": "express-middleware",
+  "title": "Middleware",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 25,
+  "tldr": [
+    "Middleware functions have access to the request object, response object, and the next middleware function in the application's request-response cycle.",
+    "They can execute code, modify req/res, end the request-response cycle, or call next() to pass control to subsequent middleware.",
+    "Express has built-in middleware (express.json, express.static, express.urlencoded) and a vast ecosystem of third-party middleware packages.",
+    "Middleware can be application-level (app.use), router-level (router.use), error-handling (4 params), or built-in/third-party."
+  ],
+  "laymanDefinition": "Middleware is like an assembly line in a factory. Each station (middleware) performs a specific task on the product (request) before passing it along to the next station. Some stations complete the product (send response) while others just inspect or modify it.",
+  "deepDive": [
+    {
+      "heading": "Application-Level Middleware",
+      "text": "Bound to the express app instance using app.use() or app.METHOD(). Runs for every request (for app.use() without path) or for requests matching a specific path. Application-level middleware is registered in order and affects all routes."
+    },
+    {
+      "heading": "Router-Level Middleware",
+      "text": "Works identically to application-level middleware but is bound to an Express.Router instance using router.use() or router.METHOD(). Scoped to routes handled by that router. Useful for middleware that should only apply to a specific group of routes."
+    },
+    {
+      "heading": "Built-in Middleware",
+      "text": "Express includes: express.json() (parses JSON request bodies), express.urlencoded({extended: true}) (parses URL-encoded bodies), express.static (serves static files), express.Router (modular routing), express.errorHandler (basic error handling). Previously express.session and express.compress existed but were removed."
+    },
+    {
+      "heading": "Third-Party Middleware",
+      "text": "Popular third-party middleware: morgan (HTTP logging), helmet (security headers), cors (Cross-Origin Resource Sharing), compression (gzip), passport (authentication), express-validator (input validation), express-rate-limit (rate limiting), cookie-parser (cookie parsing), csurf (CSRF protection)."
+    },
+    {
+      "heading": "Middleware Execution Order",
+      "text": "Middleware executes in the order it is registered. The first middleware registered runs first. If it calls next(), control passes to the next registered middleware. If it sends a response, subsequent middleware does not run. Error-handling middleware runs only when next(err) is called and is defined last."
+    }
+  ],
+  "interviewAnswer": "Middleware is the core of Express architecture. Understanding the different types (application, router, error-handling, built-in, third-party) and their execution order is essential for building secure, well-structured Express applications.",
+  "interviewQuestions": [
+    {
+      "question": "What is middleware in Express?",
+      "answer": "Middleware is a function that sits between the request and response. It has access to req, res, and next. It can execute code, modify req/res, end the cycle, or pass control to the next middleware using next(). Middleware forms the processing pipeline of an Express application."
+    },
+    {
+      "question": "What are the types of middleware?",
+      "answer": "Application-level (app.use), router-level (router.use), error-handling (4 params), built-in (express.json, express.static), and third-party (morgan, helmet, cors)."
+    },
+    {
+      "question": "How do you create custom middleware?",
+      "answer": "Define a function that accepts (req, res, next). Perform operations on req/res, then either call next() to continue or send a response to end the cycle. Example: function logger(req, res, next) { console.log(req.method, req.url); next(); }"
+    },
+    {
+      "question": "What is the difference between app.use and app.METHOD?",
+      "answer": "app.use() mounts middleware for all HTTP methods. app.get(), app.post(), etc. mount middleware only for the specified HTTP method. Both match the specified path (or all paths if none specified)."
+    },
+    {
+      "question": "How does middleware order affect execution?",
+      "answer": "Middleware executes in registration order. If middleware sends a response early, later middleware never runs. Error-handling middleware must be registered last and is only triggered by next(err)."
+    },
+    {
+      "question": "What happens when next() is called with an argument?",
+      "answer": "next(err) passes an error to Express. Express skips all remaining regular middleware and goes directly to the first error-handling middleware (4 params). If no error handler exists, Express sends a default 500 response."
+    },
+    {
+      "question": "How does express.json() work?",
+      "answer": "express.json() parses incoming requests with JSON payloads. It reads the request body, parses it as JSON, and sets req.body to the parsed object. It returns an error for invalid JSON. Must be registered before routes that expect JSON input."
+    },
+    {
+      "question": "Can middleware be conditional?",
+      "answer": "Yes, middleware can conditionally call next() or send a response. For example, authentication middleware checks credentials and either allows (next()) or rejects (send 401) the request. Route handlers can also conditionally apply middleware using arrays."
+    },
+    {
+      "question": "How do you pass data between middleware?",
+      "answer": "Attach data to the req object: req.user = authenticatedUser; req.startTime = Date.now(); Subsequent middleware can read these values from req. This is the standard pattern for sharing data across middleware."
+    },
+    {
+      "question": "What is the next() function?",
+      "answer": "next() is a callback function passed to middleware that passes control to the next middleware in the stack. Without calling next(), the request hangs. next(\\'route\\') bypasses remaining middleware on the same route. next(err) triggers error handling."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 200\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><rect x=\"0\" y=\"0\" width=\"500\" height=\"200\" rx=\"8\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"24\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">Middleware</text><rect x=\"10\" y=\"40\" width=\"140\" height=\"35\" rx=\"4\" fill=\"#68a063\" stroke=\"#68a063\" stroke-width=\"1\"/><text x=\"80\" y=\"56\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Request In</text><text x=\"80\" y=\"68\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">HTTP</text><line x1=\"150\" y1=\"58\" x2=\"170\" y2=\"58\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"180\" y=\"40\" width=\"140\" height=\"30\" rx=\"4\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1\"/><text x=\"250\" y=\"56\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">app.use(logger)</text><text x=\"250\" y=\"68\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Logging</text><line x1=\"180\" y1=\"70\" x2=\"180\" y2=\"78\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"180\" y=\"80\" width=\"140\" height=\"30\" rx=\"4\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1\"/><text x=\"250\" y=\"96\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">app.use(express.json)</text><text x=\"250\" y=\"108\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Body Parse</text><line x1=\"180\" y1=\"110\" x2=\"180\" y2=\"118\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"180\" y=\"120\" width=\"140\" height=\"30\" rx=\"4\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1\"/><text x=\"250\" y=\"136\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">app.use(auth)</text><text x=\"250\" y=\"148\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Auth Check</text><line x1=\"320\" y1=\"78\" x2=\"350\" y2=\"78\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"320\" y1=\"95\" x2=\"350\" y2=\"95\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"320\" y1=\"135\" x2=\"350\" y2=\"135\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"360\" y=\"65\" width=\"120\" height=\"55\" rx=\"4\" fill=\"#e83e8c\" stroke=\"#e83e8c\" stroke-width=\"1\"/><text x=\"420\" y=\"81\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Route Handler</text><text x=\"420\" y=\"93\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Response</text><line x1=\"180\" y1=\"150\" x2=\"180\" y2=\"165\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"180\" y=\"165\" width=\"140\" height=\"20\" rx=\"4\" fill=\"#dc3545\" stroke=\"#dc3545\" stroke-width=\"1\"/><text x=\"250\" y=\"181\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Error Handler</text><text x=\"250\" y=\"193\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">next(err)</text><text x=\"240\" y=\"210\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">Middleware Pipeline: Functions process requests sequentially in registered order.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "Creating Custom Middleware",
+      "useCase": "Simple request logger.",
+      "code": "function requestLogger(req, res, next) {\n  const start = Date.now();\n  console.log(`${req.method} ${req.url}`);\n  res.on('finish', () => {\n    const duration = Date.now() - start;\n    console.log(`${res.statusCode} - ${duration}ms`);\n  });\n  next();\n}\napp.use(requestLogger);",
+      "description": "Logs the method, URL, status code, and duration for every request."
+    },
+    {
+      "title": "Built-in Middleware: Body Parsing",
+      "useCase": "Parsing JSON and form data.",
+      "code": "const express = require('express');\nconst app = express();\napp.use(express.json());\napp.use(express.urlencoded({ extended: true }));\napp.post('/submit', (req, res) => {\n  console.log(req.body);\n  res.json({ received: true });\n});",
+      "description": "Parses JSON and form-encoded request bodies before route handlers."
+    },
+    {
+      "title": "Third-Party: Morgan Logger",
+      "useCase": "HTTP request logging.",
+      "code": "const morgan = require('morgan');\napp.use(morgan('combined'));\n// Formats: combined, common, dev, short, tiny",
+      "description": "morgan provides pre-formatted HTTP logging in various output formats."
+    },
+    {
+      "title": "Conditional Middleware",
+      "useCase": "Apply middleware only in development.",
+      "code": "if (process.env.NODE_ENV === 'development') {\n  app.use(morgan('dev'));\n  app.use(require('errorhandler')());\n}",
+      "description": "Middleware is conditionally applied based on environment."
+    },
+    {
+      "title": "Passing Data via req",
+      "useCase": "Sharing data between middleware.",
+      "code": "function loadUser(req, res, next) {\n  const userId = req.params.userId;\n  req.user = { id: userId, role: 'admin' };\n  next();\n}\napp.get('/admin/:userId', loadUser, (req, res) => {\n  res.json({ user: req.user });\n});",
+      "description": "Middleware attaches user data to req object, consumed by the route handler."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What three arguments does standard middleware receive?",
+      "options": [
+        "err, req, res",
+        "req, res, next",
+        "req, res, err",
+        "next, req, res"
+      ],
+      "answer": 1,
+      "explanation": "Standard middleware receives req, res, and next."
+    },
+    {
+      "question": "What triggers error-handling middleware?",
+      "options": [
+        "Any middleware error",
+        "Calling next(err)",
+        "Throwing an error",
+        "All of the above"
+      ],
+      "answer": 1,
+      "explanation": "Error-handling middleware is triggered by next(err)."
+    },
+    {
+      "question": "Which built-in middleware parses JSON bodies?",
+      "options": [
+        "express.parse()",
+        "express.json()",
+        "express.bodyParser()",
+        "express.JSON()"
+      ],
+      "answer": 1,
+      "explanation": "express.json() parses incoming JSON request bodies."
+    },
+    {
+      "question": "What is the purpose of next(\\'route\\')?",
+      "options": [
+        "Trigger error handler",
+        "Skip remaining middleware on this route",
+        "Pass to next route",
+        "Restart the pipeline"
+      ],
+      "answer": 1,
+      "explanation": "next(\\'route\\') skips remaining middleware on the same route and jumps to the next matching route."
+    },
+    {
+      "question": "How do you share data between middleware?",
+      "options": [
+        "Global variables",
+        "req object",
+        "res.locals",
+        "Both req and res.locals"
+      ],
+      "answer": 3,
+      "explanation": "Data is shared via req object or res.locals for response-local data."
+    },
+    {
+      "question": "Where should error-handling middleware be registered?",
+      "options": [
+        "First",
+        "After routes",
+        "Last in the middleware stack",
+        "In a separate file"
+      ],
+      "answer": 2,
+      "explanation": "Error-handling middleware should be registered last in the middleware stack."
+    }
+  ]
+};

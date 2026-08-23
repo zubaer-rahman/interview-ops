@@ -1,0 +1,201 @@
+export const k8s_scaling_manual = {
+  "id": "k8s-scaling-manual",
+  "title": "Manual Scaling",
+  "difficulty": "beginner",
+  "estimatedMinutes": 5,
+  "file": "k8s-scaling-manual.json",
+  "interviewAnswer": "Manual scaling adjusts the replica count of a Deployment, StatefulSet, or ReplicaSet using kubectl scale. The controller then creates or removes Pods to match the desired count.",
+  "tldr": [
+    "kubectl scale deployment/<name> --replicas=N",
+    "Also: kubectl scale statefulset/<name>, replicaset/<name>",
+    "HPA can override manual scale if configured",
+    "Scaling down: highest ordinal Pods removed"
+  ],
+  "deepDive": [
+    {
+      "heading": "Scale Up/Down",
+      "text": "Scale up: controller creates new Pods matching template. Scale down: controller deletes Pods (high-numbered ordinals for StatefulSet). Rollout restart also refreshes Pods. Scaling does NOT create a new Deployment revision."
+    },
+    {
+      "heading": "HPA Interaction",
+      "text": "If HPA is configured, it will automatically adjust replicas. Manual scale is overridden by HPA on next evaluation cycle (15s). To use manual scale, delete or disable the HPA first."
+    },
+    {
+      "heading": "Common Use Cases",
+      "text": "Manual Scaling applies to build automation, continuous integration, test execution, deployment orchestration, and infrastructure management. Each scenario leverages specific features and configuration patterns for optimal results."
+    }
+  ],
+  "interviewQuestions": [
+    {
+      "question": "How to manually scale?",
+      "answer": "kubectl scale deployment/<name> --replicas=N"
+    },
+    {
+      "question": "Does scaling create a revision?",
+      "answer": "No. Only Pod template changes create revisions."
+    },
+    {
+      "question": "HPA interaction?",
+      "answer": "HPA overrides manual scale on next cycle."
+    },
+    {
+      "question": "StatefulSet scale-down order?",
+      "answer": "Highest ordinal Pods removed first."
+    },
+    {
+      "question": "Manual Scaling — What tools integrate well with this?",
+      "answer": "Integration is possible through APIs, plugins, webhooks, and configuration files."
+    },
+    {
+      "question": "Manual Scaling — What are common troubleshooting steps?",
+      "answer": "Troubleshooting involves checking logs, verifying configuration, and testing incrementally."
+    },
+    {
+      "question": "Manual Scaling — What security considerations apply here?",
+      "answer": "Security considerations include access control, encryption of sensitive data, and audit logging."
+    },
+    {
+      "question": "Manual Scaling — What best practices should be followed?",
+      "answer": "Best practices include version control, automation, monitoring, and thorough documentation."
+    },
+    {
+      "question": "Manual Scaling — How does this affect team collaboration?",
+      "answer": "It supports collaboration through shared visibility, standardized processes, and clear workflows."
+    },
+    {
+      "question": "Manual Scaling — What metrics indicate successful implementation?",
+      "answer": "Key metrics include adoption rate, error reduction, build times, and team satisfaction scores."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "Scale command?",
+      "options": [
+        "kubectl scale",
+        "kubectl resize",
+        "kubectl replicas"
+      ],
+      "answer": 0
+    },
+    {
+      "question": "Scaling creates revision?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "answer": 1
+    },
+    {
+      "question": "HPA + manual scale?",
+      "options": [
+        "HPA wins",
+        "Manual wins",
+        "Conflict error"
+      ],
+      "answer": 0
+    },
+    {
+      "question": "StatefulSet removes?",
+      "options": [
+        "Random Pod",
+        "Highest ordinal first",
+        "Lowest ordinal"
+      ],
+      "answer": 1
+    },
+    {
+      "question": "Manual Scaling — How to ensure reliability?",
+      "options": [
+        "Automated testing and monitoring",
+        "Manual checks only",
+        "No testing",
+        "Reactive fixes"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing and monitoring ensure consistent reliability."
+    },
+    {
+      "question": "Manual Scaling — What helps team collaboration?",
+      "options": [
+        "Shared workflows and visibility",
+        "Isolated work",
+        "No documentation",
+        "Siloed tools"
+      ],
+      "answer": 0,
+      "explanation": "Shared workflows and visibility enable better collaboration."
+    },
+    {
+      "question": "Manual Scaling — What reduces errors most?",
+      "options": [
+        "Automation",
+        "Manual processes",
+        "Rushing",
+        "Bypassing reviews"
+      ],
+      "answer": 0,
+      "explanation": "Automation consistently eliminates human errors."
+    },
+    {
+      "question": "Manual Scaling — What improves speed?",
+      "options": [
+        "Parallel execution and caching",
+        "Serial execution",
+        "No optimization",
+        "Manual steps"
+      ],
+      "answer": 0,
+      "explanation": "Parallel execution and caching significantly improve speed."
+    },
+    {
+      "question": "Manual Scaling — What is key for monitoring?",
+      "options": [
+        "Metrics dashboards and alerts",
+        "No monitoring",
+        "Only error logs",
+        "Manual checks"
+      ],
+      "answer": 0,
+      "explanation": "Metrics dashboards and alerts provide actionable insights."
+    },
+    {
+      "question": "Manual Scaling — What ensures quality?",
+      "options": [
+        "Automated testing in pipeline",
+        "No testing",
+        "Only manual QA",
+        "Skipping code review"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing integrated into the pipeline ensures consistent quality."
+    }
+  ],
+  "codeExamples": [
+    {
+      "title": "Scale Deployment",
+      "useCase": "Increase replicas",
+      "code": "kubectl scale deployment web --replicas=5",
+      "description": "Scales to 5 replicas."
+    },
+    {
+      "title": "Scale Down",
+      "useCase": "Reduce replicas",
+      "code": "kubectl scale deployment web --replicas=2",
+      "description": "Scales down to 2 replicas."
+    },
+    {
+      "title": "Scale StatefulSet",
+      "useCase": "Scale stateful app",
+      "code": "kubectl scale statefulset db --replicas=3",
+      "description": "Scales StatefulSet."
+    },
+    {
+      "title": "Integration Pattern",
+      "useCase": "Tool integration",
+      "code": "# Integration with other tools\n# Shows how components connect",
+      "description": "Integration example with related tools."
+    }
+  ],
+  "laymanDefinition": "Manual scaling adjusts the replica count of a Deployment, StatefulSet, or ReplicaSet using kubectl scale. The controller then creates or removes Pods to match the desired count.",
+  "diagramSvg": "<svg viewBox=\"0 0 500 280\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"280\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">Manual Scaling</text><rect x=\"20\" y=\"45\" width=\"460\" height=\"60\" rx=\"5\" fill=\"#e8f4f8\" stroke=\"#ccc\" stroke-width=\"1.5\"/><text x=\"250\" y=\"80\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Manual Scaling</text><text x=\"250\" y=\"155\" font-size=\"10\" fill=\"#555\" text-anchor=\"middle\">kubectl scale deployment/<name> --replicas=N</text></svg>"
+};

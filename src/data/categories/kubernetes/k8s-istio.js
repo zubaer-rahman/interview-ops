@@ -1,0 +1,202 @@
+export const k8s_istio = {
+  "id": "k8s-istio",
+  "title": "Istio",
+  "difficulty": "advanced",
+  "estimatedMinutes": 20,
+  "file": "k8s-istio.json",
+  "interviewAnswer": "Istio is a service mesh providing traffic management, security, observability, and policy enforcement. Architecture: data plane (Envoy sidecars), control plane (Istiod). Features: mTLS, traffic routing, telemetry, access control, fault injection.",
+  "tldr": [
+    "Service mesh: traffic management, security, observability",
+    "Data plane: Envoy sidecar proxies injected into Pods",
+    "Control plane: Istiod manages configuration and certificates",
+    "Features: mTLS, canary, circuit breaking, telemetry (Prometheus, Jaeger, Kiali)"
+  ],
+  "deepDive": [
+    {
+      "heading": "Traffic Management",
+      "text": "VirtualService: routing rules (weight, header, match). DestinationRule: load balancing, circuit breaking, connection pool, TLS settings. Gateway: ingress/egress traffic. ServiceEntry: external services."
+    },
+    {
+      "heading": "Security",
+      "text": "mTLS: automatic encryption between all services (PERMISSIVE or STRICT mode). AuthorizationPolicy: allow/deny rules based on identity, IP, JWT, headers. PeerAuthentication: mTLS mode per namespace. RequestAuthentication: JWT validation."
+    },
+    {
+      "heading": "Common Use Cases",
+      "text": "Istio applies to build automation, continuous integration, test execution, deployment orchestration, and infrastructure management. Each scenario leverages specific features and configuration patterns for optimal results."
+    }
+  ],
+  "interviewQuestions": [
+    {
+      "question": "What is Istio?",
+      "answer": "Service mesh for traffic management, security, and observability."
+    },
+    {
+      "question": "Istio architecture?",
+      "answer": "Data plane (Envoy proxies), control plane (Istiod)."
+    },
+    {
+      "question": "Key CRDs?",
+      "answer": "VirtualService, DestinationRule, Gateway, AuthorizationPolicy."
+    },
+    {
+      "question": "How is mTLS configured?",
+      "answer": "PeerAuthentication policy (STRICT or PERMISSIVE mode)."
+    },
+    {
+      "question": "Istio — What tools integrate well with this?",
+      "answer": "Integration is possible through APIs, plugins, webhooks, and configuration files."
+    },
+    {
+      "question": "Istio — What are common troubleshooting steps?",
+      "answer": "Troubleshooting involves checking logs, verifying configuration, and testing incrementally."
+    },
+    {
+      "question": "Istio — What security considerations apply here?",
+      "answer": "Security considerations include access control, encryption of sensitive data, and audit logging."
+    },
+    {
+      "question": "Istio — What best practices should be followed?",
+      "answer": "Best practices include version control, automation, monitoring, and thorough documentation."
+    },
+    {
+      "question": "Istio — How does this affect team collaboration?",
+      "answer": "It supports collaboration through shared visibility, standardized processes, and clear workflows."
+    },
+    {
+      "question": "Istio — What metrics indicate successful implementation?",
+      "answer": "Key metrics include adoption rate, error reduction, build times, and team satisfaction scores."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "Istio data plane uses?",
+      "options": [
+        "NGINX",
+        "Envoy",
+        "HAProxy"
+      ],
+      "answer": 1
+    },
+    {
+      "question": "VirtualService for?",
+      "options": [
+        "Certificates",
+        "Traffic routing",
+        "Security"
+      ],
+      "answer": 1
+    },
+    {
+      "question": "PERMISSIVE mode?",
+      "options": [
+        "No mTLS",
+        "mTLS if available, plain otherwise",
+        "Strict mTLS only"
+      ],
+      "answer": 1
+    },
+    {
+      "question": "Kiali provides?",
+      "options": [
+        "Tracing",
+        "Service graph visualization",
+        "Logging"
+      ],
+      "answer": 1
+    },
+    {
+      "question": "Istio — How to ensure reliability?",
+      "options": [
+        "Automated testing and monitoring",
+        "Manual checks only",
+        "No testing",
+        "Reactive fixes"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing and monitoring ensure consistent reliability."
+    },
+    {
+      "question": "Istio — What helps team collaboration?",
+      "options": [
+        "Shared workflows and visibility",
+        "Isolated work",
+        "No documentation",
+        "Siloed tools"
+      ],
+      "answer": 0,
+      "explanation": "Shared workflows and visibility enable better collaboration."
+    },
+    {
+      "question": "Istio — What reduces errors most?",
+      "options": [
+        "Automation",
+        "Manual processes",
+        "Rushing",
+        "Bypassing reviews"
+      ],
+      "answer": 0,
+      "explanation": "Automation consistently eliminates human errors."
+    },
+    {
+      "question": "Istio — What improves speed?",
+      "options": [
+        "Parallel execution and caching",
+        "Serial execution",
+        "No optimization",
+        "Manual steps"
+      ],
+      "answer": 0,
+      "explanation": "Parallel execution and caching significantly improve speed."
+    },
+    {
+      "question": "Istio — What is key for monitoring?",
+      "options": [
+        "Metrics dashboards and alerts",
+        "No monitoring",
+        "Only error logs",
+        "Manual checks"
+      ],
+      "answer": 0,
+      "explanation": "Metrics dashboards and alerts provide actionable insights."
+    },
+    {
+      "question": "Istio — What ensures quality?",
+      "options": [
+        "Automated testing in pipeline",
+        "No testing",
+        "Only manual QA",
+        "Skipping code review"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing integrated into the pipeline ensures consistent quality."
+    }
+  ],
+  "codeExamples": [
+    {
+      "title": "Install Istio",
+      "useCase": "Deploy service mesh",
+      "code": "istioctl install --set profile=demo -y",
+      "description": "Installs Istio with demo profile."
+    },
+    {
+      "title": "Enable Sidecar Injection",
+      "useCase": "Auto-inject Envoy",
+      "code": "kubectl label namespace default istio-injection=enabled",
+      "description": "Labels namespace for auto sidecar injection."
+    },
+    {
+      "title": "Create VirtualService",
+      "useCase": "Traffic routing",
+      "code": "kubectl apply -f virtual-service.yaml",
+      "description": "Creates Istio routing rules."
+    },
+    {
+      "title": "Integration Pattern",
+      "useCase": "Tool integration",
+      "code": "# Integration with other tools\n# Shows how components connect",
+      "description": "Integration example with related tools."
+    }
+  ],
+  "laymanDefinition": "Istio is a service mesh providing traffic management, security, observability, and policy enforcement. Architecture: data plane (Envoy sidecars), control plane (Istiod). Features: mTLS, traffic routing, telemetry, access control, fault injection.",
+  "diagramSvg": "<svg viewBox=\"0 0 500 280\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"280\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">Istio</text><rect x=\"20\" y=\"45\" width=\"460\" height=\"60\" rx=\"5\" fill=\"#e8f4f8\" stroke=\"#ccc\" stroke-width=\"1.5\"/><text x=\"250\" y=\"80\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Istio</text><text x=\"250\" y=\"155\" font-size=\"10\" fill=\"#555\" text-anchor=\"middle\">Service mesh: traffic management, security, observ</text><text x=\"250\" y=\"168\" font-size=\"10\" fill=\"#555\" text-anchor=\"middle\">ability</text></svg>"
+};

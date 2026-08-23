@@ -1,0 +1,209 @@
+export const cicd_test_automation = {
+  "id": "cicd-test-automation",
+  "title": "Test Automation in CI/CD",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 20,
+  "tldr": [
+    "Test automation in CI/CD means running tests automatically on every code change, providing fast feedback on code quality.",
+    "Test types: unit tests (fast, isolated), integration tests (service interaction), end-to-end tests (full workflow), visual regression tests.",
+    "Test results gate the pipeline: failure in tests blocks the pipeline from proceeding to deployment.",
+    "Automated testing in CI/CD catches bugs minutes after they are introduced, not days later in QA."
+  ],
+  "laymanDefinition": "Test automation is like having a quality control inspector that checks every product coming off the assembly line. If the inspector finds a defect, the product is sent back, preventing bad products from reaching customers. The earlier a defect is caught, the cheaper it is to fix.",
+  "deepDive": [
+    {
+      "heading": "Test Pyramid",
+      "text": "Unit tests (base, many): test individual functions/classes. Fast, no external dependencies. Integration tests (middle, some): test module/API interactions. May use test databases. E2E tests (top, few): test complete user flows. Slow, brittle. Strategy: >70% unit, ~20% integration, <10% E2E."
+    },
+    {
+      "heading": "CI/CD Test Strategy",
+      "text": "Run unit tests on every commit (fast feedback). Run integration tests on PR to main. Run E2E tests on PR or scheduled (not on every commit). Run linting and type checking in parallel. Use test splitting/parallelism for large suites."
+    },
+    {
+      "heading": "Test Reporting",
+      "text": "JUnit XML: standard test report format. Coverage reports: Istanbul (JS), JaCoCo (Java), coverage.py. Publish reports as pipeline artifacts. Failure notifications: Slack, email, GitHub commit status. Test flakiness detection and retry."
+    }
+  ],
+  "interviewAnswer": "Test automation in CI/CD means running tests automatically on every code change, providing fast feedback on code quality.",
+  "interviewQuestions": [
+    {
+      "question": "What is the test pyramid?",
+      "answer": "A model showing the ideal proportion: many unit tests (base), some integration tests (middle), few E2E tests (top)."
+    },
+    {
+      "question": "What tests should run on every commit?",
+      "answer": "Unit tests (fast, focused). Integration and E2E tests run on PRs or schedules."
+    },
+    {
+      "question": "What is test flakiness?",
+      "answer": "Tests that sometimes pass and sometimes fail without code changes. Should be quarantined and fixed."
+    },
+    {
+      "question": "Test Automation in CI/CD — How do you get started with this concept?",
+      "answer": "Getting started involves understanding the basics, setting up a proof of concept, and iterating."
+    },
+    {
+      "question": "Test Automation in CI/CD — What tools integrate well with this?",
+      "answer": "Integration is possible through APIs, plugins, webhooks, and configuration files."
+    },
+    {
+      "question": "Test Automation in CI/CD — What are common troubleshooting steps?",
+      "answer": "Troubleshooting involves checking logs, verifying configuration, and testing incrementally."
+    },
+    {
+      "question": "Test Automation in CI/CD — What security considerations apply here?",
+      "answer": "Security considerations include access control, encryption of sensitive data, and audit logging."
+    },
+    {
+      "question": "Test Automation in CI/CD — What best practices should be followed?",
+      "answer": "Best practices include version control, automation, monitoring, and thorough documentation."
+    },
+    {
+      "question": "Test Automation in CI/CD — How does this affect team collaboration?",
+      "answer": "It supports collaboration through shared visibility, standardized processes, and clear workflows."
+    },
+    {
+      "question": "Test Automation in CI/CD — What metrics indicate successful implementation?",
+      "answer": "Key metrics include adoption rate, error reduction, build times, and team satisfaction scores."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"300\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">Test Automation in CI/CD</text><rect x=\"10\" y=\"35\" width=\"140\" height=\"25\" rx=\"5\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1.5\"/><text x=\"80\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Unit Tests</text><text x=\"80\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Fast, many, isolated</text><rect x=\"10\" y=\"65\" width=\"140\" height=\"25\" rx=\"5\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1.5\"/><text x=\"80\" y=\"81\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Integration</text><text x=\"80\" y=\"84\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">API, DB interaction</text><rect x=\"10\" y=\"95\" width=\"140\" height=\"25\" rx=\"5\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1.5\"/><text x=\"80\" y=\"111\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">E2E Tests</text><text x=\"80\" y=\"114\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Full workflows, few</text><text x=\"240\" y=\"140\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">Test Automation: Unit tests on every commit, integ</text><text x=\"240\" y=\"152\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">ration on PRs, E2E on PRs/schedules. Gate pipeline</text><text x=\"240\" y=\"164\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\"> progression.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "Test Commands",
+      "useCase": "Run tests in CI.",
+      "code": "npm run test:unit\nnpm run test:integration\nnpm run test:e2e",
+      "description": ""
+    },
+    {
+      "title": "Common Use Case",
+      "useCase": "Typical implementation",
+      "code": "# Common implementation pattern\n# Used in everyday scenarios",
+      "description": "Standard use case example."
+    },
+    {
+      "title": "Advanced Configuration",
+      "useCase": "Complex scenario",
+      "code": "# Advanced pattern for complex scenarios\n# Includes error handling",
+      "description": "Advanced configuration example."
+    },
+    {
+      "title": "Integration Pattern",
+      "useCase": "Tool integration",
+      "code": "# Integration with other tools\n# Shows how components connect",
+      "description": "Integration example with related tools."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What is the recommended proportion of unit tests in the test pyramid?",
+      "options": [
+        "10%",
+        "50%",
+        "70%+",
+        "90%+"
+      ],
+      "answer": 2,
+      "explanation": "The test pyramid recommends >70% unit tests (base), ~20% integration (middle), <10% E2E (top)."
+    },
+    {
+      "question": "Test Automation in CI/CD — What is the recommended approach?",
+      "options": [
+        "Start simple and iterate",
+        "Build everything at once",
+        "Skip testing",
+        "Avoid planning"
+      ],
+      "answer": 0,
+      "explanation": "Starting simple and iterating is the most effective approach."
+    },
+    {
+      "question": "Test Automation in CI/CD — What should be prioritized?",
+      "options": [
+        "Reliability and consistency",
+        "Speed only",
+        "Features over quality",
+        "Manual processes"
+      ],
+      "answer": 0,
+      "explanation": "Reliability and consistency are foundational priorities."
+    },
+    {
+      "question": "Test Automation in CI/CD — What is important for security?",
+      "options": [
+        "Access control and encryption",
+        "Open access",
+        "Shared passwords",
+        "No auditing"
+      ],
+      "answer": 0,
+      "explanation": "Access control and encryption are fundamental security measures."
+    },
+    {
+      "question": "Test Automation in CI/CD — How to ensure reliability?",
+      "options": [
+        "Automated testing and monitoring",
+        "Manual checks only",
+        "No testing",
+        "Reactive fixes"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing and monitoring ensure consistent reliability."
+    },
+    {
+      "question": "Test Automation in CI/CD — What helps team collaboration?",
+      "options": [
+        "Shared workflows and visibility",
+        "Isolated work",
+        "No documentation",
+        "Siloed tools"
+      ],
+      "answer": 0,
+      "explanation": "Shared workflows and visibility enable better collaboration."
+    },
+    {
+      "question": "Test Automation in CI/CD — What reduces errors most?",
+      "options": [
+        "Automation",
+        "Manual processes",
+        "Rushing",
+        "Bypassing reviews"
+      ],
+      "answer": 0,
+      "explanation": "Automation consistently eliminates human errors."
+    },
+    {
+      "question": "Test Automation in CI/CD — What improves speed?",
+      "options": [
+        "Parallel execution and caching",
+        "Serial execution",
+        "No optimization",
+        "Manual steps"
+      ],
+      "answer": 0,
+      "explanation": "Parallel execution and caching significantly improve speed."
+    },
+    {
+      "question": "Test Automation in CI/CD — What is key for monitoring?",
+      "options": [
+        "Metrics dashboards and alerts",
+        "No monitoring",
+        "Only error logs",
+        "Manual checks"
+      ],
+      "answer": 0,
+      "explanation": "Metrics dashboards and alerts provide actionable insights."
+    },
+    {
+      "question": "Test Automation in CI/CD — What ensures quality?",
+      "options": [
+        "Automated testing in pipeline",
+        "No testing",
+        "Only manual QA",
+        "Skipping code review"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing integrated into the pipeline ensures consistent quality."
+    }
+  ]
+};

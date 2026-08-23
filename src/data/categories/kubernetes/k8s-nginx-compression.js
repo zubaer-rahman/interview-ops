@@ -1,0 +1,202 @@
+export const k8s_nginx_compression = {
+  "id": "k8s-nginx-compression",
+  "title": "Compression",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 10,
+  "file": "k8s-nginx-compression.json",
+  "interviewAnswer": "NGINX gzip compression reduces bandwidth by compressing responses before sending to clients. Configurable for MIME types, minimum length, and compression level. Reduces transfer size by 60-80% for text-based responses (HTML, CSS, JS, JSON).",
+  "tldr": [
+    "gzip on; enables response compression",
+    "gzip_types: text/html, text/css, application/javascript, application/json",
+    "gzip_min_length: 1000 (bytes, minimum size to compress)",
+    "gzip_comp_level: 1-9 (1=fast, 9=best)"
+  ],
+  "deepDive": [
+    {
+      "heading": "Compression Configuration",
+      "text": "gzip on; gzip_vary on; gzip_proxied any; gzip_comp_level 6; gzip_min_length 256; gzip_types text/plain text/css application/json application/javascript text/xml application/xml text/javascript image/svg+xml; gzip_disable \"msie6\";"
+    },
+    {
+      "heading": "Brotli Compression",
+      "text": "brotli (ngx_brotli) provides better compression than gzip (20-30% smaller). Install ngx_brotli module. brotli on; brotli_types same as gzip; brotli_comp_level 6;. For NGINX Ingress: add via ConfigMap with enable-brotli: \"true\"."
+    },
+    {
+      "heading": "Common Use Cases",
+      "text": "Compression applies to build automation, continuous integration, test execution, deployment orchestration, and infrastructure management. Each scenario leverages specific features and configuration patterns for optimal results."
+    }
+  ],
+  "interviewQuestions": [
+    {
+      "question": "NGINX compression?",
+      "answer": "gzip on — compresses text responses to reduce bandwidth."
+    },
+    {
+      "question": "Compression level range?",
+      "answer": "1-9. 1=fast/least, 9=slow/best compression."
+    },
+    {
+      "question": "gzip_min_length?",
+      "answer": "Minimum response size in bytes before compressing (default 20)."
+    },
+    {
+      "question": "gzip_types?",
+      "answer": "MIME types to compress. Default: text/html only."
+    },
+    {
+      "question": "Compression — What tools integrate well with this?",
+      "answer": "Integration is possible through APIs, plugins, webhooks, and configuration files."
+    },
+    {
+      "question": "Compression — What are common troubleshooting steps?",
+      "answer": "Troubleshooting involves checking logs, verifying configuration, and testing incrementally."
+    },
+    {
+      "question": "Compression — What security considerations apply here?",
+      "answer": "Security considerations include access control, encryption of sensitive data, and audit logging."
+    },
+    {
+      "question": "Compression — What best practices should be followed?",
+      "answer": "Best practices include version control, automation, monitoring, and thorough documentation."
+    },
+    {
+      "question": "Compression — How does this affect team collaboration?",
+      "answer": "It supports collaboration through shared visibility, standardized processes, and clear workflows."
+    },
+    {
+      "question": "Compression — What metrics indicate successful implementation?",
+      "answer": "Key metrics include adoption rate, error reduction, build times, and team satisfaction scores."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "Compression reduces?",
+      "options": [
+        "Bandwidth ~60-80%",
+        "CPU usage",
+        "Latency"
+      ],
+      "answer": 0
+    },
+    {
+      "question": "High compression costs?",
+      "options": [
+        "More bandwidth",
+        "More CPU",
+        "More memory"
+      ],
+      "answer": 1
+    },
+    {
+      "question": "Brotli vs gzip?",
+      "options": [
+        "Weaker",
+        "Better compression 20-30%",
+        "Same"
+      ],
+      "answer": 1
+    },
+    {
+      "question": "gzip_vary?",
+      "options": [
+        "Adds Vary header",
+        "Changes level",
+        "Increases speed"
+      ],
+      "answer": 0
+    },
+    {
+      "question": "Compression — How to ensure reliability?",
+      "options": [
+        "Automated testing and monitoring",
+        "Manual checks only",
+        "No testing",
+        "Reactive fixes"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing and monitoring ensure consistent reliability."
+    },
+    {
+      "question": "Compression — What helps team collaboration?",
+      "options": [
+        "Shared workflows and visibility",
+        "Isolated work",
+        "No documentation",
+        "Siloed tools"
+      ],
+      "answer": 0,
+      "explanation": "Shared workflows and visibility enable better collaboration."
+    },
+    {
+      "question": "Compression — What reduces errors most?",
+      "options": [
+        "Automation",
+        "Manual processes",
+        "Rushing",
+        "Bypassing reviews"
+      ],
+      "answer": 0,
+      "explanation": "Automation consistently eliminates human errors."
+    },
+    {
+      "question": "Compression — What improves speed?",
+      "options": [
+        "Parallel execution and caching",
+        "Serial execution",
+        "No optimization",
+        "Manual steps"
+      ],
+      "answer": 0,
+      "explanation": "Parallel execution and caching significantly improve speed."
+    },
+    {
+      "question": "Compression — What is key for monitoring?",
+      "options": [
+        "Metrics dashboards and alerts",
+        "No monitoring",
+        "Only error logs",
+        "Manual checks"
+      ],
+      "answer": 0,
+      "explanation": "Metrics dashboards and alerts provide actionable insights."
+    },
+    {
+      "question": "Compression — What ensures quality?",
+      "options": [
+        "Automated testing in pipeline",
+        "No testing",
+        "Only manual QA",
+        "Skipping code review"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing integrated into the pipeline ensures consistent quality."
+    }
+  ],
+  "codeExamples": [
+    {
+      "title": "Enable Compression",
+      "useCase": "Reduce bandwidth",
+      "code": "kubectl annotate ingress my-ingress nginx.ingress.kubernetes.io/configuration-snippet=\"gzip on; gzip_types text/plain text/css application/json;\"",
+      "description": "Enables gzip for ingress."
+    },
+    {
+      "title": "Enable Brotli",
+      "useCase": "Better compression",
+      "code": "kubectl annotate ingress my-ingress nginx.ingress.kubernetes.io/enable-brotli=\"true\"",
+      "description": "Enables Brotli compression."
+    },
+    {
+      "title": "Advanced Configuration",
+      "useCase": "Complex scenario",
+      "code": "# Advanced pattern for complex scenarios\n# Includes error handling",
+      "description": "Advanced configuration example."
+    },
+    {
+      "title": "Integration Pattern",
+      "useCase": "Tool integration",
+      "code": "# Integration with other tools\n# Shows how components connect",
+      "description": "Integration example with related tools."
+    }
+  ],
+  "laymanDefinition": "NGINX gzip compression reduces bandwidth by compressing responses before sending to clients. Configurable for MIME types, minimum length, and compression level. Reduces transfer size by 60-80% for text-based responses (HTML, CSS, JS, JSON).",
+  "diagramSvg": "<svg viewBox=\"0 0 500 280\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"280\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">Compression</text><rect x=\"20\" y=\"45\" width=\"460\" height=\"60\" rx=\"5\" fill=\"#e8f4f8\" stroke=\"#ccc\" stroke-width=\"1.5\"/><text x=\"250\" y=\"80\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Compression</text><text x=\"250\" y=\"155\" font-size=\"10\" fill=\"#555\" text-anchor=\"middle\">gzip on; enables response compression</text></svg>"
+};

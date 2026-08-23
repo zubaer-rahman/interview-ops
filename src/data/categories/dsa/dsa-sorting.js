@@ -1,0 +1,175 @@
+export const dsa_sorting = {
+  "id": "dsa-sorting",
+  "title": "Sorting Algorithms",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 20,
+  "tldr": [
+    "Sorting arranges elements in a specific order (ascending/descending). Essential for efficient searching and data organization.",
+    "Comparison-based sorts: Bubble, Selection, Insertion (O(n^2)), MergeSort, QuickSort, HeapSort (O(n log n)).",
+    "Non-comparison sorts: Counting Sort, Radix Sort, Bucket Sort (O(n + k) linear in certain cases).",
+    "Stable sorts preserve relative order of equal elements. In-place sorts use O(1) extra space."
+  ],
+  "laymanDefinition": "Sorting is like organizing a deck of cards. Each sorting algorithm is a different strategy. Insertion Sort: pick a card and insert it in the correct position. MergeSort: split the deck in half, sort each, then merge. QuickSort: pick a pivot card and arrange smaller cards before it, larger after.",
+  "deepDive": [
+    {
+      "heading": "Comparison Sorts (O(n^2))",
+      "text": "Bubble Sort: repeatedly swap adjacent elements O(n^2). Selection Sort: find minimum and place at front O(n^2). Insertion Sort: insert each element into sorted portion O(n^2) but O(n) for nearly sorted data."
+    },
+    {
+      "heading": "Comparison Sorts (O(n log n))",
+      "text": "MergeSort: stable, O(n log n), O(n) space. QuickSort: in-place, O(n log n) average, O(n^2) worst. HeapSort: in-place, O(n log n), not stable. TimSort (Python/Java): hybrid of MergeSort and InsertionSort."
+    },
+    {
+      "heading": "Non-Comparison Sorts (Linear)",
+      "text": "Counting Sort: count occurrences, O(n + k) where k is range. Radix Sort: sort by digits, O(d * (n + k)). Bucket Sort: distribute into buckets, sort each. All require specific data characteristics for linear time."
+    },
+    {
+      "heading": "Sorting Properties",
+      "text": "Stable: Insertion, Merge, Bubble, Counting, TimSort. Unstable: QuickSort (Lomuto), HeapSort, Selection, ShellSort. In-place: Insertion, Selection, Bubble, QuickSort, HeapSort, ShellSort. Not in-place: MergeSort, Counting, Radix."
+    }
+  ],
+  "interviewAnswer": "Choose sorting algorithm based on data characteristics and requirements. For general-purpose, QuickSort is fastest in practice. Use MergeSort for stability. Use HeapSort when O(1) space needed. Use Counting/Radix for integers with limited range. Nearly sorted data: Insertion Sort is O(n).",
+  "interviewQuestions": [
+    {
+      "question": "What is the best general-purpose sort?",
+      "answer": "QuickSort \\u2014 fastest in practice O(n log n) average."
+    },
+    {
+      "question": "What is a stable sort?",
+      "answer": "A sort that preserves the relative order of equal elements."
+    },
+    {
+      "question": "What is an in-place sort?",
+      "answer": "A sort using O(1) extra space (besides input)."
+    },
+    {
+      "question": "What is MergeSort\\'s advantage?",
+      "answer": "Stable and guaranteed O(n log n)."
+    },
+    {
+      "question": "What is QuickSort\\'s worst case?",
+      "answer": "O(n^2) when array is already sorted and pivot is first/last element."
+    },
+    {
+      "question": "What is the space complexity of MergeSort?",
+      "answer": "O(n) for the auxiliary merge array."
+    },
+    {
+      "question": "What sorting algorithm is O(n) for nearly sorted data?",
+      "answer": "Insertion Sort \\u2014 O(n) for nearly sorted arrays."
+    },
+    {
+      "question": "When is Counting Sort used?",
+      "answer": "When the range of values (k) is small relative to n. O(n + k)."
+    },
+    {
+      "question": "What algorithm does JavaScript use?",
+      "answer": "TimSort (hybrid of MergeSort and InsertionSort), stable, O(n log n)."
+    },
+    {
+      "question": "What is HeapSort\\'s space complexity?",
+      "answer": "O(1) — in-place sort."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"300\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">Sorting Algorithms</text><rect x=\"10\" y=\"35\" width=\"100\" height=\"25\" rx=\"5\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1.5\"/><text x=\"60\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Unsorted</text><text x=\"60\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">[5,3,8,1,9]</text><line x1=\"110\" y1=\"48\" x2=\"140\" y2=\"48\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"150\" y=\"35\" width=\"120\" height=\"25\" rx=\"5\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1.5\"/><text x=\"210\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Bubble Sort</text><text x=\"210\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">O(n^2)</text><rect x=\"150\" y=\"65\" width=\"120\" height=\"25\" rx=\"5\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1.5\"/><text x=\"210\" y=\"81\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">QuickSort</text><text x=\"210\" y=\"84\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">O(n log n)</text><rect x=\"150\" y=\"95\" width=\"120\" height=\"25\" rx=\"5\" fill=\"#dc3545\" stroke=\"#dc3545\" stroke-width=\"1.5\"/><text x=\"210\" y=\"111\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">MergeSort</text><text x=\"210\" y=\"114\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Stable O(n log n)</text><rect x=\"150\" y=\"125\" width=\"120\" height=\"25\" rx=\"5\" fill=\"#e83e8c\" stroke=\"#e83e8c\" stroke-width=\"1.5\"/><text x=\"210\" y=\"141\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Counting Sort</text><text x=\"210\" y=\"144\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">O(n+k)</text><rect x=\"150\" y=\"155\" width=\"120\" height=\"25\" rx=\"5\" fill=\"#6610f2\" stroke=\"#6610f2\" stroke-width=\"1.5\"/><text x=\"210\" y=\"171\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">HeapSort</text><text x=\"210\" y=\"174\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">In-place O(n log n)</text><rect x=\"290\" y=\"35\" width=\"190\" height=\"150\" rx=\"5\" fill=\"#17a2b8\" stroke=\"#17a2b8\" stroke-width=\"1.5\"/><text x=\"385\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Sorting Algorithms</text><text x=\"385\" y=\"157\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Comparison: O(n^2) and O(n log n).</text><text x=\"385\" y=\"168\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\"> Non-comparison: O(n+k). Stable vs</text><text x=\"385\" y=\"179\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\"> in-place.</text><text x=\"240\" y=\"220\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">Sorting: Compare-based (O(n^2), O(n log n)) and no</text><text x=\"240\" y=\"232\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">n-comparison (O(n+k)). Stable vs in-place.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "Bubble Sort",
+      "useCase": "Simple O(n^2) sort.",
+      "code": "function bubbleSort(arr) {\n  const n = arr.length;\n  for (let i = 0; i < n-1; i++)\n    for (let j = 0; j < n-i-1; j++)\n      if (arr[j] > arr[j+1]) [arr[j], arr[j+1]] = [arr[j+1], arr[j]];\n  return arr;\n}",
+      "description": "Bubble Sort O(n^2) in-place stable."
+    },
+    {
+      "title": "Selection Sort",
+      "useCase": "Select minimum repeatedly.",
+      "code": "function selectionSort(arr) {\n  const n = arr.length;\n  for (let i = 0; i < n-1; i++) {\n    let minIdx = i;\n    for (let j = i+1; j < n; j++)\n      if (arr[j] < arr[minIdx]) minIdx = j;\n    if (minIdx !== i) [arr[i], arr[minIdx]] = [arr[minIdx], arr[i]];\n  }\n  return arr;\n}",
+      "description": "Selection Sort O(n^2) in-place unstable."
+    },
+    {
+      "title": "Insertion Sort",
+      "useCase": "Insert into sorted portion.",
+      "code": "function insertionSort(arr) {\n  for (let i = 1; i < arr.length; i++) {\n    let key = arr[i], j = i - 1;\n    while (j >= 0 && arr[j] > key) { arr[j+1] = arr[j]; j--; }\n    arr[j+1] = key;\n  }\n  return arr;\n}",
+      "description": "Insertion Sort O(n^2), O(n) for nearly sorted, stable."
+    },
+    {
+      "title": "Counting Sort",
+      "useCase": "Linear sort for small range.",
+      "code": "function countingSort(arr, maxVal) {\n  const count = new Array(maxVal + 1).fill(0);\n  for (const num of arr) count[num]++;\n  let idx = 0;\n  for (let i = 0; i <= maxVal; i++)\n    while (count[i] > 0) { arr[idx++] = i; count[i]--; }\n  return arr;\n}",
+      "description": "Counting Sort O(n+k) stable."
+    },
+    {
+      "title": "QuickSort (Hoare Partition)",
+      "useCase": "Faster partition scheme.",
+      "code": "function quickSortHoare(arr, low = 0, high = arr.length - 1) {\n  if (low < high) {\n    const pi = partition(arr, low, high);\n    quickSortHoare(arr, low, pi);\n    quickSortHoare(arr, pi + 1, high);\n  }\n  return arr;\n}\nfunction partition(arr, low, high) {\n  const pivot = arr[Math.floor((low + high) / 2)];\n  let i = low - 1, j = high + 1;\n  while (true) {\n    do { i++; } while (arr[i] < pivot);\n    do { j--; } while (arr[j] > pivot);\n    if (i >= j) return j;\n    [arr[i], arr[j]] = [arr[j], arr[i]];\n  }\n}",
+      "description": "QuickSort Hoare partition O(n log n) average."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "Best general-purpose sort?",
+      "options": [
+        "Bubble Sort",
+        "QuickSort",
+        "Selection Sort",
+        "Counting Sort"
+      ],
+      "answer": 1,
+      "explanation": "QuickSort is fastest in practice."
+    },
+    {
+      "question": "What is a stable sort?",
+      "options": [
+        "Preserves equal element order",
+        "In-place",
+        "O(n log n)",
+        "Uses extra memory"
+      ],
+      "answer": 0,
+      "explanation": "Stable preserves relative order of equal elements."
+    },
+    {
+      "question": "MergeSort space complexity?",
+      "options": [
+        "O(1)",
+        "O(log n)",
+        "O(n)",
+        "O(n^2)"
+      ],
+      "answer": 2,
+      "explanation": "O(n) extra space for merge."
+    },
+    {
+      "question": "QuickSort worst case?",
+      "options": [
+        "O(n log n)",
+        "O(n)",
+        "O(n^2)",
+        "O(log n)"
+      ],
+      "answer": 2,
+      "explanation": "O(n^2) for sorted array with bad pivot."
+    },
+    {
+      "question": "Which sort is O(n) for nearly sorted?",
+      "options": [
+        "QuickSort",
+        "Insertion Sort",
+        "MergeSort",
+        "HeapSort"
+      ],
+      "answer": 1,
+      "explanation": "Insertion Sort O(n) for nearly sorted."
+    },
+    {
+      "question": "Counting Sort works when?",
+      "options": [
+        "Range is small",
+        "Range is large",
+        "Data is random",
+        "Data is sorted"
+      ],
+      "answer": 0,
+      "explanation": "When the range of values is small."
+    }
+  ]
+};

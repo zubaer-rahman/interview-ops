@@ -1,0 +1,209 @@
+export const github_actions_scheduled = {
+  "id": "github-actions-scheduled",
+  "title": "Scheduled Workflows",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 10,
+  "tldr": [
+    "Scheduled workflows run at specified times using cron syntax, similar to cron jobs on Linux.",
+    "Configured via on: schedule: - cron: expression. Runs on the default branch (usually main).",
+    "Common uses: nightly builds, weekly dependency updates, daily report generation, cleanup tasks.",
+    "Scheduled Workflows works alongside other modern tools and platforms to support end-to-end software delivery processes."
+  ],
+  "laymanDefinition": "Scheduled workflows are like setting an alarm clock for your automation. \"Run tests every night at 2 AM.\" \"Send a weekly report every Monday.\" \"Check for dependency updates every day.\" GitHub Actions uses standard cron syntax, the same as Linux cron jobs.",
+  "deepDive": [
+    {
+      "heading": "Cron Syntax",
+      "text": "Five fields: minute (0-59), hour (0-23), day of month (1-31), month (1-12), day of week (0-6, 0=Sunday). Examples: \"0 2 * * *\" (daily 2 AM). \"0 0 * * 1\" (weekly Monday midnight). \"*/15 * * * *\" (every 15 minutes). \"0 0 1 * *\" (monthly). Max frequency: every 5 minutes."
+    },
+    {
+      "heading": "Schedule Behavior",
+      "text": "Runs on default branch (main). Only runs if workflow file exists on default branch. Uses UTC timezone. Delays possible if high system load. Consecutive runs: if previous run still active, new run may start or wait (configurable)."
+    },
+    {
+      "heading": "Use Cases",
+      "text": "Nightly CI: full test suite + integration tests (too slow for per-commit). Dependency updates: check for outdated packages. Report generation: email daily reports, generate documentation. Data processing: ETL jobs, database maintenance. Cleanup: delete old artifacts, close stale issues."
+    }
+  ],
+  "interviewAnswer": "Scheduled workflows run at specified times using cron syntax, similar to cron jobs on Linux.",
+  "interviewQuestions": [
+    {
+      "question": "What is a scheduled workflow?",
+      "answer": "A workflow triggered by a cron schedule rather than a code event."
+    },
+    {
+      "question": "What timezone does cron use in GitHub Actions?",
+      "answer": "UTC. Adjust your cron expression for your timezone."
+    },
+    {
+      "question": "What is the minimum cron interval?",
+      "answer": "Every 5 minutes (e.g., */5 * * * *)."
+    },
+    {
+      "question": "Scheduled Workflows — How do you get started with this concept?",
+      "answer": "Getting started involves understanding the basics, setting up a proof of concept, and iterating."
+    },
+    {
+      "question": "Scheduled Workflows — What tools integrate well with this?",
+      "answer": "Integration is possible through APIs, plugins, webhooks, and configuration files."
+    },
+    {
+      "question": "Scheduled Workflows — What are common troubleshooting steps?",
+      "answer": "Troubleshooting involves checking logs, verifying configuration, and testing incrementally."
+    },
+    {
+      "question": "Scheduled Workflows — What security considerations apply here?",
+      "answer": "Security considerations include access control, encryption of sensitive data, and audit logging."
+    },
+    {
+      "question": "Scheduled Workflows — What best practices should be followed?",
+      "answer": "Best practices include version control, automation, monitoring, and thorough documentation."
+    },
+    {
+      "question": "Scheduled Workflows — How does this affect team collaboration?",
+      "answer": "It supports collaboration through shared visibility, standardized processes, and clear workflows."
+    },
+    {
+      "question": "Scheduled Workflows — What metrics indicate successful implementation?",
+      "answer": "Key metrics include adoption rate, error reduction, build times, and team satisfaction scores."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"300\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">Scheduled Workflows</text><rect x=\"10\" y=\"35\" width=\"140\" height=\"25\" rx=\"5\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1.5\"/><text x=\"80\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Cron Trigger</text><text x=\"80\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">\"0 2 * * *\"</text><line x1=\"150\" y1=\"48\" x2=\"170\" y2=\"48\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"180\" y=\"35\" width=\"140\" height=\"25\" rx=\"5\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1.5\"/><text x=\"250\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Workflow Runs</text><text x=\"250\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Daily at 2 AM UTC</text><text x=\"240\" y=\"100\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">Scheduled Workflows: Cron-based triggers. on: sche</text><text x=\"240\" y=\"112\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">dule: - cron: expression. UTC timezone. Min interv</text><text x=\"240\" y=\"124\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">al: 5 min.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "Scheduled Workflow",
+      "useCase": "Daily execution at 2 AM.",
+      "code": "name: Nightly CI\non:\n  schedule:\n    - cron: \"0 2 * * *\"\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - run: npm ci && npm test",
+      "description": ""
+    },
+    {
+      "title": "Common Use Case",
+      "useCase": "Typical implementation",
+      "code": "# Common implementation pattern\n# Used in everyday scenarios",
+      "description": "Standard use case example."
+    },
+    {
+      "title": "Advanced Configuration",
+      "useCase": "Complex scenario",
+      "code": "# Advanced pattern for complex scenarios\n# Includes error handling",
+      "description": "Advanced configuration example."
+    },
+    {
+      "title": "Integration Pattern",
+      "useCase": "Tool integration",
+      "code": "# Integration with other tools\n# Shows how components connect",
+      "description": "Integration example with related tools."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What cron expression runs a workflow every Monday at 9 AM UTC?",
+      "options": [
+        "0 9 * * 1",
+        "0 9 1 * *",
+        "9 0 * * 1",
+        "0 0 * * 1"
+      ],
+      "answer": 0,
+      "explanation": "\"0 9 * * 1\" — minute 0, hour 9, any day of month, any month, Monday (day 1)."
+    },
+    {
+      "question": "Scheduled Workflows — What is the recommended approach?",
+      "options": [
+        "Start simple and iterate",
+        "Build everything at once",
+        "Skip testing",
+        "Avoid planning"
+      ],
+      "answer": 0,
+      "explanation": "Starting simple and iterating is the most effective approach."
+    },
+    {
+      "question": "Scheduled Workflows — What should be prioritized?",
+      "options": [
+        "Reliability and consistency",
+        "Speed only",
+        "Features over quality",
+        "Manual processes"
+      ],
+      "answer": 0,
+      "explanation": "Reliability and consistency are foundational priorities."
+    },
+    {
+      "question": "Scheduled Workflows — What is important for security?",
+      "options": [
+        "Access control and encryption",
+        "Open access",
+        "Shared passwords",
+        "No auditing"
+      ],
+      "answer": 0,
+      "explanation": "Access control and encryption are fundamental security measures."
+    },
+    {
+      "question": "Scheduled Workflows — How to ensure reliability?",
+      "options": [
+        "Automated testing and monitoring",
+        "Manual checks only",
+        "No testing",
+        "Reactive fixes"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing and monitoring ensure consistent reliability."
+    },
+    {
+      "question": "Scheduled Workflows — What helps team collaboration?",
+      "options": [
+        "Shared workflows and visibility",
+        "Isolated work",
+        "No documentation",
+        "Siloed tools"
+      ],
+      "answer": 0,
+      "explanation": "Shared workflows and visibility enable better collaboration."
+    },
+    {
+      "question": "Scheduled Workflows — What reduces errors most?",
+      "options": [
+        "Automation",
+        "Manual processes",
+        "Rushing",
+        "Bypassing reviews"
+      ],
+      "answer": 0,
+      "explanation": "Automation consistently eliminates human errors."
+    },
+    {
+      "question": "Scheduled Workflows — What improves speed?",
+      "options": [
+        "Parallel execution and caching",
+        "Serial execution",
+        "No optimization",
+        "Manual steps"
+      ],
+      "answer": 0,
+      "explanation": "Parallel execution and caching significantly improve speed."
+    },
+    {
+      "question": "Scheduled Workflows — What is key for monitoring?",
+      "options": [
+        "Metrics dashboards and alerts",
+        "No monitoring",
+        "Only error logs",
+        "Manual checks"
+      ],
+      "answer": 0,
+      "explanation": "Metrics dashboards and alerts provide actionable insights."
+    },
+    {
+      "question": "Scheduled Workflows — What ensures quality?",
+      "options": [
+        "Automated testing in pipeline",
+        "No testing",
+        "Only manual QA",
+        "Skipping code review"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing integrated into the pipeline ensures consistent quality."
+    }
+  ]
+};

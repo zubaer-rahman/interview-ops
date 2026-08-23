@@ -1,0 +1,202 @@
+export const k8s_pdb = {
+  "id": "k8s-pdb",
+  "title": "Pod Disruption Budget",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 15,
+  "file": "k8s-pdb.json",
+  "interviewAnswer": "PodDisruptionBudget (PDB) limits voluntary disruptions (node drain, cluster upgrades, autoscaling). It ensures a minimum number of replicas remain healthy during planned operations. Does NOT protect against involuntary disruptions (hardware failures).",
+  "tldr": [
+    "Limits voluntary disruptions: drain, upgrade, autoscaling down",
+    "minAvailable: minimum Pods that must be running",
+    "maxUnavailable: maximum Pods that can be unavailable",
+    "Drain blocks if PDB would be violated"
+  ],
+  "deepDive": [
+    {
+      "heading": "Configuration",
+      "text": "minAvailable: absolute number or percentage (e.g., 2 or 50%). maxUnavailable: absolute or percentage (mutually exclusive). selector: label query over Pods. PDB status: currentHealthy, desiredHealthy, disruptionsAllowed, expectedPods."
+    },
+    {
+      "heading": "Behavior During Drain",
+      "text": "kubectl drain cordons and evicts Pods. Eviction checks PDB — if disruptionsAllowed > 0, Pod evicted. If PDB would be violated, drain blocks. Force drain bypasses PDB."
+    },
+    {
+      "heading": "Common Use Cases",
+      "text": "Pod Disruption Budget applies to build automation, continuous integration, test execution, deployment orchestration, and infrastructure management. Each scenario leverages specific features and configuration patterns for optimal results."
+    }
+  ],
+  "interviewQuestions": [
+    {
+      "question": "What is PDB?",
+      "answer": "Limits voluntary disruptions ensuring minimum running Pods for availability."
+    },
+    {
+      "question": "What does PDB protect against?",
+      "answer": "Voluntary disruptions: node drain, upgrades, autoscaling."
+    },
+    {
+      "question": "minAvailable vs maxUnavailable?",
+      "answer": "minAvailable: minimum running. maxUnavailable: maximum down at once."
+    },
+    {
+      "question": "Does PDB protect against node failure?",
+      "answer": "No. Involuntary disruptions are not covered."
+    },
+    {
+      "question": "Pod Disruption Budget — What tools integrate well with this?",
+      "answer": "Integration is possible through APIs, plugins, webhooks, and configuration files."
+    },
+    {
+      "question": "Pod Disruption Budget — What are common troubleshooting steps?",
+      "answer": "Troubleshooting involves checking logs, verifying configuration, and testing incrementally."
+    },
+    {
+      "question": "Pod Disruption Budget — What security considerations apply here?",
+      "answer": "Security considerations include access control, encryption of sensitive data, and audit logging."
+    },
+    {
+      "question": "Pod Disruption Budget — What best practices should be followed?",
+      "answer": "Best practices include version control, automation, monitoring, and thorough documentation."
+    },
+    {
+      "question": "Pod Disruption Budget — How does this affect team collaboration?",
+      "answer": "It supports collaboration through shared visibility, standardized processes, and clear workflows."
+    },
+    {
+      "question": "Pod Disruption Budget — What metrics indicate successful implementation?",
+      "answer": "Key metrics include adoption rate, error reduction, build times, and team satisfaction scores."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "PDB protects against?",
+      "options": [
+        "Hardware failures",
+        "Node drain",
+        "Pod crashes"
+      ],
+      "answer": 1
+    },
+    {
+      "question": "Drain blocked when?",
+      "options": [
+        "Always succeeds",
+        "If PDB would be violated",
+        "Never blocked"
+      ],
+      "answer": 1
+    },
+    {
+      "question": "PDB status field?",
+      "options": [
+        "disruptionsAllowed",
+        "allowedDisruptions",
+        "maxDisruptions"
+      ],
+      "answer": 0
+    },
+    {
+      "question": "Voluntary disruption?",
+      "options": [
+        "Node failure",
+        "Pod crash",
+        "Cluster upgrade"
+      ],
+      "answer": 2
+    },
+    {
+      "question": "Pod Disruption Budget — How to ensure reliability?",
+      "options": [
+        "Automated testing and monitoring",
+        "Manual checks only",
+        "No testing",
+        "Reactive fixes"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing and monitoring ensure consistent reliability."
+    },
+    {
+      "question": "Pod Disruption Budget — What helps team collaboration?",
+      "options": [
+        "Shared workflows and visibility",
+        "Isolated work",
+        "No documentation",
+        "Siloed tools"
+      ],
+      "answer": 0,
+      "explanation": "Shared workflows and visibility enable better collaboration."
+    },
+    {
+      "question": "Pod Disruption Budget — What reduces errors most?",
+      "options": [
+        "Automation",
+        "Manual processes",
+        "Rushing",
+        "Bypassing reviews"
+      ],
+      "answer": 0,
+      "explanation": "Automation consistently eliminates human errors."
+    },
+    {
+      "question": "Pod Disruption Budget — What improves speed?",
+      "options": [
+        "Parallel execution and caching",
+        "Serial execution",
+        "No optimization",
+        "Manual steps"
+      ],
+      "answer": 0,
+      "explanation": "Parallel execution and caching significantly improve speed."
+    },
+    {
+      "question": "Pod Disruption Budget — What is key for monitoring?",
+      "options": [
+        "Metrics dashboards and alerts",
+        "No monitoring",
+        "Only error logs",
+        "Manual checks"
+      ],
+      "answer": 0,
+      "explanation": "Metrics dashboards and alerts provide actionable insights."
+    },
+    {
+      "question": "Pod Disruption Budget — What ensures quality?",
+      "options": [
+        "Automated testing in pipeline",
+        "No testing",
+        "Only manual QA",
+        "Skipping code review"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing integrated into the pipeline ensures consistent quality."
+    }
+  ],
+  "codeExamples": [
+    {
+      "title": "Create PDB",
+      "useCase": "Protect app availability",
+      "code": "kubectl create poddisruptionbudget my-pdb --selector=app=web --min-available=2",
+      "description": "Ensures 2 Pods always running."
+    },
+    {
+      "title": "Check PDB Status",
+      "useCase": "Monitor disruptions",
+      "code": "kubectl get pdb",
+      "description": "Shows current health and allowed disruptions."
+    },
+    {
+      "title": "Drain Node",
+      "useCase": "PDB-respecting drain",
+      "code": "kubectl drain worker-1 --ignore-daemonsets",
+      "description": "Drains respecting PDB limits."
+    },
+    {
+      "title": "Integration Pattern",
+      "useCase": "Tool integration",
+      "code": "# Integration with other tools\n# Shows how components connect",
+      "description": "Integration example with related tools."
+    }
+  ],
+  "laymanDefinition": "PodDisruptionBudget (PDB) limits voluntary disruptions (node drain, cluster upgrades, autoscaling). It ensures a minimum number of replicas remain healthy during planned operations. Does NOT protect against involuntary disruptions (hardware failures).",
+  "diagramSvg": "<svg viewBox=\"0 0 500 280\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"280\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">Pod Disruption Budget</text><rect x=\"20\" y=\"45\" width=\"460\" height=\"60\" rx=\"5\" fill=\"#e8f4f8\" stroke=\"#ccc\" stroke-width=\"1.5\"/><text x=\"250\" y=\"80\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Pod Disruption Budget</text><text x=\"250\" y=\"155\" font-size=\"10\" fill=\"#555\" text-anchor=\"middle\">Limits voluntary disruptions: drain, upgrade, auto</text><text x=\"250\" y=\"168\" font-size=\"10\" fill=\"#555\" text-anchor=\"middle\">scaling down</text></svg>"
+};

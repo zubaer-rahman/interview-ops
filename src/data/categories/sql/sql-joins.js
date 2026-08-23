@@ -1,0 +1,179 @@
+export const sql_joins = {
+  "id": "sql-joins",
+  "title": "Joins (INNER, LEFT, RIGHT, FULL, CROSS)",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 30,
+  "tldr": [
+    "Joins combine rows from two or more tables based on a related column between them.",
+    "INNER JOIN returns only matching rows from both tables. LEFT JOIN returns all rows from left table plus matched rows from right.",
+    "RIGHT JOIN is the opposite of LEFT JOIN. FULL JOIN returns all rows from both tables. CROSS JOIN returns cartesian product.",
+    "Joins use ON clause to specify the join condition. Natural JOIN matches columns with same name automatically."
+  ],
+  "laymanDefinition": "A JOIN is like inviting people from two different groups to a party. INNER JOIN only invites people confirmed from both groups. LEFT JOIN invites everyone from group A and anyone from group B who responds. FULL JOIN invites everyone from both groups.",
+  "deepDive": [
+    {
+      "heading": "INNER JOIN",
+      "text": "SELECT * FROM t1 INNER JOIN t2 ON t1.id = t2.fk_id. Returns rows only when the join condition matches in both tables. Most common join type. Can join multiple tables: t1 JOIN t2 ON ... JOIN t3 ON ..."
+    },
+    {
+      "heading": "LEFT JOIN (LEFT OUTER JOIN)",
+      "text": "SELECT * FROM t1 LEFT JOIN t2 ON t1.id = t2.fk_id. Returns all rows from t1. If match found in t2, columns populated; if not, t2 columns are NULL. Use WHERE t2.id IS NULL to find rows with no match."
+    },
+    {
+      "heading": "RIGHT JOIN",
+      "text": "SELECT * FROM t1 RIGHT JOIN t2 ON t1.id = t2.fk_id. Returns all rows from t2 regardless of match in t1. Mirror of LEFT JOIN. Can always be rewritten as LEFT JOIN by swapping table order."
+    },
+    {
+      "heading": "FULL JOIN (FULL OUTER JOIN)",
+      "text": "SELECT * FROM t1 FULL JOIN t2 ON t1.id = t2.fk_id. Returns all rows from both tables. Matching rows combined, non-matching rows get NULL on the other side. Not supported in MySQL (use UNION of LEFT and RIGHT joins)."
+    },
+    {
+      "heading": "CROSS JOIN and Self-Join",
+      "text": "CROSS JOIN produces cartesian product — every row of t1 matched with every row of t2. No ON clause needed. Self-join joins a table to itself using aliases: SELECT * FROM employees e1 JOIN employees e2 ON e1.manager_id = e2.id."
+    }
+  ],
+  "interviewAnswer": "Joins are fundamental SQL operations for combining data across related tables. Understanding the differences between join types and when to use each is essential for any data retrieval task.",
+  "interviewQuestions": [
+    {
+      "question": "What is a JOIN?",
+      "answer": "Combines rows from two or more tables based on a related column. The ON clause specifies the matching condition."
+    },
+    {
+      "question": "What is the difference between INNER and LEFT JOIN?",
+      "answer": "INNER JOIN returns only matching rows. LEFT JOIN returns all rows from left table, with NULLs for non-matching right table columns."
+    },
+    {
+      "question": "When would you use RIGHT JOIN?",
+      "answer": "When you want all rows from the right table regardless of match. Usually LEFT JOIN is preferred by swapping table order."
+    },
+    {
+      "question": "What does FULL JOIN return?",
+      "answer": "All rows from both tables. Rows without matches have NULL on the opposite side."
+    },
+    {
+      "question": "What is a CROSS JOIN?",
+      "answer": "Returns the cartesian product — every combination of rows from both tables. No ON clause."
+    },
+    {
+      "question": "What is a self-join?",
+      "answer": "Joining a table to itself using different aliases. Used for hierarchical data like employee-manager relationships."
+    },
+    {
+      "question": "Can you join more than 2 tables?",
+      "answer": "Yes. Chain joins: t1 JOIN t2 ON ... JOIN t3 ON ... Each additional join narrows or expands the result set."
+    },
+    {
+      "question": "What does USING do in a join?",
+      "answer": "Shortcut when join columns have the same name: t1 JOIN t2 USING (id). Equivalent to ON t1.id = t2.id."
+    },
+    {
+      "question": "What is a NATURAL JOIN?",
+      "answer": "Automatically joins on columns with the same name. Dangerous because schema changes can break it. Avoid in production."
+    },
+    {
+      "question": "Can WHERE filter after JOIN?",
+      "answer": "Yes. WHERE filters the joined result. The order of filtering matters: WHERE before JOIN filters individual tables, WHERE after JOIN filters the combined result."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"300\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">Joins (INNER, LEFT, RIGHT, FULL, CROSS)</text><rect x=\"10\" y=\"35\" width=\"100\" height=\"25\" rx=\"5\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1.5\"/><text x=\"60\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">INNER</text><text x=\"60\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Match only</text><rect x=\"10\" y=\"65\" width=\"100\" height=\"25\" rx=\"5\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1.5\"/><text x=\"60\" y=\"81\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">LEFT</text><text x=\"60\" y=\"84\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">All left</text><rect x=\"10\" y=\"95\" width=\"100\" height=\"25\" rx=\"5\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1.5\"/><text x=\"60\" y=\"111\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">RIGHT</text><text x=\"60\" y=\"114\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">All right</text><rect x=\"10\" y=\"125\" width=\"100\" height=\"25\" rx=\"5\" fill=\"#dc3545\" stroke=\"#dc3545\" stroke-width=\"1.5\"/><text x=\"60\" y=\"141\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">FULL</text><text x=\"60\" y=\"144\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">All both</text><rect x=\"10\" y=\"155\" width=\"100\" height=\"25\" rx=\"5\" fill=\"#e83e8c\" stroke=\"#e83e8c\" stroke-width=\"1.5\"/><text x=\"60\" y=\"171\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">CROSS</text><text x=\"60\" y=\"174\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Cartesian</text><line x1=\"110\" y1=\"48\" x2=\"140\" y2=\"48\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"110\" y1=\"78\" x2=\"140\" y2=\"78\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"110\" y1=\"108\" x2=\"140\" y2=\"108\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"110\" y1=\"138\" x2=\"140\" y2=\"138\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"110\" y1=\"168\" x2=\"140\" y2=\"168\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"150\" y=\"35\" width=\"230\" height=\"155\" rx=\"5\" fill=\"#17a2b8\" stroke=\"#17a2b8\" stroke-width=\"1.5\"/><text x=\"265\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">JOIN Types</text><text x=\"265\" y=\"173\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">INNER and LEFT are most common. FULL and </text><text x=\"265\" y=\"184\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">CROSS for specific use cases.</text><text x=\"240\" y=\"220\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">Joins: Combine related data from multiple tables u</text><text x=\"240\" y=\"232\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">sing join conditions.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "INNER JOIN Example",
+      "useCase": "Employees with their departments.",
+      "code": "SELECT e.name, e.salary, d.department_name\nFROM employees e\nINNER JOIN departments d ON e.dept_id = d.id\nORDER BY e.name;",
+      "description": "Returns only employees that belong to a department."
+    },
+    {
+      "title": "LEFT JOIN Finding Missing Records",
+      "useCase": "Employees without departments.",
+      "code": "SELECT e.name, e.salary, d.department_name\nFROM employees e\nLEFT JOIN departments d ON e.dept_id = d.id\nWHERE d.id IS NULL;",
+      "description": "Finds employees with no matching department (orphan records)."
+    },
+    {
+      "title": "Self-Join for Hierarchies",
+      "useCase": "Employee-manager relationships.",
+      "code": "SELECT e1.name AS employee, e2.name AS manager\nFROM employees e1\nLEFT JOIN employees e2 ON e1.manager_id = e2.id\nORDER BY e1.name;",
+      "description": "Joins employees table to itself to show reporting structure."
+    },
+    {
+      "title": "FULL JOIN for Comparison",
+      "useCase": "All employees and departments.",
+      "code": "SELECT e.name, d.department_name\nFROM employees e\nFULL JOIN departments d ON e.dept_id = d.id\nWHERE e.id IS NULL OR d.id IS NULL;",
+      "description": "Finds orphaned records on either side of the relationship."
+    },
+    {
+      "title": "Multiple Joins",
+      "useCase": "Orders with customer and product details.",
+      "code": "SELECT o.id AS order_id, c.name AS customer, p.name AS product, oi.quantity\nFROM orders o\nJOIN customers c ON o.customer_id = c.id\nJOIN order_items oi ON o.id = oi.order_id\nJOIN products p ON oi.product_id = p.id\nORDER BY o.id;",
+      "description": "Chains four tables together for a complete order report."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "Which JOIN returns only matching rows?",
+      "options": [
+        "LEFT JOIN",
+        "INNER JOIN",
+        "RIGHT JOIN",
+        "FULL JOIN"
+      ],
+      "answer": 1,
+      "explanation": "INNER JOIN returns only rows with matches in both tables."
+    },
+    {
+      "question": "Which JOIN returns all rows from the left table?",
+      "options": [
+        "LEFT JOIN",
+        "INNER JOIN",
+        "RIGHT JOIN",
+        "CROSS JOIN"
+      ],
+      "answer": 0,
+      "explanation": "LEFT JOIN returns all left table rows with matching right table data."
+    },
+    {
+      "question": "What does CROSS JOIN produce?",
+      "options": [
+        "Only matching rows",
+        "Cartesian product",
+        "All left rows",
+        "Combined unique rows"
+      ],
+      "answer": 1,
+      "explanation": "CROSS JOIN creates every combination of rows from both tables."
+    },
+    {
+      "question": "What is a self-join?",
+      "options": [
+        "Two different tables",
+        "Table joined to itself",
+        "Two copies of same data",
+        "A view"
+      ],
+      "answer": 1,
+      "explanation": "Self-join joins a table to itself using different aliases."
+    },
+    {
+      "question": "What is the safe alternative to NATURAL JOIN?",
+      "options": [
+        "INNER JOIN with ON",
+        "LEFT JOIN",
+        "CROSS JOIN",
+        "FULL JOIN"
+      ],
+      "answer": 0,
+      "explanation": "Use INNER JOIN with explicit ON clause instead of NATURAL JOIN."
+    },
+    {
+      "question": "Which join type is not supported in MySQL?",
+      "options": [
+        "LEFT JOIN",
+        "RIGHT JOIN",
+        "FULL JOIN",
+        "INNER JOIN"
+      ],
+      "answer": 2,
+      "explanation": "MySQL does not support FULL OUTER JOIN directly."
+    }
+  ]
+};

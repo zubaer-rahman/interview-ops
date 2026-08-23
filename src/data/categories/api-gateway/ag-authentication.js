@@ -1,0 +1,163 @@
+export const ag_authentication = {
+  "id": "ag-authentication",
+  "title": "Authentication",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 15,
+  "tldr": [
+    "Authentication (AuthN) in API Gateways verifies the identity of clients making API requests before they reach backend services.",
+    "Common methods: API Keys (simple), JWT Bearer Tokens (stateless), OAuth2/OIDC (delegated), Basic Auth (legacy), mTLS (mutual TLS).",
+    "API Gateways centralize authentication — implement once instead of duplicating in every microservice.",
+    "Gateway validates auth, extracts identity claims, forwards as headers (X-User-ID, X-User-Role) to backends."
+  ],
+  "laymanDefinition": "API Gateway authentication is like a single security checkpoint at a corporate building entrance. Instead of each office checking ID separately, the main entrance checks your badge, stamps your hand (headers) with your role. Every office sees you are authorized without rechecking.",
+  "deepDive": [
+    {
+      "heading": "API Key Authentication",
+      "text": "Simplest: client includes key in header (X-API-Key), query param, or body. Gateway checks against stored keys. Keys are long-lived and static. Good for server-to-server, service accounts, developer portals. Less secure than tokens — rotate periodically."
+    },
+    {
+      "heading": "JWT Bearer Token Auth",
+      "text": "Client presents JWT in Authorization: Bearer header. Gateway validates signature (HS256/RS256/ES256), expiration (exp), audience (aud), issuer (iss). Extracts claims (sub, role) into headers. Stateless — no DB lookup. JWKS for key rotation."
+    },
+    {
+      "heading": "OAuth2 / OIDC Auth",
+      "text": "Gateway acts as OAuth2 resource server. Authorization Code flow: redirect to auth server, exchange code for tokens. Client Credentials: server-to-server. OIDC: adds ID token for user identity. Gateway validates access tokens, optionally introspects."
+    },
+    {
+      "heading": "mTLS (Mutual TLS)",
+      "text": "Both client and server present TLS certificates. Gateway validates client cert against trusted CA. Extracts identity from CN/SAN fields. No tokens needed. Strongest auth — used in zero-trust, financial APIs, IoT."
+    }
+  ],
+  "interviewAnswer": "Centralize authentication at the API Gateway. Choose method by client type: API Keys for services, JWT for web/mobile, OAuth2 for delegated, mTLS for high-security. Forward identity claims as headers. Implement token introspection for opaque tokens.",
+  "interviewQuestions": [
+    {
+      "question": "What is authentication in API Gateway?",
+      "answer": "Verifying API client identity at the gateway before requests reach backend services."
+    },
+    {
+      "question": "Common API Gateway auth methods?",
+      "answer": "API Keys, JWT Bearer, OAuth2/OIDC, Basic Auth, mTLS."
+    },
+    {
+      "question": "Why centralize authentication?",
+      "answer": "Single implementation, consistent security, no per-service auth logic, simplified audit."
+    },
+    {
+      "question": "What does JWT validation check?",
+      "answer": "Signature, expiration (exp), audience (aud), issuer (iss), and optionally other claims."
+    },
+    {
+      "question": "How does gateway communicate identity to backends?",
+      "answer": "Forwarding claims as HTTP headers: X-User-ID, X-User-Role."
+    },
+    {
+      "question": "What is mTLS?",
+      "answer": "Mutual TLS — both client and server present certificates for mutual authentication."
+    },
+    {
+      "question": "Difference between API Keys and JWT?",
+      "answer": "API Keys: static, long-lived. JWT: dynamic, short-lived, contains claims."
+    },
+    {
+      "question": "How does OAuth2 work with gateways?",
+      "answer": "Gateway validates access tokens, optionally introspects, forwards user context."
+    },
+    {
+      "question": "What is token introspection?",
+      "answer": "OAuth2 standard (RFC 7662) for validating opaque tokens via auth server."
+    },
+    {
+      "question": "What should gateway do with invalid tokens?",
+      "answer": "Return 401 Unauthorized immediately, without forwarding to backend."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"300\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">Authentication</text><rect x=\"10\" y=\"35\" width=\"100\" height=\"25\" rx=\"5\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1.5\"/><text x=\"60\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Client</text><text x=\"60\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Request+Creds</text><line x1=\"110\" y1=\"48\" x2=\"140\" y2=\"48\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"150\" y=\"35\" width=\"100\" height=\"25\" rx=\"5\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1.5\"/><text x=\"200\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">API Gateway</text><text x=\"200\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Validates AuthN</text><line x1=\"250\" y1=\"48\" x2=\"280\" y2=\"48\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"150\" y1=\"60\" x2=\"150\" y2=\"80\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"10\" y=\"70\" width=\"100\" height=\"25\" rx=\"5\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1.5\"/><text x=\"60\" y=\"86\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">API Key</text><text x=\"60\" y=\"89\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Static lookup</text><rect x=\"10\" y=\"100\" width=\"100\" height=\"25\" rx=\"5\" fill=\"#dc3545\" stroke=\"#dc3545\" stroke-width=\"1.5\"/><text x=\"60\" y=\"116\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">JWT</text><text x=\"60\" y=\"119\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Signature+claims</text><rect x=\"10\" y=\"130\" width=\"100\" height=\"25\" rx=\"5\" fill=\"#e83e8c\" stroke=\"#e83e8c\" stroke-width=\"1.5\"/><text x=\"60\" y=\"146\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">OAuth2</text><text x=\"60\" y=\"149\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Token validation</text><rect x=\"10\" y=\"160\" width=\"100\" height=\"25\" rx=\"5\" fill=\"#6610f2\" stroke=\"#6610f2\" stroke-width=\"1.5\"/><text x=\"60\" y=\"176\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">mTLS</text><text x=\"60\" y=\"179\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Certificate</text><rect x=\"160\" y=\"70\" width=\"100\" height=\"25\" rx=\"5\" fill=\"#dc3545\" stroke=\"#dc3545\" stroke-width=\"1.5\"/><text x=\"210\" y=\"86\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Backend</text><text x=\"210\" y=\"78\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Receives user head</text><text x=\"210\" y=\"89\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">ers</text><rect x=\"290\" y=\"35\" width=\"190\" height=\"155\" rx=\"5\" fill=\"#17a2b8\" stroke=\"#17a2b8\" stroke-width=\"1.5\"/><text x=\"385\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">API Gateway Auth</text><text x=\"385\" y=\"162\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Centralized: API Keys, JWT, OAuth2</text><text x=\"385\" y=\"173\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">, mTLS. Forward identity as header</text><text x=\"385\" y=\"184\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">s.</text></svg>",
+  "codeExamples": "<text x=\"240\" y=\"220\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">Authentication: API Gateway verifies identity. Met</text><text x=\"240\" y=\"232\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">hods: API Keys, JWT, OAuth2, mTLS.</text>",
+  "mcqQuestions": [
+    {
+      "title": "JWT Validation Middleware",
+      "useCase": "Validate JWT and extract claims.",
+      "code": "const jwt=require(\"jsonwebtoken\");\nasync function authenticateGateway(req,res,next){\n  const auth=req.headers.authorization;\n  if(!auth?.startsWith(\"Bearer \")) return res.status(401).json({error:\"Missing auth\"});\n  const token=auth.split(\" \")[1];\n  try{\n    const decoded=jwt.verify(token,process.env.JWT_SECRET,{algorithms:[\"RS256\"],audience:\"api-gateway\"});\n    req.headers[\"X-User-ID\"]=decoded.sub;\n    req.headers[\"X-User-Role\"]=decoded.role;\n    delete req.headers.authorization;\n    next();\n  }catch(e){res.status(401).json({error:\"Invalid token\"})}\n}",
+      "description": "Gateway JWT validation forwarding claims as headers."
+    },
+    {
+      "title": "API Key Authentication",
+      "useCase": "Simple key-based auth.",
+      "code": "async function authenticateApiKey(req,res,next){\n  const key=req.headers[\"x-api-key\"]||req.query.api_key;\n  if(!key) return res.status(401).json({error:\"API key required\"});\n  const hash=crypto.createHash(\"sha256\").update(key).digest(\"hex\");\n  const client=await redis.hgetall(\"apikey:\"+hash);\n  if(!client) return res.status(401).json({error:\"Invalid key\"});\n  req.headers[\"X-Client-ID\"]=client.id;\n  req.headers[\"X-Client-Tier\"]=client.tier;\n  next();\n}",
+      "description": "API key auth with Redis-backed key store."
+    },
+    {
+      "title": "OAuth2 Token Introspection",
+      "useCase": "Validate opaque tokens.",
+      "code": "async function introspectToken(token){\n  const r=await fetch(\"https://auth.example.com/introspect\",{method:\"POST\",\n    headers:{\"Content-Type\":\"application/x-www-form-urlencoded\",\"Authorization\":\"Basic \"+Buffer.from(clientId+\":\"+clientSecret).toString(\"base64\")},\n    body:new URLSearchParams({token})});\n  const data=await r.json();\n  if(!data.active) throw new Error(\"Token inactive\");\n  return {sub:data.sub,scope:data.scope,clientId:data.client_id,exp:data.exp};\n}",
+      "description": "OAuth2 token introspection for opaque access tokens."
+    },
+    {
+      "title": "mTLS Authentication",
+      "useCase": "Mutual TLS.",
+      "code": "const https=require(\"https\");const fs=require(\"fs\");\nconst options={\n  key:fs.readFileSync(\"server.key\"),\n  cert:fs.readFileSync(\"server.crt\"),\n  requestCert:true,rejectUnauthorized:true,\n  ca:fs.readFileSync(\"client-ca.crt\"),\n};\nhttps.createServer(options,(req,res)=>{\n  const cert=req.socket.getPeerCertificate();\n  req.headers[\"X-Client-CN\"]=cert.subject?.CN;\n  req.headers[\"X-Client-Fingerprint\"]=cert.fingerprint;\n}).listen(443);",
+      "description": "mTLS with client certificate validation and identity extraction."
+    },
+    {
+      "title": "JWKS Key Rotation",
+      "useCase": "Rotate keys without downtime.",
+      "code": "let cachedKeys=null;let lastFetch=0;\nasync function getJwksKeys(){\n  if(cachedKeys&&Date.now()-lastFetch<3600000) return cachedKeys;\n  const r=await fetch(\"https://auth.example.com/.well-known/jwks.json\");\n  const jwks=await r.json();\n  cachedKeys=jwks.keys.map(k=>({kid:k.kid,publicKey:jwktopem(k),alg:k.alg}));\n  lastFetch=Date.now();return cachedKeys;\n}\nasync function authenticateWithJwks(req,res,next){\n  const token=extractToken(req);\n  const decoded=jwt.decode(token,{complete:true});\n  const kid=decoded?.header?.kid;\n  const keys=await getJwksKeys();\n  const key=keys.find(k=>k.kid===kid);\n  if(!key) return res.status(401).json({error:\"Unknown key ID\"});\n  jwt.verify(token,key.publicKey,{algorithms:[key.alg]});\n  next();\n}",
+      "description": "JWKS key rotation with cached public key discovery."
+    },
+    {
+      "question": "Authentication — What helps team collaboration?",
+      "options": [
+        "Shared workflows and visibility",
+        "Isolated work",
+        "No documentation",
+        "Siloed tools"
+      ],
+      "answer": 0,
+      "explanation": "Shared workflows and visibility enable better collaboration."
+    },
+    {
+      "question": "Authentication — What reduces errors most?",
+      "options": [
+        "Automation",
+        "Manual processes",
+        "Rushing",
+        "Bypassing reviews"
+      ],
+      "answer": 0,
+      "explanation": "Automation consistently eliminates human errors."
+    },
+    {
+      "question": "Authentication — What improves speed?",
+      "options": [
+        "Parallel execution and caching",
+        "Serial execution",
+        "No optimization",
+        "Manual steps"
+      ],
+      "answer": 0,
+      "explanation": "Parallel execution and caching significantly improve speed."
+    },
+    {
+      "question": "Authentication — What is key for monitoring?",
+      "options": [
+        "Metrics dashboards and alerts",
+        "No monitoring",
+        "Only error logs",
+        "Manual checks"
+      ],
+      "answer": 0,
+      "explanation": "Metrics dashboards and alerts provide actionable insights."
+    },
+    {
+      "question": "Authentication — What ensures quality?",
+      "options": [
+        "Automated testing in pipeline",
+        "No testing",
+        "Only manual QA",
+        "Skipping code review"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing integrated into the pipeline ensures consistent quality."
+    }
+  ]
+};

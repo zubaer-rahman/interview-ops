@@ -1,0 +1,202 @@
+export const k8s_nginx_caching = {
+  "id": "k8s-nginx-caching",
+  "title": "Caching",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 10,
+  "file": "k8s-nginx-caching.json",
+  "interviewAnswer": "NGINX caching stores responses from backends and serves them directly for subsequent requests, reducing backend load and improving response times. Cache keys based on URL, query params, and headers. Cache purging, bypass, and validation supported.",
+  "tldr": [
+    "proxy_cache_path defines cache storage location and size",
+    "proxy_cache <zone> enables cache for a location",
+    "proxy_cache_key defines cache key ($scheme$host$request_uri)",
+    "Cache purging via proxy_cache_purge (NGINX Plus) or third-party module"
+  ],
+  "deepDive": [
+    {
+      "heading": "Cache Configuration",
+      "text": "proxy_cache_path /data/nginx/cache levels=1:2 keys_zone=my_cache:10m max_size=1g inactive=60m use_temp_path=off; proxy_cache my_cache; proxy_cache_key \"$scheme$request_method$host$request_uri\"; proxy_cache_valid 200 302 60m; proxy_cache_valid 404 1m; proxy_cache_use_stale error timeout updating;"
+    },
+    {
+      "heading": "Cache Bypass and Purging",
+      "text": "Bypass: proxy_cache_bypass $cookie_nocache $arg_nocache; with cookie/param. Invalidate: Cache-Control: max-age=0 or no-cache header. Purge (NGINX Plus): proxy_cache_purge with PURGE method. Microcaching: cache for short TTL (1s) to absorb traffic spikes."
+    },
+    {
+      "heading": "Common Use Cases",
+      "text": "Caching applies to build automation, continuous integration, test execution, deployment orchestration, and infrastructure management. Each scenario leverages specific features and configuration patterns for optimal results."
+    }
+  ],
+  "interviewQuestions": [
+    {
+      "question": "NGINX caching?",
+      "answer": "Stores backend responses and serves them directly for repeated requests."
+    },
+    {
+      "question": "Cache key default?",
+      "answer": "$scheme$host$request_uri (scheme, host, URI + query)."
+    },
+    {
+      "question": "Cache storage defined by?",
+      "answer": "proxy_cache_path directive (path, zone, size, inactive)."
+    },
+    {
+      "question": "Cache bypass?",
+      "answer": "proxy_cache_bypass with cookie or query param."
+    },
+    {
+      "question": "Caching — What tools integrate well with this?",
+      "answer": "Integration is possible through APIs, plugins, webhooks, and configuration files."
+    },
+    {
+      "question": "Caching — What are common troubleshooting steps?",
+      "answer": "Troubleshooting involves checking logs, verifying configuration, and testing incrementally."
+    },
+    {
+      "question": "Caching — What security considerations apply here?",
+      "answer": "Security considerations include access control, encryption of sensitive data, and audit logging."
+    },
+    {
+      "question": "Caching — What best practices should be followed?",
+      "answer": "Best practices include version control, automation, monitoring, and thorough documentation."
+    },
+    {
+      "question": "Caching — How does this affect team collaboration?",
+      "answer": "It supports collaboration through shared visibility, standardized processes, and clear workflows."
+    },
+    {
+      "question": "Caching — What metrics indicate successful implementation?",
+      "answer": "Key metrics include adoption rate, error reduction, build times, and team satisfaction scores."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "Cache zone directive?",
+      "options": [
+        "proxy_cache",
+        "proxy_cache_path",
+        "cache_zone"
+      ],
+      "answer": 0
+    },
+    {
+      "question": "Cache key includes?",
+      "options": [
+        "URI only",
+        "Scheme + host + URI",
+        "Host + path"
+      ],
+      "answer": 1
+    },
+    {
+      "question": "Cache valid for status?",
+      "options": [
+        "proxy_cache_valid",
+        "cache_valid",
+        "cache_status"
+      ],
+      "answer": 0
+    },
+    {
+      "question": "Microcaching TTL?",
+      "options": [
+        "1s",
+        "60s",
+        "3600s"
+      ],
+      "answer": 0
+    },
+    {
+      "question": "Caching — How to ensure reliability?",
+      "options": [
+        "Automated testing and monitoring",
+        "Manual checks only",
+        "No testing",
+        "Reactive fixes"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing and monitoring ensure consistent reliability."
+    },
+    {
+      "question": "Caching — What helps team collaboration?",
+      "options": [
+        "Shared workflows and visibility",
+        "Isolated work",
+        "No documentation",
+        "Siloed tools"
+      ],
+      "answer": 0,
+      "explanation": "Shared workflows and visibility enable better collaboration."
+    },
+    {
+      "question": "Caching — What reduces errors most?",
+      "options": [
+        "Automation",
+        "Manual processes",
+        "Rushing",
+        "Bypassing reviews"
+      ],
+      "answer": 0,
+      "explanation": "Automation consistently eliminates human errors."
+    },
+    {
+      "question": "Caching — What improves speed?",
+      "options": [
+        "Parallel execution and caching",
+        "Serial execution",
+        "No optimization",
+        "Manual steps"
+      ],
+      "answer": 0,
+      "explanation": "Parallel execution and caching significantly improve speed."
+    },
+    {
+      "question": "Caching — What is key for monitoring?",
+      "options": [
+        "Metrics dashboards and alerts",
+        "No monitoring",
+        "Only error logs",
+        "Manual checks"
+      ],
+      "answer": 0,
+      "explanation": "Metrics dashboards and alerts provide actionable insights."
+    },
+    {
+      "question": "Caching — What ensures quality?",
+      "options": [
+        "Automated testing in pipeline",
+        "No testing",
+        "Only manual QA",
+        "Skipping code review"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing integrated into the pipeline ensures consistent quality."
+    }
+  ],
+  "codeExamples": [
+    {
+      "title": "Basic Setup",
+      "useCase": "Initial configuration",
+      "code": "# Basic configuration example\n# This shows the fundamental setup",
+      "description": "Basic setup example for beginners."
+    },
+    {
+      "title": "Common Use Case",
+      "useCase": "Typical implementation",
+      "code": "# Common implementation pattern\n# Used in everyday scenarios",
+      "description": "Standard use case example."
+    },
+    {
+      "title": "Advanced Configuration",
+      "useCase": "Complex scenario",
+      "code": "# Advanced pattern for complex scenarios\n# Includes error handling",
+      "description": "Advanced configuration example."
+    },
+    {
+      "title": "Integration Pattern",
+      "useCase": "Tool integration",
+      "code": "# Integration with other tools\n# Shows how components connect",
+      "description": "Integration example with related tools."
+    }
+  ],
+  "laymanDefinition": "NGINX caching stores responses from backends and serves them directly for subsequent requests, reducing backend load and improving response times. Cache keys based on URL, query params, and headers. Cache purging, bypass, and validation supported.",
+  "diagramSvg": "<svg viewBox=\"0 0 500 280\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"280\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">Caching</text><rect x=\"20\" y=\"45\" width=\"460\" height=\"60\" rx=\"5\" fill=\"#e8f4f8\" stroke=\"#ccc\" stroke-width=\"1.5\"/><text x=\"250\" y=\"80\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Caching</text><text x=\"250\" y=\"155\" font-size=\"10\" fill=\"#555\" text-anchor=\"middle\">proxy_cache_path defines cache storage location an</text><text x=\"250\" y=\"168\" font-size=\"10\" fill=\"#555\" text-anchor=\"middle\">d size</text></svg>"
+};

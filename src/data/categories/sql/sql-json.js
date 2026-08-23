@@ -1,0 +1,179 @@
+export const sql_json = {
+  "id": "sql-json",
+  "title": "JSON & JSONB",
+  "difficulty": "advanced",
+  "estimatedMinutes": 25,
+  "tldr": [
+    "PostgreSQL offers two JSON types: JSON (stores exact text copy, re-parsed each query) and JSONB (stores binary/decomposed, supports indexing).",
+    "JSONB is generally preferred: faster to query (indexes, no re-parsing), supports GIN indexing for containment/existence queries, and removes duplicate keys.",
+    "Operators: -> (JSON field as JSON), ->> (JSON field as text), @> (contains), ? (key exists), || (concatenate).",
+    "Functions: jsonb_build_object, jsonb_agg, jsonb_array_elements, jsonb_set, jsonb_pretty."
+  ],
+  "laymanDefinition": "JSONB is like filing a document in a filing cabinet with a detailed index of every word. JSON is like filing the document as-is — every time you want to read it, you pull out the whole thing. JSONB is faster to search through but takes slightly more space.",
+  "deepDive": [
+    {
+      "heading": "JSON vs JSONB",
+      "text": "JSON: stores exact input (preserves whitespace, key order, duplicate keys). Slower operations (re-parsed each time). No indexes. JSONB: stores parsed binary format. Supports indexing (GIN, B-tree). More operators. Preferred for most use cases."
+    },
+    {
+      "heading": "JSONB Operators",
+      "text": "-> \\'key\\' — get value as JSON. ->> \\'key\\' — get value as TEXT. @> \\'{\"key\": \"val\"}\\' — top-level contains. ? \\'key\\' — key exists. ?| ARRAY[\\'a\\',\\'b\\'] — any key exists. ?& — all keys exist. || — merge/concatenate JSONB objects."
+    },
+    {
+      "heading": "GIN Indexes on JSONB",
+      "text": "CREATE INDEX ON table USING GIN (jsonb_col); — indexes all keys/values. Supports @>, ?, ?|, ?& operators. JSON path ops (@? and @*) also use GIN. Much faster than sequential scan for JSON queries."
+    },
+    {
+      "heading": "JSONB Functions",
+      "text": "jsonb_build_object(\\'key\\', val) — build JSONB from key-value pairs. jsonb_agg(expr) — aggregate rows into JSONB array. jsonb_array_elements(jsonb) — expand array to rows. jsonb_set(target, path, newval) — update nested value."
+    },
+    {
+      "heading": "JSON Path Queries (PG 12+)",
+      "text": "jsonb_path_exists(data, \\'$.phone[*].type ? (@ == \"mobile\")\\') — SQL/JSON path language. Path access: \\'$.store.book[0].title\\'. Powerful for complex JSON document queries with filters and conditions."
+    }
+  ],
+  "interviewAnswer": "PostgreSQL's JSONB support is best-in-class, offering NoSQL-like document storage within a relational database. Use JSONB for flexible schemas, event sourcing, and when combining structured and semi-structured data.",
+  "interviewQuestions": [
+    {
+      "question": "What is the difference between JSON and JSONB?",
+      "answer": "JSON stores text (re-parsed each query). JSONB stores binary (faster, supports indexing, preferred)."
+    },
+    {
+      "question": "What does the @> operator do?",
+      "answer": "Checks if a JSONB document contains another JSONB value at the top level."
+    },
+    {
+      "question": "What does the ? operator do?",
+      "answer": "Checks if a key exists in a JSONB object."
+    },
+    {
+      "question": "What index type supports JSONB containment queries?",
+      "answer": "GIN (Generalized Inverted Index). CREATE INDEX ON table USING GIN (jsonb_col);"
+    },
+    {
+      "question": "How do you extract a JSON field as text?",
+      "answer": "column ->> \\'key\\' returns the value as TEXT. column -> \\'key\\' returns as JSON."
+    },
+    {
+      "question": "How do you aggregate rows into a JSON array?",
+      "answer": "jsonb_agg(column) or jsonb_agg(column ORDER BY ...) aggregates values into a JSONB array."
+    },
+    {
+      "question": "What does jsonb_set do?",
+      "answer": "Updates a nested value in a JSONB document: jsonb_set(data, \\'{path,to,field}\\', \\'new_value\\'::jsonb)."
+    },
+    {
+      "question": "How do you expand a JSON array to rows?",
+      "answer": "jsonb_array_elements(jsonb_col) — one row per array element."
+    },
+    {
+      "question": "What is jsonb_pretty?",
+      "answer": "Formats JSONB with indentation for readability."
+    },
+    {
+      "question": "Can JSONB have indexes on specific paths?",
+      "answer": "Yes. CREATE INDEX ON table USING GIN ((jsonb_col -> \\'email\\')); — index on specific key."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"300\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">JSON & JSONB</text><rect x=\"10\" y=\"35\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1.5\"/><text x=\"65\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">JSON</text><text x=\"65\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Text storage</text><rect x=\"10\" y=\"65\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1.5\"/><text x=\"65\" y=\"81\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">JSONB</text><text x=\"65\" y=\"84\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Binary storage</text><rect x=\"10\" y=\"95\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1.5\"/><text x=\"65\" y=\"111\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">@></text><text x=\"65\" y=\"114\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Contains</text><rect x=\"10\" y=\"125\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#dc3545\" stroke=\"#dc3545\" stroke-width=\"1.5\"/><text x=\"65\" y=\"141\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">->></text><text x=\"65\" y=\"144\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Extract</text><rect x=\"10\" y=\"155\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#e83e8c\" stroke=\"#e83e8c\" stroke-width=\"1.5\"/><text x=\"65\" y=\"171\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">GIN Index</text><text x=\"65\" y=\"174\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Fast search</text><line x1=\"120\" y1=\"48\" x2=\"150\" y2=\"48\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"120\" y1=\"78\" x2=\"150\" y2=\"78\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"120\" y1=\"108\" x2=\"150\" y2=\"108\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"120\" y1=\"138\" x2=\"150\" y2=\"138\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"120\" y1=\"168\" x2=\"150\" y2=\"168\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"160\" y=\"35\" width=\"220\" height=\"155\" rx=\"5\" fill=\"#17a2b8\" stroke=\"#17a2b8\" stroke-width=\"1.5\"/><text x=\"270\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">JSON & JSONB</text><text x=\"270\" y=\"173\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">PostgreSQL's NoSQL-style document storag</text><text x=\"270\" y=\"184\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">e with indexing and powerful operators.</text><text x=\"240\" y=\"220\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">JSON & JSONB: Flexible document storage with relat</text><text x=\"240\" y=\"232\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">ional integrity in PostgreSQL.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "Creating and Querying JSONB",
+      "useCase": "Store and retrieve nested data.",
+      "code": "CREATE TABLE products (\n  id SERIAL PRIMARY KEY,\n  name VARCHAR(100),\n  attributes JSONB\n);\n\nINSERT INTO products (name, attributes) VALUES (\n  'Laptop',\n  '{\"brand\": \"Dell\", \"specs\": {\"ram\": \"16GB\", \"cpu\": \"i7\"}, \"tags\": [\"electronics\", \"computers\"]}'\n);\n\nSELECT name, attributes->'brand' AS brand,\n  attributes->'specs'->>'ram' AS ram\nFROM products\nWHERE attributes @> '{\"brand\": \"Dell\"}';",
+      "description": "JSONB with nested objects, extraction, and containment query."
+    },
+    {
+      "title": "JSONB GIN Index",
+      "useCase": "Fast JSON searches.",
+      "code": "CREATE INDEX idx_products_attrs\nON products USING GIN (attributes);\n\n-- These queries use the index:\nSELECT * FROM products WHERE attributes ? 'brand';\nSELECT * FROM products WHERE attributes @> '{\"tags\": [\"electronics\"]}';\nSELECT * FROM products WHERE attributes ?| ARRAY['color', 'size'];",
+      "description": "GIN index enables fast containment, existence, and key lookups in JSONB."
+    },
+    {
+      "title": "Aggregate to JSON",
+      "useCase": "Build JSON from relational data.",
+      "code": "SELECT\n  department,\n  jsonb_agg(jsonb_build_object(\n    'name', name,\n    'salary', salary\n  ) ORDER BY name) AS employees\nFROM employees\nGROUP BY department;",
+      "description": "Creates nested JSON documents from relational GROUP BY results."
+    },
+    {
+      "title": "jsonb_set to Update",
+      "useCase": "Modify nested JSON values.",
+      "code": "-- Update laptop specs\nUPDATE products SET attributes = jsonb_set(\n  attributes,\n  '{specs, ram}',\n  '\"32GB\"'\n) WHERE name = 'Laptop';\n\n-- Result: specs.ram changes from \"16GB\" to \"32GB\"",
+      "description": "jsonb_set updates deeply nested JSONB fields without rewriting the entire document."
+    },
+    {
+      "title": "JSON Path Queries",
+      "useCase": "SQL/JSON path expressions.",
+      "code": "-- Find products with mobile phone in tags\nSELECT name FROM products\nWHERE jsonb_path_exists(attributes, '$.tags[*] ? (@ == \"mobile\")');\n\n-- Extract all tag values\nSELECT jsonb_path_query(attributes, '$.tags[*]')\nFROM products;",
+      "description": "JSON path expressions (PG 12+) for complex document queries."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "Which JSON type supports indexing?",
+      "options": [
+        "JSON",
+        "JSONB",
+        "Both",
+        "Neither"
+      ],
+      "answer": 1,
+      "explanation": "JSONB supports GIN and B-tree indexing. JSON does not."
+    },
+    {
+      "question": "What operator checks if a key exists?",
+      "options": [
+        "@>",
+        "?",
+        "->",
+        "||"
+      ],
+      "answer": 1,
+      "explanation": "The ? operator checks if a key exists in a JSONB object."
+    },
+    {
+      "question": "What does @> check?",
+      "options": [
+        "Key existence",
+        "Containment",
+        "Equality",
+        "Type match"
+      ],
+      "answer": 1,
+      "explanation": "@> checks if the left JSONB contains the right JSONB."
+    },
+    {
+      "question": "How do you extract a JSON field as text?",
+      "options": [
+        "->",
+        "->>",
+        "#>",
+        "@>"
+      ],
+      "answer": 1,
+      "explanation": "->> extracts a JSON field as TEXT."
+    },
+    {
+      "question": "What index is best for JSONB?",
+      "options": [
+        "B-tree",
+        "Hash",
+        "GIN",
+        "GiST"
+      ],
+      "answer": 2,
+      "explanation": "GIN (Generalized Inverted Index) is best for JSONB containment queries."
+    },
+    {
+      "question": "What function aggregates rows to JSON?",
+      "options": [
+        "jsonb_agg",
+        "jsonb_build",
+        "jsonb_row",
+        "jsonb_collect"
+      ],
+      "answer": 0,
+      "explanation": "jsonb_agg aggregates values into a JSONB array."
+    }
+  ]
+};

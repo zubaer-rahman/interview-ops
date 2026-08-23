@@ -1,0 +1,168 @@
+export const ag_api_keys = {
+  "id": "ag-api-keys",
+  "title": "API Keys",
+  "difficulty": "beginner",
+  "estimatedMinutes": 10,
+  "tldr": [
+    "API Keys are long-lived, static credentials identifying and authenticating API clients for machine-to-machine communication.",
+    "Passed in headers (X-API-Key), query params, or body. Identify the client, NOT a specific user.",
+    "Best practices: hash before storing, support rotation, allow multiple keys per client, set expiration, log usage, revoke.",
+    "Use for: service accounts, third-party integrations, developer portals, public API tiers."
+  ],
+  "laymanDefinition": "API Keys are like apartment building mailbox keys. Each service gets a specific key. Lost key = get new one, old one stops working.",
+  "deepDive": [
+    {
+      "heading": "API Key Generation",
+      "text": "crypto.randomBytes(32).toString(\"hex\") = 64-char hex. Prefix: sk_live_abc123. Store SHA-256 hash only. Rotate 90-365 days."
+    },
+    {
+      "heading": "API Key Validation in Gateway",
+      "text": "Extract key, hash it, look up in DB/Redis. Check valid/expired/revoked/scopes. Rate limit by tier. Cache in Redis (short TTL)."
+    },
+    {
+      "heading": "API Key vs JWT",
+      "text": "API Key: static, long-lived, identifies client, hash lookup. JWT: dynamic, short-lived, user claims, stateless. Many systems use both."
+    },
+    {
+      "heading": "API Key Management",
+      "text": "Create: generate, hash, store, return once. List: show prefixes only. Revoke: delete/flag hash. Rotate: new key, old grace period."
+    }
+  ],
+  "interviewAnswer": "Essential for machine-to-machine API access. Generate with crypto randomness, hash before storing, never expose in logs. Support rotation with grace period. Use prefixes. Combine with per-key rate limiting.",
+  "interviewQuestions": [
+    {
+      "question": "What is an API Key?",
+      "answer": "Long-lived, static credential identifying API clients for machine-to-machine communication."
+    },
+    {
+      "question": "How should API Keys be stored?",
+      "answer": "Hashed (SHA-256). Return plaintext once at creation."
+    },
+    {
+      "question": "What header for API Keys?",
+      "answer": "X-API-Key header, also query param or body."
+    },
+    {
+      "question": "API Key vs JWT?",
+      "answer": "API Key: static, identifies client. JWT: dynamic, carries user identity."
+    },
+    {
+      "question": "How to revoke?",
+      "answer": "Delete or flag the hashed key."
+    },
+    {
+      "question": "What is key rotation?",
+      "answer": "Replacing old key with new. Grace period where both work."
+    },
+    {
+      "question": "Can API Keys identify a user?",
+      "answer": "No � they identify applications."
+    },
+    {
+      "question": "Recommended format?",
+      "answer": "Prefix + type + random: sk_live_abc123def456."
+    },
+    {
+      "question": "Should API Keys expire?",
+      "answer": "Yes. Rotate periodically."
+    },
+    {
+      "question": "What to log?",
+      "answer": "Key prefix, endpoint, timestamp, IP, success/failure."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"300\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">API Keys</text><rect x=\"10\" y=\"35\" width=\"100\" height=\"25\" rx=\"5\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1.5\"/><text x=\"60\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Client</text><text x=\"60\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">App/Service</text><line x1=\"110\" y1=\"48\" x2=\"140\" y2=\"48\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"150\" y=\"35\" width=\"100\" height=\"25\" rx=\"5\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1.5\"/><text x=\"200\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">API Gateway</text><text x=\"200\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Validate Key</text><line x1=\"150\" y1=\"60\" x2=\"150\" y2=\"80\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"250\" y1=\"48\" x2=\"280\" y2=\"48\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"10\" y=\"70\" width=\"100\" height=\"25\" rx=\"5\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1.5\"/><text x=\"60\" y=\"86\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">X-API-Key</text><text x=\"60\" y=\"89\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Header/Query</text><rect x=\"10\" y=\"105\" width=\"100\" height=\"25\" rx=\"5\" fill=\"#dc3545\" stroke=\"#dc3545\" stroke-width=\"1.5\"/><text x=\"60\" y=\"121\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Hash Lookup</text><text x=\"60\" y=\"124\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">SHA-256</text><rect x=\"10\" y=\"140\" width=\"100\" height=\"25\" rx=\"5\" fill=\"#e83e8c\" stroke=\"#e83e8c\" stroke-width=\"1.5\"/><text x=\"60\" y=\"156\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Redis Cache</text><text x=\"60\" y=\"159\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Fast</text><rect x=\"160\" y=\"70\" width=\"100\" height=\"25\" rx=\"5\" fill=\"#6610f2\" stroke=\"#6610f2\" stroke-width=\"1.5\"/><text x=\"210\" y=\"86\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Rate Limit</text><text x=\"210\" y=\"89\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Per-key</text><rect x=\"160\" y=\"105\" width=\"100\" height=\"25\" rx=\"5\" fill=\"#17a2b8\" stroke=\"#17a2b8\" stroke-width=\"1.5\"/><text x=\"210\" y=\"121\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Backend</text><text x=\"210\" y=\"124\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Processing</text><rect x=\"290\" y=\"35\" width=\"190\" height=\"155\" rx=\"5\" fill=\"#17a2b8\" stroke=\"#17a2b8\" stroke-width=\"1.5\"/><text x=\"385\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">API Keys</text><text x=\"385\" y=\"162\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Static credentials. Hash, rotate, </text><text x=\"385\" y=\"173\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">rate-limit. Machine-to-machine aut</text><text x=\"385\" y=\"184\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">h.</text></svg>",
+  "codeExamples": "<text x=\"240\" y=\"220\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">API Keys: Simple static credentials for service-to</text><text x=\"240\" y=\"232\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">-service auth. Hash, rotate, rate-limit.</text>",
+  "mcqQuestions": [
+    {
+      "title": "API Key Generation and Storage",
+      "useCase": "Generate and hash keys.",
+      "code": "const crypto=require(\"crypto\");\nfunction generateApiKey(clientId,type=\"live\"){\n  const random=crypto.randomBytes(32).toString(\"hex\");\n  const apiKey=\"sk_\"+type+\"_\"+random;\n  const hash=crypto.createHash(\"sha256\").update(apiKey).digest(\"hex\");\n  return{plaintext:apiKey,hash,prefix:apiKey.substring(0,12)};\n}\nasync function storeApiKey(clientId,keyData){\n  await db.query(\"INSERT INTO api_keys (client_id,key_hash,key_prefix,expires_at) VALUES (,,,NOW()+INTERVAL '365 days')\",[clientId,keyData.hash,keyData.prefix]);\n}",
+      "description": "API key generation with crypto randomness and hashing."
+    },
+    {
+      "title": "API Key Validation Middleware",
+      "useCase": "Validate at gateway.",
+      "code": "async function apiKeyAuth(req,res,next){\n  const key=req.headers[\"x-api-key\"]||req.query.api_key;\n  if(!key) return res.status(401).json({error:\"API key required\"});\n  const hash=crypto.createHash(\"sha256\").update(key).digest(\"hex\");\n  let client=await redis.hgetall(\"apikey:\"+hash);\n  if(!client){\n    const r=await db.query(\"SELECT * FROM api_keys WHERE key_hash= AND (expires_at IS NULL OR expires_at>NOW()) AND revoked=false\",[hash]);\n    client=r.rows[0];\n    if(!client) return res.status(401).json({error:\"Invalid key\"});\n    await redis.hset(\"apikey:\"+hash,{client_id:client.client_id,tier:client.tier});\n    await redis.expire(\"apikey:\"+hash,300);\n  }\n  req.client=client;next();\n}",
+      "description": "API key validation with Redis cache and DB fallback."
+    },
+    {
+      "title": "Key Rotation with Grace Period",
+      "useCase": "Rotate without downtime.",
+      "code": "async function rotateApiKey(clientId,oldKey){\n  const oldHash=crypto.createHash(\"sha256\").update(oldKey).digest(\"hex\");\n  const existing=await db.query(\"SELECT * FROM api_keys WHERE key_hash= AND client_id=\",[oldHash,clientId]);\n  if(!existing.rows[0]) throw new Error(\"Invalid old key\");\n  const newKey=generateApiKey(clientId);\n  await storeApiKey(clientId,newKey);\n  await db.query(\"UPDATE api_keys SET expires_at=NOW()+INTERVAL '7 days' WHERE key_hash=\",[oldHash]);\n  return{newKey:newKey.plaintext,gracePeriodDays:7};\n}",
+      "description": "Key rotation with 7-day grace period."
+    },
+    {
+      "title": "Per-Key Rate Limiting",
+      "useCase": "Rate limit by key tier.",
+      "code": "const TIER_LIMITS={free:{rpm:10},basic:{rpm:100},pro:{rpm:1000},enterprise:{rpm:10000}};\nasync function perKeyRateLimit(req,res,next){\n  const key=req.headers[\"x-api-key\"];\n  const hash=crypto.createHash(\"sha256\").update(key).digest(\"hex\");\n  const client=await getClientByKeyHash(hash);\n  const limits=TIER_LIMITS[client.tier]||TIER_LIMITS.free;\n  const current=await redis.incr(\"ratelimit:\"+hash+\":minute\");\n  if(current===1) await redis.expire(\"ratelimit:\"+hash+\":minute\",60);\n  if(current>limits.rpm) return res.status(429).json({error:\"Rate limited\",tier:client.tier});\n  res.setHeader(\"X-RateLimit-Limit\",limits.rpm);res.setHeader(\"X-RateLimit-Remaining\",limits.rpm-current);\n  next();\n}",
+      "description": "Per-API-key rate limiting with tier-based limits."
+    },
+    {
+      "question": "API Keys — How to ensure reliability?",
+      "options": [
+        "Automated testing and monitoring",
+        "Manual checks only",
+        "No testing",
+        "Reactive fixes"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing and monitoring ensure consistent reliability."
+    },
+    {
+      "question": "API Keys — What helps team collaboration?",
+      "options": [
+        "Shared workflows and visibility",
+        "Isolated work",
+        "No documentation",
+        "Siloed tools"
+      ],
+      "answer": 0,
+      "explanation": "Shared workflows and visibility enable better collaboration."
+    },
+    {
+      "question": "API Keys — What reduces errors most?",
+      "options": [
+        "Automation",
+        "Manual processes",
+        "Rushing",
+        "Bypassing reviews"
+      ],
+      "answer": 0,
+      "explanation": "Automation consistently eliminates human errors."
+    },
+    {
+      "question": "API Keys — What improves speed?",
+      "options": [
+        "Parallel execution and caching",
+        "Serial execution",
+        "No optimization",
+        "Manual steps"
+      ],
+      "answer": 0,
+      "explanation": "Parallel execution and caching significantly improve speed."
+    },
+    {
+      "question": "API Keys — What is key for monitoring?",
+      "options": [
+        "Metrics dashboards and alerts",
+        "No monitoring",
+        "Only error logs",
+        "Manual checks"
+      ],
+      "answer": 0,
+      "explanation": "Metrics dashboards and alerts provide actionable insights."
+    },
+    {
+      "question": "API Keys — What ensures quality?",
+      "options": [
+        "Automated testing in pipeline",
+        "No testing",
+        "Only manual QA",
+        "Skipping code review"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing integrated into the pipeline ensures consistent quality."
+    }
+  ]
+};

@@ -1,0 +1,179 @@
+export const nextjs_server_components = {
+  "id": "nextjs-server-components",
+  "title": "Server Components",
+  "difficulty": "advanced",
+  "estimatedMinutes": 30,
+  "tldr": [
+    "React Server Components (RSC) are components that render exclusively on the server, sending only the resulting HTML to the client.",
+    "In Next.js, all components in the App Router are Server Components by default, reducing client-side JavaScript bundle size significantly.",
+    "Server Components can directly access databases, filesystems, and backend services without exposing sensitive logic to the client.",
+    "They cannot use React hooks, browser APIs, event handlers, or state management, making them ideal for data fetching and static content rendering."
+  ],
+  "laymanDefinition": "Server Components are like kitchen prep chefs who prepare all the ingredients (fetch data, query databases) before the food goes to the dining area (browser). The diners only see the finished dish (HTML), not the kitchen tools (server code).",
+  "deepDive": [
+    {
+      "heading": "What Are Server Components",
+      "text": "Server Components are React components that run exclusively on the server during rendering. They are the default in Next.js App Router. They reduce client bundle size because their code, dependencies, and imported libraries never reach the browser. They can use Node.js APIs directly (database queries, filesystem access)."
+    },
+    {
+      "heading": "Benefits of Server Components",
+      "text": "Reduced JavaScript bundle size (server-only code is excluded), direct backend access (no API layer needed for data fetching), automatic code splitting (only client components are bundled), improved initial page load (HTML is pre-rendered), and better SEO (complete HTML is served)."
+    },
+    {
+      "heading": "Limitations and Constraints",
+      "text": "Server Components cannot use useState, useEffect, useContext, useReducer, or any React hooks. They cannot use browser APIs (window, document, localStorage). They cannot handle user interactions (onClick, onChange). They cannot use context providers or event handlers. These features require Client Components."
+    },
+    {
+      "heading": "Data Fetching in Server Components",
+      "text": "Server Components can use async/await directly in the component function. They can fetch data from databases, APIs, or filesystems. The App Router automatically deduplicates fetch requests and caches responses. Data fetching is done at the component level, eliminating prop drilling for data."
+    },
+    {
+      "heading": "Server Component Composition",
+      "text": "Server Components can import and render Client Components, creating a seamless hybrid. Data can be passed from Server Components to Client Components as props. The boundary between server and client is clearly marked by the \"use client\" directive. Server Components can also be passed as children to Client Components."
+    }
+  ],
+  "interviewAnswer": "Server Components represent a fundamental shift in React architecture. By moving data fetching and rendering to the server, they eliminate the need for client-side state management for data, reduce bundle sizes, and improve performance. The key to mastering Server Components is understanding the server/client boundary.",
+  "interviewQuestions": [
+    {
+      "question": "What are React Server Components?",
+      "answer": "Server Components are React components that run and render exclusively on the server. They never send their JavaScript code to the client; only the rendered HTML output is sent. This reduces bundle size and enables direct access to server-side resources like databases."
+    },
+    {
+      "question": "How are Server Components different from Client Components?",
+      "answer": "Server Components run on the server, have no client-side interactivity, and reduce bundle size. Client Components run in the browser, support hooks and event handlers, and increase bundle size. In the App Router, all components are Server Components by default."
+    },
+    {
+      "question": "What can Server Components do that Client Components cannot?",
+      "answer": "Server Components can directly access databases, read from the filesystem, use environment variables (non-NEXT_PUBLIC_), access backend services, and perform CPU-intensive computations without affecting client performance. They can also keep sensitive logic (API keys, business logic) server-side."
+    },
+    {
+      "question": "What are the limitations of Server Components?",
+      "answer": "Server Components cannot use React hooks (useState, useEffect, useContext, etc.), browser APIs (window, document), event handlers (onClick, onSubmit), or create React context. They are rendered only on the server and do not re-render on the client."
+    },
+    {
+      "question": "How do you fetch data in Server Components?",
+      "answer": "Use async/await directly in the component: export default async function Page() { const data = await fetch(\"https://api.example.com/data\"); return <div>{data.title}</div> }. Next.js automatically deduplicates and caches fetch requests."
+    },
+    {
+      "question": "How do you add interactivity to Server Components?",
+      "answer": "Server Components cannot be interactive. To add interactivity, import and render a Client Component (marked with \"use client\") from within a Server Component. The Client Component handles event handlers, state, and browser APIs while the Server Component handles data fetching and layout."
+    },
+    {
+      "question": "What happens when a Server Component re-renders?",
+      "answer": "Server Components only render on the server. When data changes, the component re-renders on the server, and the new HTML is sent to the client. Client-side state and UI are preserved during this process. Client Components nested inside Server Components maintain their state across re-renders."
+    },
+    {
+      "question": "How does the Server Component pattern improve performance?",
+      "answer": "By rendering on the server, Server Components eliminate the need to download, parse, and execute JavaScript for data fetching and rendering logic. This reduces the bundle size, improves Time to Interactive, and reduces the device resources required."
+    },
+    {
+      "question": "Can Server Components use CSS-in-JS libraries?",
+      "answer": "Most CSS-in-JS libraries require client-side JavaScript execution and cannot be used directly in Server Components. Use CSS Modules, Tailwind CSS, or other zero-runtime CSS solutions with Server Components. Some libraries like styled-components have experimental server-side support."
+    },
+    {
+      "question": "How do Server Components handle authentication?",
+      "answer": "Server Components can check authentication by reading cookies or session tokens server-side. They can conditionally render content based on auth state. For interactive auth flows (login forms, redirects), use Client Components wrapped by Server Components that provide the initial auth state."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 200\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><rect x=\"0\" y=\"0\" width=\"500\" height=\"200\" rx=\"8\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"24\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">Server Components</text><rect x=\"10\" y=\"40\" width=\"140\" height=\"35\" rx=\"4\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1\"/><text x=\"80\" y=\"56\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Server Component</text><text x=\"80\" y=\"68\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Runs on Server</text><line x1=\"150\" y1=\"58\" x2=\"170\" y2=\"58\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"180\" y=\"40\" width=\"140\" height=\"35\" rx=\"4\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1\"/><text x=\"250\" y=\"56\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Direct DB/API</text><text x=\"250\" y=\"68\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Fetch Data</text><line x1=\"320\" y1=\"58\" x2=\"340\" y2=\"58\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"350\" y=\"40\" width=\"120\" height=\"35\" rx=\"4\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1\"/><text x=\"410\" y=\"56\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">HTML Output</text><text x=\"410\" y=\"68\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">to Client</text><line x1=\"350\" y1=\"75\" x2=\"350\" y2=\"95\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"230\" y=\"105\" width=\"140\" height=\"35\" rx=\"4\" fill=\"#17a2b8\" stroke=\"#17a2b8\" stroke-width=\"1\"/><text x=\"300\" y=\"121\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Client Component</text><text x=\"300\" y=\"133\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Interactive (useState)</text><line x1=\"230\" y1=\"123\" x2=\"180\" y2=\"123\" stroke=\"#999\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"10\" y=\"105\" width=\"140\" height=\"35\" rx=\"4\" fill=\"#6610f2\" stroke=\"#6610f2\" stroke-width=\"1\"/><text x=\"80\" y=\"121\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Server Component</text><text x=\"80\" y=\"133\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">No JS bundle</text><text x=\"250\" y=\"170\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">Server Components: Server-rendered by default, reduce JS bundle, direct backend access.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "Async Server Component for Data Fetching",
+      "useCase": "When you need to fetch data and render it directly.",
+      "code": "// app/page.js — Server Component by default\nexport default async function Home() {\n  const res = await fetch(\"https://api.example.com/posts\");\n  const posts = await res.json();\n  return (\n    <ul>\n      {posts.map(p => <li key={p.id}>{p.title}</li>)}\n    </ul>\n  );\n}",
+      "description": "Fetches posts directly in the component without useEffect, loading state, or API route."
+    },
+    {
+      "title": "Server Component with Database Access",
+      "useCase": "When you need to query a database directly.",
+      "code": "import { sql } from \"@vercel/postgres\";\n\nexport default async function Users() {\n  const { rows } = await sql`SELECT * FROM users`;\n  return (\n    <table>\n      {rows.map(r => <tr key={r.id}><td>{r.name}</td></tr>)}\n    </table>\n  );\n}",
+      "description": "Queries a PostgreSQL database directly in the Server Component without an API layer."
+    },
+    {
+      "title": "Server Component with Client Composition",
+      "useCase": "When you need both data and interactivity.",
+      "code": "// Server Component (parent)\nimport LikeButton from \"./LikeButton\";\n\nexport default async function PostPage({ params }) {\n  const post = await fetchPost(params.id);\n  return (\n    <div>\n      <h1>{post.title}</h1>\n      <p>{post.content}</p>\n      <LikeButton initialLikes={post.likes} />\n    </div>\n  );\n}\n\n// Client Component (child)\n\"use client\"\nexport default function LikeButton({ initialLikes }) {\n  const [likes, setLikes] = useState(initialLikes);\n  return <button onClick={() => setLikes(l => l + 1)}>{likes} likes</button>\n}",
+      "description": "Server Component handles data fetching, Client Component handles the interactive like button."
+    },
+    {
+      "title": "Server Component with Error Handling",
+      "useCase": "When you need graceful error handling.",
+      "code": "export default async function Product({ id }) {\n  try {\n    const product = await fetchProduct(id);\n    return <div>{product.name}</div>;\n  } catch (error) {\n    console.error(\"Failed to fetch product:\", error);\n    return <div className=\"error\">Product not available</div>;\n  }\n}",
+      "description": "Error handling in Server Components uses try-catch with fallback UI rendering."
+    },
+    {
+      "title": "Server Component with Suspense",
+      "useCase": "When you want streaming with loading states.",
+      "code": "import { Suspense } from \"react\";\n\nasync function ProductList() {\n  const products = await fetchProducts();\n  return products.map(p => <div key={p.id}>{p.name}</div>);\n}\n\nexport default function Page() {\n  return (\n    <Suspense fallback={<div>Loading products...</div>}>\n      <ProductList />\n    </Suspense>\n  );\n}",
+      "description": "Wraps the async Server Component in Suspense for streaming and immediate loading feedback."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What is the default component type in the App Router?",
+      "options": [
+        "Client Component",
+        "Server Component",
+        "Hybrid Component",
+        "Static Component"
+      ],
+      "answer": 1,
+      "explanation": "All components in the App Router are Server Components by default."
+    },
+    {
+      "question": "Which of the following can a Server Component use?",
+      "options": [
+        "useState",
+        "Database queries",
+        "onClick handlers",
+        "localStorage"
+      ],
+      "answer": 1,
+      "explanation": "Server Components can directly access databases since they run on the server."
+    },
+    {
+      "question": "How do you mark a component as a Client Component?",
+      "options": [
+        "Add \"use client\" at the top",
+        "Export as client wrapper",
+        "Use ClientComponent HOC",
+        "Configure in next.config"
+      ],
+      "answer": 0,
+      "explanation": "Add the \"use client\" directive at the top of the file to mark it as a Client Component."
+    },
+    {
+      "question": "What is sent to the client from a Server Component?",
+      "options": [
+        "Component source code",
+        "Rendered HTML (no JS)",
+        "JavaScript bundle",
+        "Server logs"
+      ],
+      "answer": 1,
+      "explanation": "Only the rendered HTML output is sent; no JavaScript source code is included."
+    },
+    {
+      "question": "Can Server Components use React context?",
+      "options": [
+        "Yes, always",
+        "No, context requires Client Components",
+        "Yes, with use client",
+        "Only for theme context"
+      ],
+      "answer": 1,
+      "explanation": "React context requires client-side state, so it is not available in Server Components."
+    },
+    {
+      "question": "How are fetch requests optimized in Server Components?",
+      "options": [
+        "They are blocked",
+        "They are automatically deduplicated",
+        "They run on the client",
+        "They are cached for one hour"
+      ],
+      "answer": 1,
+      "explanation": "Next.js automatically deduplicates identical fetch requests within a render pass."
+    }
+  ]
+};

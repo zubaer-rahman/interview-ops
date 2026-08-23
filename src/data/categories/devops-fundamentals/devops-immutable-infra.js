@@ -1,0 +1,213 @@
+export const devops_immutable_infra = {
+  "id": "devops-immutable-infra",
+  "title": "Immutable Infrastructure",
+  "difficulty": "advanced",
+  "estimatedMinutes": 20,
+  "tldr": [
+    "Immutable infrastructure is a pattern where servers are never modified after deployment. When changes are needed, new servers are built from a common image.",
+    "Instead of patching or upgrading running servers (mutable), you replace them entirely with new instances running the updated image.",
+    "Benefits: no configuration drift, consistent environments, easy rollback (switch to old image), simplified debugging (known state).",
+    "Enabling technologies: container images (Docker), AMIs (AWS machine images), virtual machine snapshots, auto-scaling groups, blue-green deployments."
+  ],
+  "laymanDefinition": "Immutable infrastructure is like replacing a lightbulb instead of repairing it. When a bulb burns out (needs a change), you don't fix the filament — you screw in a brand new bulb. Every bulb is identical, factory-made. Your servers are the same: when anything needs to change, you provision a fresh one.",
+  "deepDive": [
+    {
+      "heading": "Immutable vs Mutable",
+      "text": "Mutable: SSH into server, update config, restart service. Over time, servers become snowflakes (unique, undocumented differences). Immutable: build new image with changes, deploy new instances, terminate old ones. Every instance is identical to the image. No drift. Predictable. Debugging is easier because you know the exact state."
+    },
+    {
+      "heading": "Building Immutable Images",
+      "text": "Step 1: Start with base image (OS + security patches). Step 2: Install dependencies and application. Step 3: Configure settings baked into image. Step 4: Create golden image (AMI, Docker image). Step 5: Deploy instances from image. Never SSH into running instances. Never hotfix."
+    },
+    {
+      "heading": "Immutable Infrastructure with Containers",
+      "text": "Docker containers are the ultimate expression of immutability. Dockerfile defines exact image contents. Image is built once, deployed everywhere. No differences between dev, staging, production. Registry stores image versions. Rollback is switching to previous image tag. Kubernetes manages immutable container deployments."
+    },
+    {
+      "heading": "Challenges and Solutions",
+      "text": "Challenge: stateful services (databases). Solution: externalize state to managed services (RDS), persistent volumes. Challenge: hotfix urgency. Solution: quick image build pipeline, feature flags. Challenge: configuration. Solution: bake config into image or use env vars at deploy time. Challenge: cost. Solution: immutable is often cheaper (no snowflake management)."
+    }
+  ],
+  "interviewAnswer": "Immutable infrastructure is a cornerstone of modern DevOps. Treat servers as disposable — never modify them in place. Use Docker images or AMIs. Combine with auto-scaling and blue-green deployments. Externalize state. The result: no drift, easy rollbacks, and perfect consistency.",
+  "interviewQuestions": [
+    {
+      "question": "What is immutable infrastructure?",
+      "answer": "Servers are never modified after deployment. Changes mean replacing the entire server from a new image."
+    },
+    {
+      "question": "What is the difference between immutable and mutable infrastructure?",
+      "answer": "Mutable: modify servers in place. Immutable: replace servers entirely for any change."
+    },
+    {
+      "question": "What are the benefits of immutable infrastructure?",
+      "answer": "No configuration drift, consistent environments, easy rollback, simplified debugging."
+    },
+    {
+      "question": "How do containers relate to immutable infrastructure?",
+      "answer": "Containers are inherently immutable — the image defines exact contents; any change requires a new image."
+    },
+    {
+      "question": "What is a golden image?",
+      "answer": "A master image (AMI, VM snapshot) used as the basis for all instances in immutable infrastructure."
+    },
+    {
+      "question": "How do you handle databases with immutable infrastructure?",
+      "answer": "Externalize state to managed services (RDS) or persistent volumes — keep data outside ephemeral compute."
+    },
+    {
+      "question": "Immutable Infrastructure — What security considerations apply here?",
+      "answer": "Security considerations include access control, encryption of sensitive data, and audit logging."
+    },
+    {
+      "question": "Immutable Infrastructure — What best practices should be followed?",
+      "answer": "Best practices include version control, automation, monitoring, and thorough documentation."
+    },
+    {
+      "question": "Immutable Infrastructure — How does this affect team collaboration?",
+      "answer": "It supports collaboration through shared visibility, standardized processes, and clear workflows."
+    },
+    {
+      "question": "Immutable Infrastructure — What metrics indicate successful implementation?",
+      "answer": "Key metrics include adoption rate, error reduction, build times, and team satisfaction scores."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"300\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">Immutable Infrastructure</text><rect x=\"10\" y=\"35\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1.5\"/><text x=\"65\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Build Image</text><text x=\"65\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Golden AMI / Docker</text><line x1=\"120\" y1=\"48\" x2=\"150\" y2=\"48\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"160\" y=\"35\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1.5\"/><text x=\"215\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Deploy</text><text x=\"215\" y=\"43\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">New instances from i</text><text x=\"215\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">mage</text><rect x=\"10\" y=\"65\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1.5\"/><text x=\"65\" y=\"81\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Running</text><text x=\"65\" y=\"73\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Never SSH, never pat</text><text x=\"65\" y=\"84\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">ch</text><rect x=\"10\" y=\"95\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#dc3545\" stroke=\"#dc3545\" stroke-width=\"1.5\"/><text x=\"65\" y=\"111\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Change Needed</text><text x=\"65\" y=\"103\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Build new image vers</text><text x=\"65\" y=\"114\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">ion</text><line x1=\"120\" y1=\"78\" x2=\"150\" y2=\"78\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"120\" y1=\"108\" x2=\"150\" y2=\"108\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"160\" y=\"65\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#e83e8c\" stroke=\"#e83e8c\" stroke-width=\"1.5\"/><text x=\"215\" y=\"81\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Replace</text><text x=\"215\" y=\"84\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">New instances</text><rect x=\"10\" y=\"125\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#6610f2\" stroke=\"#6610f2\" stroke-width=\"1.5\"/><text x=\"65\" y=\"141\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Terminate</text><text x=\"65\" y=\"133\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Old instances remove</text><text x=\"65\" y=\"144\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">d</text><rect x=\"290\" y=\"35\" width=\"190\" height=\"120\" rx=\"5\" fill=\"#17a2b8\" stroke=\"#17a2b8\" stroke-width=\"1.5\"/><text x=\"385\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Immutable Infrastructure</text><text x=\"385\" y=\"127\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Never modify servers. Replace with</text><text x=\"385\" y=\"138\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\"> new images. No drift. Easy rollba</text><text x=\"385\" y=\"149\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">ck. Containers + AMIs.</text><text x=\"240\" y=\"190\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">Immutable Infrastructure: Replace, never modify. B</text><text x=\"240\" y=\"202\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">uild golden images, deploy new instances, terminat</text><text x=\"240\" y=\"214\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">e old ones.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "Dockerfile for Immutable App Image",
+      "useCase": "Deterministic container build.",
+      "code": "# Dockerfile — immutable application image\nFROM node:18-alpine AS base\nWORKDIR /app\nCOPY package*.json ./\nRUN npm ci --only=production\n\nFROM base AS build\nCOPY . .\nRUN npm run build\n\nFROM nginx:alpine AS production\nCOPY --from=build /app/dist /usr/share/nginx/html\nCOPY nginx.conf /etc/nginx/conf.d/default.conf\nEXPOSE 80\nHEALTHCHECK --interval=30s CMD wget -qO- http://localhost/ || exit 1",
+      "description": "Multi-stage Dockerfile building an immutable production image — no runtime modifications allowed."
+    },
+    {
+      "title": "Packer: Build Golden AMI",
+      "useCase": "Automated machine image creation.",
+      "code": "# packer.pkr.hcl — build immutable AMI\npacker {\n  required_plugins {\n    amazon = {\n      version = \">= 1.0.0\"\n      source  = \"github.com/hashicorp/amazon\"\n    }\n  }\n}\n\nsource \"amazon-ebs\" \"webapp\" {\n  ami_name      = \"myapp-{{timestamp}}\")\n  instance_type = \"t2.micro\"\n  region        = \"us-east-1\"\n  source_ami_filter {\n    filters = {\n      name = \"amzn2-ami-hvm-*-x86_64-gp2\"\n    }\n  }\n  communicator = \"ssh\"\n  ssh_username = \"ec2-user\"\n}\n\nbuild {\n  sources = [\"source.amazon-ebs.webapp\"]\n  provisioner \"shell\" {\n    inline = [\n      \"sudo yum update -y\",\n      \"sudo yum install -y nginx\",\n      \"sudo systemctl enable nginx\"\n    ]\n  }\n}",
+      "description": "Packer builds immutable AMIs by starting from a base image, provisioning, and creating a golden image."
+    },
+    {
+      "title": "Advanced Configuration",
+      "useCase": "Complex scenario",
+      "code": "# Advanced pattern for complex scenarios\n# Includes error handling",
+      "description": "Advanced configuration example."
+    },
+    {
+      "title": "Integration Pattern",
+      "useCase": "Tool integration",
+      "code": "# Integration with other tools\n# Shows how components connect",
+      "description": "Integration example with related tools."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What is the key principle of immutable infrastructure?",
+      "options": [
+        "Servers are patched regularly",
+        "Servers are replaced, never modified",
+        "Servers are backed up daily",
+        "Servers are manually configured"
+      ],
+      "answer": 1,
+      "explanation": "Immutable infrastructure replaces servers entirely rather than modifying them in place."
+    },
+    {
+      "question": "What is a benefit of immutable infrastructure?",
+      "options": [
+        "More complex debugging",
+        "No configuration drift",
+        "Higher costs",
+        "Slower deployments"
+      ],
+      "answer": 1,
+      "explanation": "No configuration drift — every instance is identical to the golden image it was built from."
+    },
+    {
+      "question": "How do containers relate to immutability?",
+      "options": [
+        "Containers are mutable by default",
+        "Container images are immutable — any change requires a new image",
+        "Containers cannot be immutable",
+        "Only Docker supports immutability"
+      ],
+      "answer": 1,
+      "explanation": "Container images are inherently immutable. Any change requires building a new image version."
+    },
+    {
+      "question": "Immutable Infrastructure — What is important for security?",
+      "options": [
+        "Access control and encryption",
+        "Open access",
+        "Shared passwords",
+        "No auditing"
+      ],
+      "answer": 0,
+      "explanation": "Access control and encryption are fundamental security measures."
+    },
+    {
+      "question": "Immutable Infrastructure — How to ensure reliability?",
+      "options": [
+        "Automated testing and monitoring",
+        "Manual checks only",
+        "No testing",
+        "Reactive fixes"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing and monitoring ensure consistent reliability."
+    },
+    {
+      "question": "Immutable Infrastructure — What helps team collaboration?",
+      "options": [
+        "Shared workflows and visibility",
+        "Isolated work",
+        "No documentation",
+        "Siloed tools"
+      ],
+      "answer": 0,
+      "explanation": "Shared workflows and visibility enable better collaboration."
+    },
+    {
+      "question": "Immutable Infrastructure — What reduces errors most?",
+      "options": [
+        "Automation",
+        "Manual processes",
+        "Rushing",
+        "Bypassing reviews"
+      ],
+      "answer": 0,
+      "explanation": "Automation consistently eliminates human errors."
+    },
+    {
+      "question": "Immutable Infrastructure — What improves speed?",
+      "options": [
+        "Parallel execution and caching",
+        "Serial execution",
+        "No optimization",
+        "Manual steps"
+      ],
+      "answer": 0,
+      "explanation": "Parallel execution and caching significantly improve speed."
+    },
+    {
+      "question": "Immutable Infrastructure — What is key for monitoring?",
+      "options": [
+        "Metrics dashboards and alerts",
+        "No monitoring",
+        "Only error logs",
+        "Manual checks"
+      ],
+      "answer": 0,
+      "explanation": "Metrics dashboards and alerts provide actionable insights."
+    },
+    {
+      "question": "Immutable Infrastructure — What ensures quality?",
+      "options": [
+        "Automated testing in pipeline",
+        "No testing",
+        "Only manual QA",
+        "Skipping code review"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing integrated into the pipeline ensures consistent quality."
+    }
+  ]
+};

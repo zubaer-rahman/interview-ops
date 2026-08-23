@@ -1,10 +1,10 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useProgress } from "./core/hooks/useProgress";
 import { Login } from "./features/auth/Login";
 import { Sidebar } from "./features/layout/Sidebar";
 import { Topbar } from "./features/layout/Topbar";
 import { TopicContent } from "./features/topics/TopicContent";
-import { CATEGORIES } from "./data/categories.js";
+import { CATEGORIES } from "./data/categories";
 
 const TOTAL_TOPICS = CATEGORIES.reduce((sum, c) => sum + c.topics.length, 0);
 
@@ -21,13 +21,35 @@ export default function App() {
   const [query, setQuery] = useState("");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const activeTopic = useMemo(() => {
+  const activeTopicMeta = useMemo(() => {
     for (const cat of CATEGORIES) {
       const t = cat.topics.find((t) => t.id === activeTopicId);
       if (t) return { ...t, categoryId: cat.id, categoryName: cat.name };
     }
     return null;
   }, [activeTopicId]);
+
+  const [activeTopic, setActiveTopic] = useState(null);
+
+  useEffect(() => {
+    if (!activeTopicMeta) {
+      setActiveTopic(null);
+      return;
+    }
+
+    if (typeof activeTopicMeta.content === 'function') {
+      let cancelled = false;
+      setActiveTopic({ ...activeTopicMeta, content: null }); // Show skeleton or keep old UI structure while loading
+      activeTopicMeta.content().then((res) => {
+        if (!cancelled) {
+          setActiveTopic({ ...activeTopicMeta, content: res });
+        }
+      });
+      return () => { cancelled = true; };
+    } else {
+      setActiveTopic(activeTopicMeta);
+    }
+  }, [activeTopicMeta]);
 
   const filteredCategories = useMemo(() => {
     if (!query.trim()) return CATEGORIES;
@@ -41,14 +63,16 @@ export default function App() {
   }, [query]);
 
   const completedCount = Object.values(progress).filter(Boolean).length;
-  const overallPct = TOTAL_TOPICS ? Math.round((completedCount / TOTAL_TOPICS) * 100) : 0;
+  const overallPct = TOTAL_TOPICS 
+    ? completedCount === 0 ? 0 : Math.max(1, Math.round((completedCount / TOTAL_TOPICS) * 100)) 
+    : 0;
 
   function categoryProgress(cat) {
     const done = cat.topics.filter((t) => progress[t.id]).length;
     return {
       done,
       total: cat.topics.length,
-      pct: Math.round((done / cat.topics.length) * 100),
+      pct: done === 0 ? 0 : Math.max(1, Math.round((done / cat.topics.length) * 100)),
     };
   }
 
@@ -106,6 +130,7 @@ export default function App() {
           storageError={error}
           isSidebarOpen={isSidebarOpen}
           setIsSidebarOpen={setIsSidebarOpen}
+          activeTopic={activeTopic}
         />
 
         <TopicContent

@@ -1,0 +1,179 @@
+export const mongodb_updateone = {
+  "id": "mongodb-updateone",
+  "title": "updateOne()",
+  "difficulty": "beginner",
+  "estimatedMinutes": 15,
+  "tldr": [
+    "updateOne() updates the first document that matches the filter using update operators ($set, $unset, $inc, etc.).",
+    "Returns UpdateResult with matchedCount, modifiedCount, upsertedCount, and upsertedId.",
+    "Use upsert: true option to create a document if no match is found, combining filter fields and update operators.",
+    "For replacing the entire document (except _id), use replaceOne() instead of updateOne()."
+  ],
+  "laymanDefinition": "updateOne() is like editing a single form in a filing system. You specify which form to find (filter), what changes to make (update), and optionally create one if it doesn't exist (upsert).",
+  "deepDive": [
+    {
+      "heading": "Update Operators",
+      "text": "$set: Set field values. $unset: Remove fields. $inc: Increment number. $min/$max: Conditional update. $mul: Multiply. $rename: Rename field. $push/$pull/$addToSet: Array operations. $each/$position/$slice: Array modifiers."
+    },
+    {
+      "heading": "UpdateResult Properties",
+      "text": "matchedCount: number of documents matching filter (0 or 1). modifiedCount: number of documents actually modified (0 or 1). upsertedCount: 1 if upsert created a new doc. upsertedId: _id of created document (if upsert). acknowledged: true if write concern satisfied."
+    },
+    {
+      "heading": "Upsert Behavior",
+      "text": "With upsert: true, if no document matches, MongoDB creates one by combining filter fields and $set operators. The _id is auto-generated. The upsertedId field contains the new _id."
+    },
+    {
+      "heading": "Field Update vs Replace",
+      "text": "updateOne() modifies specific fields using $ operators. replaceOne() replaces the entire document content. Use updateOne for partial updates, replaceOne when changing most fields. _id cannot be changed in either."
+    },
+    {
+      "heading": "Array Update Operators",
+      "text": "$push: Add to end of array. $pop: Remove first or last. $pull: Remove matching elements. $pullAll: Remove all matching values. $addToSet: Add if not exists. $each: Add multiple values. $position: Insert at position. $slice: Limit array size."
+    }
+  ],
+  "interviewAnswer": "updateOne() is the standard method for partial document updates. Understanding update operators and upsert behavior is critical for correct application behavior.",
+  "interviewQuestions": [
+    {
+      "question": "What does updateOne() do?",
+      "answer": "Updates the first document matching the filter using specified update operators. Returns an UpdateResult."
+    },
+    {
+      "question": "What is the difference between matchedCount and modifiedCount?",
+      "answer": "matchedCount is documents matching the filter. modifiedCount is those actually changed. If the document already matches the update, modifiedCount may be 0."
+    },
+    {
+      "question": "What is upsert?",
+      "answer": "If no document matches and upsert: true, MongoDB creates a new document combining filter fields and $set values."
+    },
+    {
+      "question": "What update operators set and remove fields?",
+      "answer": "$set sets field values. $unset removes fields. $inc increments numbers. $rename renames fields."
+    },
+    {
+      "question": "How do you update an array field?",
+      "answer": "Use $push (add), $pull (remove matching), $addToSet (add if not exists), $pop (remove first/last)."
+    },
+    {
+      "question": "Can updateOne update multiple documents?",
+      "answer": "No, updateOne only updates the first matching document. Use updateMany for multiple documents."
+    },
+    {
+      "question": "How do you replace an entire document?",
+      "answer": "Use replaceOne(filter, replacementDoc). The replacement doc replaces all fields except _id."
+    },
+    {
+      "question": "What happens if the update does not change anything?",
+      "answer": "modifiedCount is 0. matchedCount is still 1 if a match was found."
+    },
+    {
+      "question": "Can you use aggregation pipeline in update?",
+      "answer": "Yes, MongoDB 4.2+ supports aggregation pipelines in update: updateOne(filter, [{ $set: { total: { $sum: [\"$price\", \"$tax\"] } } }])."
+    },
+    {
+      "question": "Is updateOne atomic?",
+      "answer": "Yes, write operations are atomic at the document level. All changes in a single updateOne are applied atomically."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"300\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">updateOne()</text><rect x=\"10\" y=\"40\" width=\"140\" height=\"35\" rx=\"5\" fill=\"#47A248\" stroke=\"#47A248\" stroke-width=\"1.5\"/><text x=\"80\" y=\"56\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">updateOne(filter)</text><text x=\"80\" y=\"69\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Find Document</text><line x1=\"150\" y1=\"58\" x2=\"180\" y2=\"58\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"190\" y=\"40\" width=\"140\" height=\"35\" rx=\"5\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1.5\"/><text x=\"260\" y=\"56\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">$set, $inc, $push</text><text x=\"260\" y=\"69\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Apply Operators</text><line x1=\"190\" y1=\"75\" x2=\"190\" y2=\"93\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"190\" y=\"95\" width=\"140\" height=\"35\" rx=\"5\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1.5\"/><text x=\"260\" y=\"111\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">UpdateResult</text><text x=\"260\" y=\"124\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">matched/modifiedCount</text><rect x=\"10\" y=\"140\" width=\"100\" height=\"35\" rx=\"5\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1.5\"/><text x=\"60\" y=\"156\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Upsert</text><text x=\"60\" y=\"169\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Create if missing</text><text x=\"240\" y=\"200\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">updateOne(): Update first matching document with o</text><text x=\"240\" y=\"212\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">perators.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "Basic $set and $inc",
+      "useCase": "Update user fields.",
+      "code": "await db.collection('users').updateOne(\n  { _id: userId },\n  { $set: { name: \"Alice Updated\" }, $inc: { version: 1 } }\n);",
+      "description": "Sets name and increments version in one operation."
+    },
+    {
+      "title": "Upsert Example",
+      "useCase": "Create if not exists.",
+      "code": "const result = await db.collection('counters').updateOne(\n  { _id: \"views\" },\n  { $inc: { count: 1 } },\n  { upsert: true }\n);\nconsole.log(result.upsertedId); // First time only",
+      "description": "Creates counter doc if missing, increments count."
+    },
+    {
+      "title": "Array $push with $each",
+      "useCase": "Add multiple tags.",
+      "code": "await db.collection('articles').updateOne(\n  { _id: articleId },\n  { $push: { tags: { $each: [\"mongodb\", \"database\", \"nosql\"] } } }\n);",
+      "description": "Adds multiple tags to the tags array."
+    },
+    {
+      "title": "Using $pull",
+      "useCase": "Remove from array.",
+      "code": "await db.collection('users').updateOne(\n  { _id: userId },\n  { $pull: { notifications: { type: \"old-alert\" } } }\n);",
+      "description": "Removes notifications matching the condition."
+    },
+    {
+      "title": "Pipeline Update",
+      "useCase": "Complex calculation.",
+      "code": "await db.collection('orders').updateOne(\n  { _id: orderId },\n  [{ $set: { totalPrice: { $multiply: [\"$quantity\", \"$unitPrice\"] } } }]\n);",
+      "description": "Uses aggregation pipeline (MongoDB 4.2+) to calculate totalPrice."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "Which operator sets field values?",
+      "options": [
+        "$set",
+        "$add",
+        "$put",
+        "$assign"
+      ],
+      "answer": 0,
+      "explanation": "$set sets field values."
+    },
+    {
+      "question": "What is upsert?",
+      "options": [
+        "Always insert",
+        "Update or insert if no match",
+        "Update only",
+        "Delete and insert"
+      ],
+      "answer": 1,
+      "explanation": "Upsert creates a document if no match found."
+    },
+    {
+      "question": "What does modifiedCount represent?",
+      "options": [
+        "Docs matching filter",
+        "Docs actually changed",
+        "Docs inserted",
+        "Docs deleted"
+      ],
+      "answer": 1,
+      "explanation": "modifiedCount is documents actually modified."
+    },
+    {
+      "question": "Which operator removes a field?",
+      "options": [
+        "$delete",
+        "$unset",
+        "$remove",
+        "$clear"
+      ],
+      "answer": 1,
+      "explanation": "$unset removes fields from a document."
+    },
+    {
+      "question": "Does updateOne update multiple docs?",
+      "options": [
+        "Yes",
+        "No, only first match",
+        "Depends on options",
+        "Only with multi:true"
+      ],
+      "answer": 1,
+      "explanation": "updateOne updates only the first matching document."
+    },
+    {
+      "question": "What operator adds to array if not exists?",
+      "options": [
+        "$push",
+        "$addToSet",
+        "$set",
+        "$append"
+      ],
+      "answer": 1,
+      "explanation": "$addToSet adds to array only if value is not already present."
+    }
+  ]
+};

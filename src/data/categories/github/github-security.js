@@ -1,0 +1,213 @@
+export const github_security = {
+  "id": "github-security",
+  "title": "GitHub Security",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 20,
+  "tldr": [
+    "GitHub provides security features to protect code, dependencies, and the supply chain.",
+    "Dependabot: automated dependency updates and security alerts. Secret scanning: detect committed secrets. Code scanning: identify vulnerabilities.",
+    "Adopting GitHub Security leads to faster deployments, lower failure rates, and quicker recovery when issues arise.",
+    "GitHub Security works alongside other modern tools and platforms to support end-to-end software delivery processes."
+  ],
+  "laymanDefinition": "GitHub Security is like having a team of security guards for your code. Dependabot watches your dependencies and alerts you about known vulnerabilities. Secret scanning checks for accidentally committed passwords or API keys. Code scanning analyzes code for security flaws.",
+  "deepDive": [
+    {
+      "heading": "Dependabot",
+      "text": "Dependabot alerts: notifies about vulnerable dependencies. Dependabot security updates: automatically creates PRs to fix vulnerabilities. Dependabot version updates: keeps dependencies up to date. Configured via dependabot.yml. Supports npm, pip, Maven, Docker, GitHub Actions, and more."
+    },
+    {
+      "heading": "Secret Scanning",
+      "text": "Detects supported secrets: AWS keys, GitHub tokens, npm tokens, Slack tokens, etc. Custom patterns for organization-specific secrets. Push protection: blocks commits containing secrets. Alerts: notifies when secrets are detected."
+    },
+    {
+      "heading": "Code Scanning",
+      "text": "Powered by CodeQL and third-party tools. CodeQL: semantic code analysis engine. Identifies: SQL injection, XSS, path traversal, command injection, insecure crypto. Runs on each push or on schedule. Results shown in Security tab and PR checks."
+    },
+    {
+      "heading": "Security Overview",
+      "text": "Dependency graph: visualize dependencies and their vulnerabilities. Advisory database: GitHub Security Advisories. Private vulnerability reporting: researchers report privately. Security policies: SECURITY.md for reporting instructions."
+    }
+  ],
+  "interviewAnswer": "GitHub provides security features to protect code, dependencies, and the supply chain.",
+  "interviewQuestions": [
+    {
+      "question": "What is Dependabot?",
+      "answer": "An automated tool that monitors dependencies, alerts about vulnerabilities, and creates PRs to update them."
+    },
+    {
+      "question": "What does secret scanning detect?",
+      "answer": "Committed secrets like API keys, tokens, passwords from known providers."
+    },
+    {
+      "question": "What is CodeQL?",
+      "answer": "A semantic code analysis engine for identifying security vulnerabilities in code."
+    },
+    {
+      "question": "GitHub Security — How do you get started with this concept?",
+      "answer": "Getting started involves understanding the basics, setting up a proof of concept, and iterating."
+    },
+    {
+      "question": "GitHub Security — What tools integrate well with this?",
+      "answer": "Integration is possible through APIs, plugins, webhooks, and configuration files."
+    },
+    {
+      "question": "GitHub Security — What are common troubleshooting steps?",
+      "answer": "Troubleshooting involves checking logs, verifying configuration, and testing incrementally."
+    },
+    {
+      "question": "GitHub Security — What security considerations apply here?",
+      "answer": "Security considerations include access control, encryption of sensitive data, and audit logging."
+    },
+    {
+      "question": "GitHub Security — What best practices should be followed?",
+      "answer": "Best practices include version control, automation, monitoring, and thorough documentation."
+    },
+    {
+      "question": "GitHub Security — How does this affect team collaboration?",
+      "answer": "It supports collaboration through shared visibility, standardized processes, and clear workflows."
+    },
+    {
+      "question": "GitHub Security — What metrics indicate successful implementation?",
+      "answer": "Key metrics include adoption rate, error reduction, build times, and team satisfaction scores."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"300\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">GitHub Security</text><rect x=\"10\" y=\"35\" width=\"140\" height=\"25\" rx=\"5\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1.5\"/><text x=\"80\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Dependabot</text><text x=\"80\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Auto-update deps</text><rect x=\"10\" y=\"65\" width=\"140\" height=\"25\" rx=\"5\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1.5\"/><text x=\"80\" y=\"81\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Secret Scanning</text><text x=\"80\" y=\"84\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Find leaked secrets</text><rect x=\"10\" y=\"95\" width=\"140\" height=\"25\" rx=\"5\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1.5\"/><text x=\"80\" y=\"111\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Code Scanning</text><text x=\"80\" y=\"114\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">CodeQL analysis</text><rect x=\"10\" y=\"125\" width=\"140\" height=\"25\" rx=\"5\" fill=\"#dc3545\" stroke=\"#dc3545\" stroke-width=\"1.5\"/><text x=\"80\" y=\"141\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Push Protection</text><text x=\"80\" y=\"144\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Block secrets in commits</text><text x=\"240\" y=\"175\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">GitHub Security: Dependabot, secret scanning, code</text><text x=\"240\" y=\"187\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\"> scanning, and supply chain security features.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "Dependabot Config",
+      "useCase": "dependabot.yml example.",
+      "code": "version: 2\nupdates:\n  - package-ecosystem: \"npm\"\n    directory: \"/\"\n    schedule:\n      interval: \"weekly\"",
+      "description": ""
+    },
+    {
+      "title": "Common Use Case",
+      "useCase": "Typical implementation",
+      "code": "# Common implementation pattern\n# Used in everyday scenarios",
+      "description": "Standard use case example."
+    },
+    {
+      "title": "Advanced Configuration",
+      "useCase": "Complex scenario",
+      "code": "# Advanced pattern for complex scenarios\n# Includes error handling",
+      "description": "Advanced configuration example."
+    },
+    {
+      "title": "Integration Pattern",
+      "useCase": "Tool integration",
+      "code": "# Integration with other tools\n# Shows how components connect",
+      "description": "Integration example with related tools."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What does Dependabot do?",
+      "options": [
+        "Delete vulnerable code",
+        "Monitor and auto-update dependencies",
+        "Scan for secrets",
+        "Analyze code quality"
+      ],
+      "answer": 1,
+      "explanation": "Dependabot monitors dependencies for vulnerabilities and automatically creates PRs to update them."
+    },
+    {
+      "question": "GitHub Security — What is the recommended approach?",
+      "options": [
+        "Start simple and iterate",
+        "Build everything at once",
+        "Skip testing",
+        "Avoid planning"
+      ],
+      "answer": 0,
+      "explanation": "Starting simple and iterating is the most effective approach."
+    },
+    {
+      "question": "GitHub Security — What should be prioritized?",
+      "options": [
+        "Reliability and consistency",
+        "Speed only",
+        "Features over quality",
+        "Manual processes"
+      ],
+      "answer": 0,
+      "explanation": "Reliability and consistency are foundational priorities."
+    },
+    {
+      "question": "GitHub Security — What is important for security?",
+      "options": [
+        "Access control and encryption",
+        "Open access",
+        "Shared passwords",
+        "No auditing"
+      ],
+      "answer": 0,
+      "explanation": "Access control and encryption are fundamental security measures."
+    },
+    {
+      "question": "GitHub Security — How to ensure reliability?",
+      "options": [
+        "Automated testing and monitoring",
+        "Manual checks only",
+        "No testing",
+        "Reactive fixes"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing and monitoring ensure consistent reliability."
+    },
+    {
+      "question": "GitHub Security — What helps team collaboration?",
+      "options": [
+        "Shared workflows and visibility",
+        "Isolated work",
+        "No documentation",
+        "Siloed tools"
+      ],
+      "answer": 0,
+      "explanation": "Shared workflows and visibility enable better collaboration."
+    },
+    {
+      "question": "GitHub Security — What reduces errors most?",
+      "options": [
+        "Automation",
+        "Manual processes",
+        "Rushing",
+        "Bypassing reviews"
+      ],
+      "answer": 0,
+      "explanation": "Automation consistently eliminates human errors."
+    },
+    {
+      "question": "GitHub Security — What improves speed?",
+      "options": [
+        "Parallel execution and caching",
+        "Serial execution",
+        "No optimization",
+        "Manual steps"
+      ],
+      "answer": 0,
+      "explanation": "Parallel execution and caching significantly improve speed."
+    },
+    {
+      "question": "GitHub Security — What is key for monitoring?",
+      "options": [
+        "Metrics dashboards and alerts",
+        "No monitoring",
+        "Only error logs",
+        "Manual checks"
+      ],
+      "answer": 0,
+      "explanation": "Metrics dashboards and alerts provide actionable insights."
+    },
+    {
+      "question": "GitHub Security — What ensures quality?",
+      "options": [
+        "Automated testing in pipeline",
+        "No testing",
+        "Only manual QA",
+        "Skipping code review"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing integrated into the pipeline ensures consistent quality."
+    }
+  ]
+};

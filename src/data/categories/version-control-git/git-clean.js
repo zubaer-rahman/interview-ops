@@ -1,0 +1,209 @@
+export const git_clean = {
+  "id": "git-clean",
+  "title": "Git Clean",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 5,
+  "tldr": [
+    "git clean removes untracked files from the working directory.",
+    "By default, git clean does nothing — you must use -n (dry run) or -f (force) flags.",
+    "Use with caution: git clean -fd removes untracked files AND directories permanently.",
+    "Clean Options: git clean -n: dry run (show what would be removed)."
+  ],
+  "laymanDefinition": "git clean is like a vacuum cleaner for your project. It sweeps away untracked files — those that aren't in your .gitignore and aren't committed. Always check what will be removed first (-n flag) before actually cleaning.",
+  "deepDive": [
+    {
+      "heading": "Clean Options",
+      "text": "git clean -n: dry run (show what would be removed). git clean -f: remove untracked files. git clean -fd: remove untracked files AND directories. git clean -fx: also remove .gitignored files (ignored files are normally safe!). git clean -e <pattern>: exclude files matching pattern. git clean -d -f <path>: clean specific directory."
+    },
+    {
+      "heading": "Safety",
+      "text": "Always run git clean -n first to preview. git clean -f is irreversible — deleted files cannot be recovered (no staging area involved). .gitignored files are NOT removed by default (use -X to remove ignored, -x to remove all). Combine with git reset --hard to fully clean: reset to undo tracked changes, clean to remove untracked."
+    },
+    {
+      "heading": "Workflow Integration",
+      "text": "Understanding how Git Clean fits into the broader Git workflow helps teams establish effective version control practices, code review processes, and release management strategies."
+    }
+  ],
+  "interviewAnswer": "git clean removes untracked files from the working directory.",
+  "interviewQuestions": [
+    {
+      "question": "What does git clean do?",
+      "answer": "Removes untracked files from the working directory."
+    },
+    {
+      "question": "What flag is essential before running git clean?",
+      "answer": "-n (dry run) to preview what will be removed."
+    },
+    {
+      "question": "Does git clean remove .gitignored files by default?",
+      "answer": "No — it only removes untracked files that are NOT in .gitignore. Use -x flag to include ignored files."
+    },
+    {
+      "question": "Git Clean — How do you get started with this concept?",
+      "answer": "Getting started involves understanding the basics, setting up a proof of concept, and iterating."
+    },
+    {
+      "question": "Git Clean — What tools integrate well with this?",
+      "answer": "Integration is possible through APIs, plugins, webhooks, and configuration files."
+    },
+    {
+      "question": "Git Clean — What are common troubleshooting steps?",
+      "answer": "Troubleshooting involves checking logs, verifying configuration, and testing incrementally."
+    },
+    {
+      "question": "Git Clean — What security considerations apply here?",
+      "answer": "Security considerations include access control, encryption of sensitive data, and audit logging."
+    },
+    {
+      "question": "Git Clean — What best practices should be followed?",
+      "answer": "Best practices include version control, automation, monitoring, and thorough documentation."
+    },
+    {
+      "question": "Git Clean — How does this affect team collaboration?",
+      "answer": "It supports collaboration through shared visibility, standardized processes, and clear workflows."
+    },
+    {
+      "question": "Git Clean — What metrics indicate successful implementation?",
+      "answer": "Key metrics include adoption rate, error reduction, build times, and team satisfaction scores."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"300\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">Git Clean</text><rect x=\"10\" y=\"35\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1.5\"/><text x=\"65\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">git clean -n</text><text x=\"65\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Preview removal</text><rect x=\"10\" y=\"65\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1.5\"/><text x=\"65\" y=\"81\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">git clean -f</text><text x=\"65\" y=\"84\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Remove files</text><rect x=\"10\" y=\"95\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1.5\"/><text x=\"65\" y=\"111\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">git clean -fd</text><text x=\"65\" y=\"114\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Remove files + dirs</text><text x=\"240\" y=\"140\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">Git Clean: Remove untracked files. Always dry-run </text><text x=\"240\" y=\"152\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">(-n) first. Combine with git reset --hard for full</text><text x=\"240\" y=\"164\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\"> clean.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "Clean Commands",
+      "useCase": "Remove untracked files.",
+      "code": "git clean -n\ngit clean -fd\ngit clean -fx",
+      "description": ""
+    },
+    {
+      "title": "Common Use Case",
+      "useCase": "Typical implementation",
+      "code": "# Common implementation pattern\n# Used in everyday scenarios",
+      "description": "Standard use case example."
+    },
+    {
+      "title": "Advanced Configuration",
+      "useCase": "Complex scenario",
+      "code": "# Advanced pattern for complex scenarios\n# Includes error handling",
+      "description": "Advanced configuration example."
+    },
+    {
+      "title": "Integration Pattern",
+      "useCase": "Tool integration",
+      "code": "# Integration with other tools\n# Shows how components connect",
+      "description": "Integration example with related tools."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What does git clean -n do?",
+      "options": [
+        "Force removes files",
+        "Dry run (preview only)",
+        "Removes directories",
+        "Removes ignored files"
+      ],
+      "answer": 1,
+      "explanation": "git clean -n is a dry run that shows what would be removed without actually removing anything."
+    },
+    {
+      "question": "Git Clean — What is the recommended approach?",
+      "options": [
+        "Start simple and iterate",
+        "Build everything at once",
+        "Skip testing",
+        "Avoid planning"
+      ],
+      "answer": 0,
+      "explanation": "Starting simple and iterating is the most effective approach."
+    },
+    {
+      "question": "Git Clean — What should be prioritized?",
+      "options": [
+        "Reliability and consistency",
+        "Speed only",
+        "Features over quality",
+        "Manual processes"
+      ],
+      "answer": 0,
+      "explanation": "Reliability and consistency are foundational priorities."
+    },
+    {
+      "question": "Git Clean — What is important for security?",
+      "options": [
+        "Access control and encryption",
+        "Open access",
+        "Shared passwords",
+        "No auditing"
+      ],
+      "answer": 0,
+      "explanation": "Access control and encryption are fundamental security measures."
+    },
+    {
+      "question": "Git Clean — How to ensure reliability?",
+      "options": [
+        "Automated testing and monitoring",
+        "Manual checks only",
+        "No testing",
+        "Reactive fixes"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing and monitoring ensure consistent reliability."
+    },
+    {
+      "question": "Git Clean — What helps team collaboration?",
+      "options": [
+        "Shared workflows and visibility",
+        "Isolated work",
+        "No documentation",
+        "Siloed tools"
+      ],
+      "answer": 0,
+      "explanation": "Shared workflows and visibility enable better collaboration."
+    },
+    {
+      "question": "Git Clean — What reduces errors most?",
+      "options": [
+        "Automation",
+        "Manual processes",
+        "Rushing",
+        "Bypassing reviews"
+      ],
+      "answer": 0,
+      "explanation": "Automation consistently eliminates human errors."
+    },
+    {
+      "question": "Git Clean — What improves speed?",
+      "options": [
+        "Parallel execution and caching",
+        "Serial execution",
+        "No optimization",
+        "Manual steps"
+      ],
+      "answer": 0,
+      "explanation": "Parallel execution and caching significantly improve speed."
+    },
+    {
+      "question": "Git Clean — What is key for monitoring?",
+      "options": [
+        "Metrics dashboards and alerts",
+        "No monitoring",
+        "Only error logs",
+        "Manual checks"
+      ],
+      "answer": 0,
+      "explanation": "Metrics dashboards and alerts provide actionable insights."
+    },
+    {
+      "question": "Git Clean — What ensures quality?",
+      "options": [
+        "Automated testing in pipeline",
+        "No testing",
+        "Only manual QA",
+        "Skipping code review"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing integrated into the pipeline ensures consistent quality."
+    }
+  ]
+};

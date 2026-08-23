@@ -1,0 +1,209 @@
+export const git_reset = {
+  "id": "git-reset",
+  "title": "Git Reset",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 15,
+  "tldr": [
+    "git reset moves the current branch pointer backward, optionally modifying the staging area and working directory.",
+    "Three modes: --soft (only move pointer), --mixed (pointer + staging, default), --hard (pointer + staging + working directory).",
+    "Use for undoing local commits. NEVER use reset on commits that have been pushed to shared branches.",
+    "Reset Modes: git reset --soft HEAD~1: undo last commit, keep changes staged."
+  ],
+  "laymanDefinition": "git reset is like a remote control for your project's timeline. --soft is like going back in time but keeping all your changes ready. --mixed is like going back and unstaging. --hard is like going back and throwing away all changes since. Use carefully — you can lose work.",
+  "deepDive": [
+    {
+      "heading": "Reset Modes",
+      "text": "git reset --soft HEAD~1: undo last commit, keep changes staged. git reset HEAD~1 (--mixed): undo last commit, unstage changes. git reset --hard HEAD~1: undo last commit, DISCARD changes permanently. git reset <file>: unstage file from staging area (same as git restore --staged)."
+    },
+    {
+      "heading": "Reset vs Revert",
+      "text": "Reset: removes commits, rewrites history. Safe only for local/unpushed commits. Revert: creates new commit that undoes changes. Safe for shared branches. Rule: reset for local undo, revert for public undo."
+    },
+    {
+      "heading": "ORIG_HEAD and Reflog",
+      "text": "After reset, ORIG_HEAD stores previous position: git reset --hard ORIG_HEAD (undo the reset). Reflog (git reflog) records all HEAD movements — can recover lost commits. Reset is not permanent if you act quickly."
+    }
+  ],
+  "interviewAnswer": "git reset moves the current branch pointer backward, optionally modifying the staging area and working directory.",
+  "interviewQuestions": [
+    {
+      "question": "What does git reset do?",
+      "answer": "Moves the current branch pointer backward, optionally modifying staging area and working directory."
+    },
+    {
+      "question": "What are the three reset modes?",
+      "answer": "--soft (move pointer only), --mixed (pointer + staging), --hard (all three, discard changes)."
+    },
+    {
+      "question": "When should you use reset vs revert?",
+      "answer": "Reset for local/unpushed commits. Revert for commits already pushed to shared branches."
+    },
+    {
+      "question": "Git Reset — How do you get started with this concept?",
+      "answer": "Getting started involves understanding the basics, setting up a proof of concept, and iterating."
+    },
+    {
+      "question": "Git Reset — What tools integrate well with this?",
+      "answer": "Integration is possible through APIs, plugins, webhooks, and configuration files."
+    },
+    {
+      "question": "Git Reset — What are common troubleshooting steps?",
+      "answer": "Troubleshooting involves checking logs, verifying configuration, and testing incrementally."
+    },
+    {
+      "question": "Git Reset — What security considerations apply here?",
+      "answer": "Security considerations include access control, encryption of sensitive data, and audit logging."
+    },
+    {
+      "question": "Git Reset — What best practices should be followed?",
+      "answer": "Best practices include version control, automation, monitoring, and thorough documentation."
+    },
+    {
+      "question": "Git Reset — How does this affect team collaboration?",
+      "answer": "It supports collaboration through shared visibility, standardized processes, and clear workflows."
+    },
+    {
+      "question": "Git Reset — What metrics indicate successful implementation?",
+      "answer": "Key metrics include adoption rate, error reduction, build times, and team satisfaction scores."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"300\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">Git Reset</text><rect x=\"10\" y=\"35\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1.5\"/><text x=\"65\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">--soft</text><text x=\"65\" y=\"43\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Undo commit, keep st</text><text x=\"65\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">aged</text><rect x=\"10\" y=\"65\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1.5\"/><text x=\"65\" y=\"81\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">--mixed</text><text x=\"65\" y=\"73\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Undo commit + unstag</text><text x=\"65\" y=\"84\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">e</text><rect x=\"10\" y=\"95\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1.5\"/><text x=\"65\" y=\"111\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">--hard</text><text x=\"65\" y=\"114\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Discard everything</text><rect x=\"10\" y=\"125\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#dc3545\" stroke=\"#dc3545\" stroke-width=\"1.5\"/><text x=\"65\" y=\"141\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">DANGER</text><text x=\"65\" y=\"133\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Lost changes permane</text><text x=\"65\" y=\"144\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">ntly</text><text x=\"240\" y=\"170\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">Git Reset: Move branch pointer backward. Three mod</text><text x=\"240\" y=\"182\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">es: soft, mixed, hard. Use only for local commits.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "Reset Commands",
+      "useCase": "Undo local commits.",
+      "code": "git reset --soft HEAD~1\ngit reset HEAD~1\ngit reset --hard HEAD~1\ngit reset ORIG_HEAD",
+      "description": ""
+    },
+    {
+      "title": "Common Use Case",
+      "useCase": "Typical implementation",
+      "code": "# Common implementation pattern\n# Used in everyday scenarios",
+      "description": "Standard use case example."
+    },
+    {
+      "title": "Advanced Configuration",
+      "useCase": "Complex scenario",
+      "code": "# Advanced pattern for complex scenarios\n# Includes error handling",
+      "description": "Advanced configuration example."
+    },
+    {
+      "title": "Integration Pattern",
+      "useCase": "Tool integration",
+      "code": "# Integration with other tools\n# Shows how components connect",
+      "description": "Integration example with related tools."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What is the safest reset mode?",
+      "options": [
+        "--hard",
+        "--soft",
+        "--mixed",
+        "--force"
+      ],
+      "answer": 1,
+      "explanation": "--soft is safest — moves pointer but keeps all changes staged. --hard discards changes permanently."
+    },
+    {
+      "question": "Git Reset — What is the recommended approach?",
+      "options": [
+        "Start simple and iterate",
+        "Build everything at once",
+        "Skip testing",
+        "Avoid planning"
+      ],
+      "answer": 0,
+      "explanation": "Starting simple and iterating is the most effective approach."
+    },
+    {
+      "question": "Git Reset — What should be prioritized?",
+      "options": [
+        "Reliability and consistency",
+        "Speed only",
+        "Features over quality",
+        "Manual processes"
+      ],
+      "answer": 0,
+      "explanation": "Reliability and consistency are foundational priorities."
+    },
+    {
+      "question": "Git Reset — What is important for security?",
+      "options": [
+        "Access control and encryption",
+        "Open access",
+        "Shared passwords",
+        "No auditing"
+      ],
+      "answer": 0,
+      "explanation": "Access control and encryption are fundamental security measures."
+    },
+    {
+      "question": "Git Reset — How to ensure reliability?",
+      "options": [
+        "Automated testing and monitoring",
+        "Manual checks only",
+        "No testing",
+        "Reactive fixes"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing and monitoring ensure consistent reliability."
+    },
+    {
+      "question": "Git Reset — What helps team collaboration?",
+      "options": [
+        "Shared workflows and visibility",
+        "Isolated work",
+        "No documentation",
+        "Siloed tools"
+      ],
+      "answer": 0,
+      "explanation": "Shared workflows and visibility enable better collaboration."
+    },
+    {
+      "question": "Git Reset — What reduces errors most?",
+      "options": [
+        "Automation",
+        "Manual processes",
+        "Rushing",
+        "Bypassing reviews"
+      ],
+      "answer": 0,
+      "explanation": "Automation consistently eliminates human errors."
+    },
+    {
+      "question": "Git Reset — What improves speed?",
+      "options": [
+        "Parallel execution and caching",
+        "Serial execution",
+        "No optimization",
+        "Manual steps"
+      ],
+      "answer": 0,
+      "explanation": "Parallel execution and caching significantly improve speed."
+    },
+    {
+      "question": "Git Reset — What is key for monitoring?",
+      "options": [
+        "Metrics dashboards and alerts",
+        "No monitoring",
+        "Only error logs",
+        "Manual checks"
+      ],
+      "answer": 0,
+      "explanation": "Metrics dashboards and alerts provide actionable insights."
+    },
+    {
+      "question": "Git Reset — What ensures quality?",
+      "options": [
+        "Automated testing in pipeline",
+        "No testing",
+        "Only manual QA",
+        "Skipping code review"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing integrated into the pipeline ensures consistent quality."
+    }
+  ]
+};

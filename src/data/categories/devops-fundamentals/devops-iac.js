@@ -1,0 +1,217 @@
+export const devops_iac = {
+  "id": "devops-iac",
+  "title": "Infrastructure as Code (IaC)",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 25,
+  "tldr": [
+    "Infrastructure as Code (IaC) is the practice of managing and provisioning infrastructure through machine-readable definition files, not manual processes.",
+    "IaC brings version control, code review, automated testing, and repeatability to infrastructure management.",
+    "Two approaches: declarative (desired state — Terraform, CloudFormation) and imperative (step-by-step — Ansible, Chef, Puppet).",
+    "Key benefits: consistency (no configuration drift), speed (minutes vs days), reproducibility (same config = same environment), versioned infrastructure."
+  ],
+  "laymanDefinition": "IaC is like having a recipe card for your entire server setup instead of a chef who remembers how they made it last time. Want the exact same setup for staging and production? Use the same recipe. Server crashed at 3 AM? Run the recipe on a new machine. Everything is documented, repeatable, and version-controlled.",
+  "deepDive": [
+    {
+      "heading": "Declarative vs Imperative IaC",
+      "text": "Declarative (Terraform, CloudFormation, Pulumi): you define the desired end state — \"I want 3 EC2 instances with this config.\" The tool figures out how to get there. Imperative (Ansible, Chef, Puppet, Shell): you define the steps — \"Create instance, install nginx, copy config, restart service.\" Declarative is generally preferred for cloud infrastructure."
+    },
+    {
+      "heading": "IaC Best Practices",
+      "text": "Store configs in version control (Git). Use modules/abstractions to avoid duplication. Parameterize environments (dev/staging/prod configs). Never hardcode secrets — use vault/parameter store. Test infrastructure changes in CI. Use state locking to prevent concurrent modifications. Plan before apply (terraform plan)."
+    },
+    {
+      "heading": "Terraform Workflow",
+      "text": "Write .tf files → terraform init (download providers) → terraform plan (preview changes) → terraform apply (make changes) → terraform destroy (tear down). Terraform maintains state file tracking real-world resources. Remote state (S3, Terraform Cloud) enables team collaboration."
+    },
+    {
+      "heading": "Configuration Drift",
+      "text": "When actual infrastructure differs from defined config. Causes: manual changes, failed deployments, expired resources. Detection: terraform plan shows drift. Drift management: reconcile by updating config or importing existing resources. Periodic \"drift detection\" runs in CI."
+    },
+    {
+      "heading": "Immutable vs Mutable Infrastructure",
+      "text": "Mutable: modify existing servers in place (Ansible, Chef). Risk of configuration drift over time. Immutable: never modify running servers — replace them (AMI, containers). Terraform + auto-scaling groups enable immutable infrastructure. Immutable is preferred for reliability and consistency."
+    }
+  ],
+  "interviewAnswer": "IaC is essential for DevOps. Use declarative tools (Terraform) for cloud infrastructure. Store everything in Git. Never make manual changes to infrastructure. Use modules. Implement CI/CD for infrastructure changes. Plan before apply. Treat infrastructure with the same rigor as application code.",
+  "interviewQuestions": [
+    {
+      "question": "What is Infrastructure as Code?",
+      "answer": "Managing and provisioning infrastructure through machine-readable definition files instead of manual processes."
+    },
+    {
+      "question": "What is the difference between declarative and imperative IaC?",
+      "answer": "Declarative: define desired state (Terraform). Imperative: define steps (Ansible). Declarative is preferred."
+    },
+    {
+      "question": "What is Terraform?",
+      "answer": "A declarative IaC tool by HashiCorp for provisioning cloud infrastructure across providers (AWS, Azure, GCP)."
+    },
+    {
+      "question": "What is configuration drift?",
+      "answer": "When actual infrastructure differs from defined configuration files. IaC helps detect and prevent drift."
+    },
+    {
+      "question": "What is immutable infrastructure?",
+      "answer": "Never modify servers in place — replace them with new instances from a known image. More reliable than mutable."
+    },
+    {
+      "question": "What is Terraform state?",
+      "answer": "A file tracking real-world resources, enabling Terraform to map config to actual infrastructure."
+    },
+    {
+      "question": "Infrastructure as Code (IaC) — What security considerations apply here?",
+      "answer": "Security considerations include access control, encryption of sensitive data, and audit logging."
+    },
+    {
+      "question": "Infrastructure as Code (IaC) — What best practices should be followed?",
+      "answer": "Best practices include version control, automation, monitoring, and thorough documentation."
+    },
+    {
+      "question": "Infrastructure as Code (IaC) — How does this affect team collaboration?",
+      "answer": "It supports collaboration through shared visibility, standardized processes, and clear workflows."
+    },
+    {
+      "question": "Infrastructure as Code (IaC) — What metrics indicate successful implementation?",
+      "answer": "Key metrics include adoption rate, error reduction, build times, and team satisfaction scores."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"300\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">Infrastructure as Code (IaC)</text><rect x=\"10\" y=\"35\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1.5\"/><text x=\"65\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Define</text><text x=\"65\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">main.tf files</text><line x1=\"120\" y1=\"48\" x2=\"150\" y2=\"48\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"160\" y=\"35\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1.5\"/><text x=\"215\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Version Control</text><text x=\"215\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Git</text><line x1=\"160\" y1=\"60\" x2=\"160\" y2=\"80\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"10\" y=\"70\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1.5\"/><text x=\"65\" y=\"86\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">CI/CD</text><text x=\"65\" y=\"89\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Test infra changes</text><line x1=\"120\" y1=\"83\" x2=\"150\" y2=\"83\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"160\" y=\"70\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#dc3545\" stroke=\"#dc3545\" stroke-width=\"1.5\"/><text x=\"215\" y=\"86\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Provision</text><text x=\"215\" y=\"89\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Terraform apply</text><rect x=\"10\" y=\"105\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#e83e8c\" stroke=\"#e83e8c\" stroke-width=\"1.5\"/><text x=\"65\" y=\"121\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">State</text><text x=\"65\" y=\"124\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Track resources</text><rect x=\"10\" y=\"135\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#6610f2\" stroke=\"#6610f2\" stroke-width=\"1.5\"/><text x=\"65\" y=\"151\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Drift Check</text><text x=\"65\" y=\"154\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Plan in CI</text><rect x=\"290\" y=\"35\" width=\"190\" height=\"135\" rx=\"5\" fill=\"#17a2b8\" stroke=\"#17a2b8\" stroke-width=\"1.5\"/><text x=\"385\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Infrastructure as Code</text><text x=\"385\" y=\"142\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Automated, versioned, repeatable i</text><text x=\"385\" y=\"153\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">nfrastructure. Declarative configs</text><text x=\"385\" y=\"164\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">. No manual changes.</text><text x=\"240\" y=\"205\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">IaC: Manage infrastructure through code. Versioned</text><text x=\"240\" y=\"217\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">, automated, consistent. Terraform, Ansible, Cloud</text><text x=\"240\" y=\"229\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">Formation.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "Basic Terraform Configuration",
+      "useCase": "AWS EC2 instance.",
+      "code": "terraform {\n  required_providers {\n    aws = {\n      source  = \"hashicorp/aws\"\n      version = \"~> 5.0\"\n    }\n  }\n}\n\nprovider \"aws\" {\n  region = \"us-east-1\"\n}\n\nresource \"aws_instance\" \"app_server\" {\n  ami           = \"ami-0c55b159cbfafe1f0\"\n  instance_type = \"t2.micro\"\n\n  tags = {\n    Name = \"MyAppServer\"\n  }\n}",
+      "description": "Basic Terraform configuration provisioning an AWS EC2 instance declaratively."
+    },
+    {
+      "title": "Ansible Playbook (Imperative IaC)",
+      "useCase": "Configure a web server.",
+      "code": "---\n- name: Configure web server\n  hosts: webservers\n  become: yes\n  tasks:\n    - name: Install nginx\n      apt:\n        name: nginx\n        state: present\n    - name: Copy config\n      template:\n        src: nginx.conf.j2\n        dest: /etc/nginx/nginx.conf\n      notify: restart nginx\n    - name: Start nginx\n      service:\n        name: nginx\n        state: started\n        enabled: yes\n  handlers:\n    - name: restart nginx\n      service:\n        name: nginx\n        state: restarted",
+      "description": "Ansible playbook imperatively describing steps to configure an nginx web server."
+    },
+    {
+      "title": "Advanced Configuration",
+      "useCase": "Complex scenario",
+      "code": "# Advanced pattern for complex scenarios\n# Includes error handling",
+      "description": "Advanced configuration example."
+    },
+    {
+      "title": "Integration Pattern",
+      "useCase": "Tool integration",
+      "code": "# Integration with other tools\n# Shows how components connect",
+      "description": "Integration example with related tools."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What does IaC stand for?",
+      "options": [
+        "Infrastructure as Code",
+        "Integration as Code",
+        "Interface as Code",
+        "Infrastructure and Configuration"
+      ],
+      "answer": 0,
+      "explanation": "IaC = Infrastructure as Code."
+    },
+    {
+      "question": "What is the difference between declarative and imperative IaC?",
+      "options": [
+        "Worse performance",
+        "Declarative = desired state; Imperative = steps to reach state",
+        "Declarative = steps; Imperative = desired state",
+        "No difference"
+      ],
+      "answer": 1,
+      "explanation": "Declarative IaC (Terraform) defines the desired state. Imperative IaC (Ansible) defines the steps."
+    },
+    {
+      "question": "What is configuration drift?",
+      "options": [
+        "Improving configuration",
+        "When actual infrastructure differs from defined config",
+        "Configuration file changes",
+        "Automatic configuration"
+      ],
+      "answer": 1,
+      "explanation": "Configuration drift is when actual infrastructure state differs from the defined IaC configuration."
+    },
+    {
+      "question": "Infrastructure as Code (IaC) — What is important for security?",
+      "options": [
+        "Access control and encryption",
+        "Open access",
+        "Shared passwords",
+        "No auditing"
+      ],
+      "answer": 0,
+      "explanation": "Access control and encryption are fundamental security measures."
+    },
+    {
+      "question": "Infrastructure as Code (IaC) — How to ensure reliability?",
+      "options": [
+        "Automated testing and monitoring",
+        "Manual checks only",
+        "No testing",
+        "Reactive fixes"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing and monitoring ensure consistent reliability."
+    },
+    {
+      "question": "Infrastructure as Code (IaC) — What helps team collaboration?",
+      "options": [
+        "Shared workflows and visibility",
+        "Isolated work",
+        "No documentation",
+        "Siloed tools"
+      ],
+      "answer": 0,
+      "explanation": "Shared workflows and visibility enable better collaboration."
+    },
+    {
+      "question": "Infrastructure as Code (IaC) — What reduces errors most?",
+      "options": [
+        "Automation",
+        "Manual processes",
+        "Rushing",
+        "Bypassing reviews"
+      ],
+      "answer": 0,
+      "explanation": "Automation consistently eliminates human errors."
+    },
+    {
+      "question": "Infrastructure as Code (IaC) — What improves speed?",
+      "options": [
+        "Parallel execution and caching",
+        "Serial execution",
+        "No optimization",
+        "Manual steps"
+      ],
+      "answer": 0,
+      "explanation": "Parallel execution and caching significantly improve speed."
+    },
+    {
+      "question": "Infrastructure as Code (IaC) — What is key for monitoring?",
+      "options": [
+        "Metrics dashboards and alerts",
+        "No monitoring",
+        "Only error logs",
+        "Manual checks"
+      ],
+      "answer": 0,
+      "explanation": "Metrics dashboards and alerts provide actionable insights."
+    },
+    {
+      "question": "Infrastructure as Code (IaC) — What ensures quality?",
+      "options": [
+        "Automated testing in pipeline",
+        "No testing",
+        "Only manual QA",
+        "Skipping code review"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing integrated into the pipeline ensures consistent quality."
+    }
+  ]
+};

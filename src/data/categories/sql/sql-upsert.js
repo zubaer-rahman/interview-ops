@@ -1,0 +1,179 @@
+export const sql_upsert = {
+  "id": "sql-upsert",
+  "title": "UPSERT & MERGE",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 20,
+  "tldr": [
+    "UPSERT = INSERT + UPDATE (insert or update if already exists). PostgreSQL uses INSERT ... ON CONFLICT DO UPDATE.",
+    "ON CONFLICT specifies the conflict target (unique constraint/index) and the action: DO NOTHING or DO UPDATE.",
+    "MERGE (SQL standard, PostgreSQL 15+) combines INSERT, UPDATE, DELETE in a single statement based on a source/target match.",
+    "UPSERT is atomic and concurrent-safe — no race conditions between check and insert/update."
+  ],
+  "laymanDefinition": "UPSERT is like \"save or update\" in a to-do app. When you save a task, if it already exists (same ID), update it instead. ON CONFLICT is saying \"if this unique value already exists, here is what to do instead of erroring\".",
+  "deepDive": [
+    {
+      "heading": "INSERT ... ON CONFLICT DO NOTHING",
+      "text": "INSERT INTO products (id, name) VALUES (1, \\'Laptop\\') ON CONFLICT (id) DO NOTHING; — inserts if no conflict, silently skips if conflict. Useful for idempotent inserts."
+    },
+    {
+      "heading": "INSERT ... ON CONFLICT DO UPDATE",
+      "text": "INSERT INTO ... VALUES (...) ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name, updated_at = NOW(). EXCLUDED refers to the values that would have been inserted. Can reference both original table columns and EXCLUDED pseudo-table."
+    },
+    {
+      "heading": "Conflict Target",
+      "text": "ON CONFLICT (column) — specify the unique column/index. ON CONFLICT ON CONSTRAINT constraint_name — specify constraint name. ON CONFLICT WHERE condition — partial unique indexes. Without target, DO UPDATE is not allowed."
+    },
+    {
+      "heading": "MERGE (PG 15+)",
+      "text": "MERGE INTO target USING source ON condition WHEN MATCHED THEN UPDATE SET ... WHEN NOT MATCHED THEN INSERT .... Also supports WHEN MATCHED THEN DELETE. More flexible than ON CONFLICT but more verbose."
+    },
+    {
+      "heading": "Use Cases",
+      "text": "Importing data with upserts (CSV imports, ETL). Session management (insert or update last seen). Inventory updates (insert new product or update stock). Counter tables (insert or increment)."
+    }
+  ],
+  "interviewAnswer": "UPSERT is essential for any application that imports data or handles concurrent inserts/updates. ON CONFLICT DO UPDATE is the standard PostgreSQL approach — it is atomic, fast, and handles race conditions automatically.",
+  "interviewQuestions": [
+    {
+      "question": "What is UPSERT?",
+      "answer": "INSERT + UPDATE — insert a row, or if a conflict occurs (unique violation), update the existing row."
+    },
+    {
+      "question": "What is the PostgreSQL UPSERT syntax?",
+      "answer": "INSERT INTO table VALUES (...) ON CONFLICT (column) DO UPDATE SET column = EXCLUDED.column;"
+    },
+    {
+      "question": "What does EXCLUDED refer to?",
+      "answer": "A pseudo-table containing the values that would have been inserted. EXCLUDED.column refers to the proposed new value."
+    },
+    {
+      "question": "What does ON CONFLICT DO NOTHING do?",
+      "answer": "Inserts if no conflict occurs. If a conflict occurs, silently does nothing (no error)."
+    },
+    {
+      "question": "What is the conflict target?",
+      "answer": "The unique column, constraint, or index that defines what constitutes a conflict."
+    },
+    {
+      "question": "What is MERGE?",
+      "answer": "A SQL standard statement (PG 15+) that conditionally inserts, updates, or deletes based on source/target matching."
+    },
+    {
+      "question": "What is the difference between MERGE and ON CONFLICT?",
+      "answer": "ON CONFLICT is simpler and PostgreSQL-specific. MERGE is more flexible (supports DELETE) but more verbose."
+    },
+    {
+      "question": "Is UPSERT atomic?",
+      "answer": "Yes. ON CONFLICT is atomic — no race condition between the check and the insert/update."
+    },
+    {
+      "question": "Can you use WHERE in DO UPDATE?",
+      "answer": "Yes: ON CONFLICT DO UPDATE SET column = value WHERE condition. Only updates if the condition is met."
+    },
+    {
+      "question": "When would you use DO NOTHING vs DO UPDATE?",
+      "answer": "DO NOTHING: bulk imports where you want to skip duplicates. DO UPDATE: syncing data where you want latest values."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"300\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">UPSERT & MERGE</text><rect x=\"10\" y=\"35\" width=\"130\" height=\"25\" rx=\"5\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1.5\"/><text x=\"75\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">INSERT</text><text x=\"75\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">First attempt</text><line x1=\"140\" y1=\"48\" x2=\"170\" y2=\"48\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"180\" y=\"35\" width=\"130\" height=\"25\" rx=\"5\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1.5\"/><text x=\"245\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">ON CONFLICT</text><text x=\"245\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Conflict?</text><line x1=\"180\" y1=\"60\" x2=\"180\" y2=\"80\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"310\" y1=\"48\" x2=\"340\" y2=\"48\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"10\" y=\"70\" width=\"130\" height=\"25\" rx=\"5\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1.5\"/><text x=\"75\" y=\"86\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">DO NOTHING</text><text x=\"75\" y=\"89\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Skip</text><rect x=\"180\" y=\"75\" width=\"130\" height=\"25\" rx=\"5\" fill=\"#dc3545\" stroke=\"#dc3545\" stroke-width=\"1.5\"/><text x=\"245\" y=\"91\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">DO UPDATE</text><text x=\"245\" y=\"94\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Update</text><rect x=\"350\" y=\"35\" width=\"130\" height=\"80\" rx=\"5\" fill=\"#17a2b8\" stroke=\"#17a2b8\" stroke-width=\"1.5\"/><text x=\"415\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">UPSERT</text><text x=\"415\" y=\"87\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Insert or Update. Atomi</text><text x=\"415\" y=\"98\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">c and race-condition-fr</text><text x=\"415\" y=\"109\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">ee.</text><text x=\"240\" y=\"160\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">UPSERT & MERGE: Insert or update in one atomic sta</text><text x=\"240\" y=\"172\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">tement without race conditions.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "Basic UPSERT",
+      "useCase": "Insert or update product.",
+      "code": "INSERT INTO products (id, name, price, stock)\nVALUES (101, 'Wireless Mouse', 29.99, 50)\nON CONFLICT (id) DO UPDATE SET\n  name = EXCLUDED.name,\n  price = EXCLUDED.price,\n  stock = products.stock + EXCLUDED.stock,\n  updated_at = NOW();",
+      "description": "Inserts new product or adds stock and updates details for existing product."
+    },
+    {
+      "title": "ON CONFLICT DO NOTHING",
+      "useCase": "Idempotent inserts.",
+      "code": "-- Insert if not exists, skip if exists\nINSERT INTO user_sessions (user_id, session_token, created_at)\nVALUES (42, 'abc123', NOW())\nON CONFLICT (user_id) DO NOTHING;\n\n-- Returns INSERT 0 0 if skipped,\n-- INSERT 0 1 if inserted",
+      "description": "Prevents duplicate session creation without raising errors."
+    },
+    {
+      "title": "Using EXCLUDED",
+      "useCase": "Reference proposed values.",
+      "code": "INSERT INTO counters (page, views, last_viewed)\nVALUES ('/home', 1, NOW())\nON CONFLICT (page) DO UPDATE SET\n  views = counters.views + EXCLUDED.views,\n  last_viewed = EXCLUDED.last_viewed;",
+      "description": "EXCLUDED references the proposed values; table name references existing values."
+    },
+    {
+      "title": "MERGE Statement (PG 15+)",
+      "useCase": "Full-featured merge.",
+      "code": "MERGE INTO products p\nUSING (VALUES (101, 'Mouse', 25.00)) AS s(id, name, price)\nON p.id = s.id\nWHEN MATCHED THEN UPDATE SET\n  name = s.name, price = s.price, updated_at = NOW()\nWHEN NOT MATCHED THEN INSERT (id, name, price)\n  VALUES (s.id, s.name, s.price);",
+      "description": "MERGE provides standard SQL syntax with WHEN MATCHED / NOT MATCHED clauses."
+    },
+    {
+      "title": "Conditional UPSERT",
+      "useCase": "Update only certain conditions.",
+      "code": "INSERT INTO orders (id, status, amount, updated_at)\nVALUES (5001, 'shipped', 150.00, NOW())\nON CONFLICT (id) DO UPDATE SET\n  status = EXCLUDED.status,\n  updated_at = NOW()\nWHERE orders.status != 'cancelled';\n\n-- Only updates if the existing order is not cancelled",
+      "description": "Conditional DO UPDATE prevents overwriting certain states (e.g., cancelled orders)."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What does UPSERT stand for?",
+      "options": [
+        "Update + Select",
+        "Insert + Update",
+        "Union + Select",
+        "Unique + Insert"
+      ],
+      "answer": 1,
+      "explanation": "UPSERT = INSERT + UPDATE (insert or update)."
+    },
+    {
+      "question": "What PostgreSQL feature enables UPSERT?",
+      "options": [
+        "MERGE",
+        "ON CONFLICT",
+        "UPSERT keyword",
+        "REPLACE"
+      ],
+      "answer": 1,
+      "explanation": "INSERT ... ON CONFLICT is the PostgreSQL UPSERT mechanism."
+    },
+    {
+      "question": "What does EXCLUDED represent?",
+      "options": [
+        "Existing row data",
+        "Proposed new values",
+        "Excluded columns",
+        "Error data"
+      ],
+      "answer": 1,
+      "explanation": "EXCLUDED refers to the values that would have been inserted."
+    },
+    {
+      "question": "What does ON CONFLICT DO NOTHING do?",
+      "options": [
+        "Errors on conflict",
+        "Skips silently on conflict",
+        "Updates on conflict",
+        "Deletes on conflict"
+      ],
+      "answer": 1,
+      "explanation": "DO NOTHING skips the insert silently on conflict without error."
+    },
+    {
+      "question": "When was MERGE added to PostgreSQL?",
+      "options": [
+        "PG 10",
+        "PG 12",
+        "PG 14",
+        "PG 15"
+      ],
+      "answer": 3,
+      "explanation": "MERGE was added in PostgreSQL 15."
+    },
+    {
+      "question": "Is UPSERT atomic?",
+      "options": [
+        "Yes",
+        "No",
+        "Depends on index",
+        "Only with DO NOTHING"
+      ],
+      "answer": 0,
+      "explanation": "ON CONFLICT is atomic — no race conditions."
+    }
+  ]
+};

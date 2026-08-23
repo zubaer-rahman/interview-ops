@@ -1,0 +1,209 @@
+export const docker_image_creation = {
+  "id": "docker-image-creation",
+  "title": "Image Creation",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 15,
+  "tldr": [
+    "Docker images are created by building a Dockerfile with docker build, or by committing a container with docker commit.",
+    "Image Creation is an essential concept that helps teams automate and streamline their development workflows effectively.",
+    "Adopting Image Creation leads to faster deployments, lower failure rates, and quicker recovery when issues arise.",
+    "Image Creation works alongside other modern tools and platforms to support end-to-end software delivery processes."
+  ],
+  "laymanDefinition": "Creating an image is like writing a recipe (Dockerfile) and cooking it (docker build). The recipe lists ingredients (FROM), steps (RUN), and finishing instructions (CMD).",
+  "deepDive": [
+    {
+      "heading": "Dockerfile Build",
+      "text": "docker build -t myapp:v1 . builds from Dockerfile in current dir. -f Dockerfile.prod uses alternate file. --no-cache skips cache. --target stops at specific stage (multi-stage). Build context: files sent to daemon."
+    },
+    {
+      "heading": "Docker Commit",
+      "text": "docker commit <container> <new-image> creates image from container state. Useful for debugging and snapshots. Not recommended for production because it is non-reproducible. Prefer Dockerfile builds."
+    },
+    {
+      "heading": "Common Use Cases",
+      "text": "Image Creation applies to build automation, continuous integration, test execution, deployment orchestration, and infrastructure management. Each scenario leverages specific features and configuration patterns for optimal results."
+    }
+  ],
+  "interviewAnswer": "Docker images are created by building a Dockerfile with docker build, or by committing a container with docker commit.",
+  "interviewQuestions": [
+    {
+      "question": "What command creates an image from a Dockerfile?",
+      "answer": "docker build -t <tag> <path>."
+    },
+    {
+      "question": "Why prefer Dockerfile over docker commit?",
+      "answer": "Dockerfile is reproducible, version-controlled, documented, and automated."
+    },
+    {
+      "question": "Image Creation — What are the key features to understand?",
+      "answer": "Key features include automation capabilities, integration options, and support for modern practices."
+    },
+    {
+      "question": "Image Creation — How do you get started with this concept?",
+      "answer": "Getting started involves understanding the basics, setting up a proof of concept, and iterating."
+    },
+    {
+      "question": "Image Creation — What tools integrate well with this?",
+      "answer": "Integration is possible through APIs, plugins, webhooks, and configuration files."
+    },
+    {
+      "question": "Image Creation — What are common troubleshooting steps?",
+      "answer": "Troubleshooting involves checking logs, verifying configuration, and testing incrementally."
+    },
+    {
+      "question": "Image Creation — What security considerations apply here?",
+      "answer": "Security considerations include access control, encryption of sensitive data, and audit logging."
+    },
+    {
+      "question": "Image Creation — What best practices should be followed?",
+      "answer": "Best practices include version control, automation, monitoring, and thorough documentation."
+    },
+    {
+      "question": "Image Creation — How does this affect team collaboration?",
+      "answer": "It supports collaboration through shared visibility, standardized processes, and clear workflows."
+    },
+    {
+      "question": "Image Creation — What metrics indicate successful implementation?",
+      "answer": "Key metrics include adoption rate, error reduction, build times, and team satisfaction scores."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"300\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">Image Creation</text><text x=\"240\" y=\"100\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">Image Creation: docker build (Dockerfile) for repr</text><text x=\"240\" y=\"112\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">oducibility. docker commit (snapshot) for debuggin</text><text x=\"240\" y=\"124\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">g.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "Build Image",
+      "useCase": "",
+      "code": "docker build -t myapp:v1 .  # Build image from Dockerfile",
+      "description": ""
+    },
+    {
+      "title": "Common Use Case",
+      "useCase": "Typical implementation",
+      "code": "# Common implementation pattern\n# Used in everyday scenarios",
+      "description": "Standard use case example."
+    },
+    {
+      "title": "Advanced Configuration",
+      "useCase": "Complex scenario",
+      "code": "# Advanced pattern for complex scenarios\n# Includes error handling",
+      "description": "Advanced configuration example."
+    },
+    {
+      "title": "Integration Pattern",
+      "useCase": "Tool integration",
+      "code": "# Integration with other tools\n# Shows how components connect",
+      "description": "Integration example with related tools."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "Question?",
+      "options": [
+        "Answer A",
+        "Answer B",
+        "Answer C",
+        "Answer D"
+      ],
+      "answer": 1,
+      "explanation": "Explanation."
+    },
+    {
+      "question": "Image Creation — What is the recommended approach?",
+      "options": [
+        "Start simple and iterate",
+        "Build everything at once",
+        "Skip testing",
+        "Avoid planning"
+      ],
+      "answer": 0,
+      "explanation": "Starting simple and iterating is the most effective approach."
+    },
+    {
+      "question": "Image Creation — What should be prioritized?",
+      "options": [
+        "Reliability and consistency",
+        "Speed only",
+        "Features over quality",
+        "Manual processes"
+      ],
+      "answer": 0,
+      "explanation": "Reliability and consistency are foundational priorities."
+    },
+    {
+      "question": "Image Creation — What is important for security?",
+      "options": [
+        "Access control and encryption",
+        "Open access",
+        "Shared passwords",
+        "No auditing"
+      ],
+      "answer": 0,
+      "explanation": "Access control and encryption are fundamental security measures."
+    },
+    {
+      "question": "Image Creation — How to ensure reliability?",
+      "options": [
+        "Automated testing and monitoring",
+        "Manual checks only",
+        "No testing",
+        "Reactive fixes"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing and monitoring ensure consistent reliability."
+    },
+    {
+      "question": "Image Creation — What helps team collaboration?",
+      "options": [
+        "Shared workflows and visibility",
+        "Isolated work",
+        "No documentation",
+        "Siloed tools"
+      ],
+      "answer": 0,
+      "explanation": "Shared workflows and visibility enable better collaboration."
+    },
+    {
+      "question": "Image Creation — What reduces errors most?",
+      "options": [
+        "Automation",
+        "Manual processes",
+        "Rushing",
+        "Bypassing reviews"
+      ],
+      "answer": 0,
+      "explanation": "Automation consistently eliminates human errors."
+    },
+    {
+      "question": "Image Creation — What improves speed?",
+      "options": [
+        "Parallel execution and caching",
+        "Serial execution",
+        "No optimization",
+        "Manual steps"
+      ],
+      "answer": 0,
+      "explanation": "Parallel execution and caching significantly improve speed."
+    },
+    {
+      "question": "Image Creation — What is key for monitoring?",
+      "options": [
+        "Metrics dashboards and alerts",
+        "No monitoring",
+        "Only error logs",
+        "Manual checks"
+      ],
+      "answer": 0,
+      "explanation": "Metrics dashboards and alerts provide actionable insights."
+    },
+    {
+      "question": "Image Creation — What ensures quality?",
+      "options": [
+        "Automated testing in pipeline",
+        "No testing",
+        "Only manual QA",
+        "Skipping code review"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing integrated into the pipeline ensures consistent quality."
+    }
+  ]
+};

@@ -1,0 +1,161 @@
+export const react_useref = {
+  "id": "react-useref",
+  "title": "React useRef",
+  "difficulty": "beginner",
+  "estimatedMinutes": 20,
+  "tldr": [
+    "useRef creates a mutable reference that persists across re-renders without causing re-renders when its value changes.",
+    "Commonly used for DOM element references (ref={ref}) and for storing mutable values that should not trigger re-renders.",
+    "The ref object has a .current property that can be read and written freely without causing component updates.",
+    "useRef is the same as creating { current: initialValue } manually, except React guarantees the same object reference across renders."
+  ],
+  "laymanDefinition": "useRef is like a secret pocket notebook that React does not watch. When you write something in it, React does not re-render the component (unlike state, where every change causes a re-render). This makes it perfect for remembering things between renders without triggering updates. The most common use is holding a reference to a DOM element: <div ref={myRef}> gives you access to the actual HTML element. You can also use it to store interval IDs, previous values, or any mutable data that should survive re-renders but should not cause re-renders when changed.",
+  "deepDive": [
+    {
+      "heading": "useRef vs useState: The Fundamental Difference",
+      "text": "useState creates state that triggers a re-render when updated. useRef creates a mutable container whose updates never trigger re-renders. When you change ref.current, the component does not re-render. This makes useRef ideal for: (1) Storing values that need to persist across renders but should not cause re-renders (e.g., interval IDs, timer handles, WebSocket connections). (2) Accessing DOM nodes imperatively. (3) Keeping track of previous values. (4) Storing expensive class instances (like D3 charts, Three.js scenes) that should be created once and reused across renders. The ref object itself is created once and the same reference is returned on every render - this is guaranteed by React."
+    },
+    {
+      "heading": "Refs and the DOM: The most common use case",
+      "text": "The most widespread use of useRef is to access DOM elements. When you pass a ref to an element's ref attribute (e.g., <input ref={inputRef} />), React assigns the DOM node to inputRef.current after the component mounts AND after every update. This enables imperative operations: focusing inputs, measuring element dimensions (getBoundingClientRect), managing media playback, integrating with non-React libraries (D3, Chart.js, jQuery), and controlling scroll positions. Refs are set before useLayoutEffect runs and before useEffect runs. Note: you cannot use refs to access DOM during the render phase (ref.current is null during render for the initial mount)."
+    },
+    {
+      "heading": "Advanced Patterns: Callback Refs and Ref Forwarding",
+      "text": "For dynamic scenarios (like a list of unknown length), callback refs provide more flexibility: <div ref={(node) => { if (node) measure(node); }} />. The callback receives the DOM node when it mounts and null when it unmounts. For passing refs through component boundaries (e.g., from a parent to an <input> inside a child), use React.forwardRef in the child component. This allows the parent to focus the child's input imperatively. Refs can also be shared via props (avoiding forwardRef if desired, though forwardRef is the idiomatic pattern). In React 18, useImperativeHandle combined with forwardRef allows the child to expose a custom API (like focus, scrollTo, reset) to the parent."
+    },
+    {
+      "heading": "Storing Previous Values and Instance Variables",
+      "text": "A powerful pattern is tracking previous values: useRef to store the previous state or props value, updated in useEffect. Similarly, useRef replaces instance variables from class components. In a class: this.intervalId = setInterval(...). In a function component: const intervalRef = useRef(); intervalRef.current = setInterval(...);. The ref persists across renders without causing re-renders when updated. This is especially useful for: (1) Debouncing/throttling - store the timer ID to cancel it on cleanup. (2) Tracking render count - increment ref.current on every render. (3) Storing component lifecycle flags - isMounted ref to avoid setting state on unmounted components."
+    },
+    {
+      "heading": "Refs in Concurrent Mode and StrictMode",
+      "text": "In React 18 concurrent mode, ref behavior is consistent but with important nuances: (1) During development with StrictMode, effects are double-invoked, which means refs may be set, cleared, and set again on mount. (2) In concurrent mode, renders can be interrupted and discarded. However, ref mutations are visible immediately and are not rolled back if a render is discarded - this is usually fine because refs are imperative escape hatches. (3) The useRef hook itself is safe in concurrent mode because it does not depend on the render lifecycle - the ref object is created once and the same reference persists. (4) Avoid using refs as a synchronization mechanism for concurrent features - use state or transitions instead."
+    }
+  ],
+  "interviewAnswer": "useRef provides a mutable object with a .current property that persists across component re-renders without triggering re-renders when updated. It is primarily used for DOM element access (via the ref attribute), storing mutable values (timer IDs, interval handles), tracking previous state, and holding expensive instances that should be created once. The same ref object reference is returned on every render. Unlike state, updating ref.current does not cause a re-render, making it ideal for values that change frequently but do not require UI updates. Refs are set after DOM mutations during the commit phase, meaning they are accessible in useLayoutEffect and useEffect but not during initial render.",
+  "interviewQuestions": [
+    {
+      "question": "What is the main difference between useRef and useState?",
+      "answer": "useRef updates do NOT trigger re-renders. useState updates trigger a re-render. useRef is for values that persist across renders without causing UI updates. useState is for values that drive the UI and should cause re-renders when changed."
+    },
+    {
+      "question": "When does ref.current get populated with a DOM node?",
+      "answer": "After the component mounts, during the commit phase. Ref assignment happens after DOM mutations are applied but before useLayoutEffect runs. During the initial render (before commit), ref.current is still the initial value (usually null)."
+    },
+    {
+      "question": "Can you use useRef to force a re-render?",
+      "answer": "Yes, indirectly. You can store a counter in useRef and update it with useState to trigger re-renders. But this is an anti-pattern - if you need re-renders, use useState directly. A common pattern is using useRef with a forceUpdate function to re-render when the ref changes."
+    },
+    {
+      "question": "What is the difference between useRef and creating { current: value } manually?",
+      "answer": "React guarantees that useRef returns the SAME object reference on every render. Creating { current: value } in the component body creates a new object every render. useRef also integrates with the React fiber lifecycle for cleanup during unmount."
+    },
+    {
+      "question": "How do callback refs differ from useRef?",
+      "answer": "Callback refs are functions called by React when a DOM node mounts/unmounts. They provide more control: you receive the node as a parameter and can clean up when null is passed. useRef returns a ref object with a .current property that gets automatically populated."
+    },
+    {
+      "question": "What is forwardRef and when do you need it?",
+      "answer": "forwardRef is a React API that lets a parent component pass a ref down to a DOM element inside a child component. It is needed because ref is not a prop - it is handled specially by React. forwardRef allows the child to accept a ref parameter and attach it to an internal DOM element."
+    },
+    {
+      "question": "Can useRef store a function?",
+      "answer": "Yes, useRef can store any value including functions. This is useful for creating stable function references that always call the latest callback without re-rendering. Libraries like useMemoizedFn use this pattern internally."
+    },
+    {
+      "question": "What is the useImperativeHandle hook used for?",
+      "answer": "useImperativeHandle customizes the instance value exposed by a forwardRef. Instead of exposing the raw DOM node, you can expose a limited API: { focus: () => inputRef.current.focus(), reset: () => inputRef.current.value = \"\" }. This encapsulates the implementation details."
+    },
+    {
+      "question": "Does changing ref.current in useEffect cause an infinite loop?",
+      "answer": "No, because updating ref.current does not trigger a re-render. Unlike setState in useEffect (which would cause a re-render and re-run the effect), ref updates are silent."
+    },
+    {
+      "question": "How do you test components that use useRef for DOM access?",
+      "answer": "Use React Testing Library. The ref is automatically populated when the component renders. You can assert on the DOM node: expect(inputRef.current).toBe(inputElement). For testing focus/blur, use element.focus() and check document.activeElement."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 720 280\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:720px;\"><defs><marker id=\"a\" markerWidth=\"10\" markerHeight=\"7\" refX=\"10\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,10 3.5,0 7\" fill=\"#6c9fff\"/></marker></defs><rect x=\"10\" y=\"10\" width=\"700\" height=\"260\" rx=\"10\" fill=\"var(--bg-card)\" stroke=\"var(--border)\" stroke-width=\"1\"/><text x=\"360\" y=\"38\" fill=\"#e8eaed\" font-size=\"14\" font-weight=\"bold\" text-anchor=\"middle\">useRef Object Lifecycle</text><rect x=\"30\" y=\"55\" width=\"200\" height=\"45\" rx=\"6\" fill=\"#1a1d28\" stroke=\"#6c9fff\" stroke-width=\"1.5\"/><text x=\"130\" y=\"72.5\" fill=\"#e8eaed\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">1st Render</text><text x=\"130\" y=\"89.5\" fill=\"#9aa0b0\" font-size=\"10\" text-anchor=\"middle\">useRef creates { current: init }</text><line x1=\"130\" y1=\"100\" x2=\"130\" y2=\"125\" stroke=\"#6c9fff\" stroke-width=\"2\" marker-end=\"url(#a)\"/><rect x=\"30\" y=\"125\" width=\"200\" height=\"45\" rx=\"6\" fill=\"#1a1d28\" stroke=\"#34d399\" stroke-width=\"1.5\"/><text x=\"130\" y=\"142.5\" fill=\"#e8eaed\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">Commit Phase</text><text x=\"130\" y=\"159.5\" fill=\"#9aa0b0\" font-size=\"10\" text-anchor=\"middle\">DOM node set to ref.current</text><line x1=\"130\" y1=\"170\" x2=\"130\" y2=\"195\" stroke=\"#6c9fff\" stroke-width=\"2\" marker-end=\"url(#a)\"/><rect x=\"30\" y=\"195\" width=\"200\" height=\"45\" rx=\"6\" fill=\"#1a1d28\" stroke=\"#f59e0b\" stroke-width=\"1.5\"/><text x=\"130\" y=\"212.5\" fill=\"#e8eaed\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">2nd+ Render</text><text x=\"130\" y=\"229.5\" fill=\"#9aa0b0\" font-size=\"10\" text-anchor=\"middle\">Same ref object returned</text><text x=\"260\" y=\"78\" fill=\"#9aa0b0\" font-size=\"11\" text-anchor=\"start\">ref.current = timerId, prevValue, DOM node</text><text x=\"260\" y=\"150\" fill=\"#9aa0b0\" font-size=\"11\" text-anchor=\"start\">ref.current is now accessible</text><text x=\"260\" y=\"218\" fill=\"#9aa0b0\" font-size=\"11\" text-anchor=\"start\">No re-render triggered on ref.current change</text></svg>",
+  "codeExamples": [
+    {
+      "title": "DOM Focus and Measurement with useRef",
+      "useCase": "Focus input on mount and measure element dimensions",
+      "code": "function AutoFocusInput() {\n  const inputRef = useRef(null);\n\n  useLayoutEffect(() => {\n    inputRef.current.focus();\n    console.log(\"Input width:\", inputRef.current.offsetWidth);\n  }, []);\n\n  return <input ref={inputRef} placeholder=\"I am auto-focused\" />;\n}\n\nfunction MeasureExample() {\n  const [rect, setRect] = useState(null);\n  const divRef = useRef(null);\n\n  useEffect(() => {\n    const observer = new ResizeObserver(entries => {\n      const entry = entries[0];\n      setRect(entry.contentRect);\n    });\n    if (divRef.current) observer.observe(divRef.current);\n    return () => observer.disconnect();\n  }, []);\n\n  return (\n    <div ref={divRef}>\n      <p>Width: {rect?.width}px, Height: {rect?.height}px</p>\n    </div>\n  );\n}",
+      "description": "useRef provides direct imperative access to DOM nodes for focus management, measurements, and integration with non-React APIs like ResizeObserver."
+    },
+    {
+      "title": "Tracking Previous Value with useRef",
+      "useCase": "Compare current value with previous value on each update",
+      "code": "function usePrevious(value) {\n  const ref = useRef();\n  useEffect(() => { ref.current = value; });\n  return ref.current;\n}\n\nfunction Counter() {\n  const [count, setCount] = useState(0);\n  const prevCount = usePrevious(count);\n\n  return (\n    <div>\n      <p>Now: {count}, Before: {prevCount}</p>\n      <p>Direction: {count > prevCount ? \"Up\" : count < prevCount ? \"Down\" : \"Same\"}</p>\n      <button onClick={() => setCount(c => c + 1)}>+</button>\n      <button onClick={() => setCount(c => c - 1)}>-</button>\n    </div>\n  );\n}\n\n// === Practical: Timer with cleanup ===\nfunction Timer() {\n  const intervalRef = useRef(null);\n  const [count, setCount] = useState(0);\n\n  useEffect(() => {\n    intervalRef.current = setInterval(() => {\n      setCount(c => c + 1);\n    }, 1000);\n    return () => clearInterval(intervalRef.current);\n  }, []);\n\n  const stopTimer = () => {\n    clearInterval(intervalRef.current);\n  };\n\n  return <div><p>Count: {count}</p><button onClick={stopTimer}>Stop</button></div>;\n}",
+      "description": "useRef is ideal for storing mutable values that should not trigger re-renders. The usePrevious pattern compares state across renders. The timer pattern stores the interval ID for imperative cancellation."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "Which of the following is true about useRef?",
+      "options": [
+        "Updating ref.current triggers a re-render",
+        "The ref object is created on every render",
+        "Updating ref.current does NOT trigger a re-render",
+        "useRef can only store DOM nodes"
+      ],
+      "answer": 1,
+      "explanation": "useRef updates are silent - they never cause a re-render. This is the fundamental difference from useState."
+    },
+    {
+      "question": "When can you safely read ref.current to get a DOM node?",
+      "options": [
+        "During the render phase",
+        "After the component mounts (in useEffect/useLayoutEffect)",
+        "In the function body before return",
+        "At any time including during initial render"
+      ],
+      "answer": 1,
+      "explanation": "During initial render, ref.current is null because the DOM node does not exist yet. It gets populated during the commit phase, so it is accessible in effects but not during the render function."
+    },
+    {
+      "question": "What does forwardRef do?",
+      "options": [
+        "Creates a ref in the parent component",
+        "Allows a parent to pass a ref through a child to its DOM element",
+        "Blocks refs from being passed to children",
+        "Automatically generates refs for all DOM elements"
+      ],
+      "answer": 1,
+      "explanation": "forwardRef is a higher-order component that lets a child receive a ref from its parent and attach it to a child DOM element, enabling imperative access from the parent."
+    },
+    {
+      "question": "What is the purpose of useImperativeHandle?",
+      "options": [
+        "To prevent refs from being used",
+        "To customize the value exposed by a forwarded ref",
+        "To create a ref that only works in production",
+        "To automatically focus an input"
+      ],
+      "answer": 1,
+      "explanation": "useImperativeHandle works with forwardRef to define what the parent receives - typically a limited API object like { focus, reset } instead of the raw DOM node."
+    },
+    {
+      "question": "What happens if you pass a ref to a functional component without forwardRef?",
+      "options": [
+        "React ignores the ref and logs a warning",
+        "The ref works normally",
+        "React throws an error",
+        "The ref attaches to the parent component"
+      ],
+      "answer": 1,
+      "explanation": "Functional components do not accept refs by default. Without forwardRef, the ref prop is ignored and React logs a warning that function components cannot be given refs."
+    },
+    {
+      "question": "Can useRef be used to store the return value of setInterval?",
+      "options": [
+        "Yes - useRef can store any mutable value",
+        "No - useRef only stores DOM nodes",
+        "Yes but it triggers a re-render",
+        "No - useRef cannot store numbers"
+      ],
+      "answer": 1,
+      "explanation": "useRef can store any value including interval IDs, timer handles, WebSocket connections, or any other mutable data. Updating ref.current does not cause re-renders, making it ideal for timer handles."
+    }
+  ]
+};

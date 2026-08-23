@@ -1,0 +1,227 @@
+export const prototype = {
+  "title": "Prototype",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 30,
+  "tldr": [
+    "A <strong>prototype</strong> is a mechanism by which JavaScript objects <strong>inherit</strong> properties and methods from other objects.",
+    "Every JavaScript object has an internal property called <code>[[Prototype]]</code> that points to another object (or <code>null</code>).",
+    "When you access a property on an object, JavaScript first looks for it on the object itself; if not found, it walks up the <code>[[Prototype]]</code> chain.",
+    "Functions have a <code>.prototype</code> property that is used when the function is invoked with <code>new</code> — it becomes the <code>[[Prototype]]</code> of the created instance."
+  ],
+  "laymanDefinition": "Think of a prototype as a 'backup object.' When you ask an object for a property it doesn't have, instead of giving up, it checks its backup object. If that backup doesn't have it either, it checks its backup's backup, and so on. It's like asking a family member for a tool — if you don't have it, you ask your sibling, then your parent, then your grandparent. The prototype chain is your object's family tree, and prototypes are the relatives that share their properties with you.",
+  "deepDive": [
+    {
+      "heading": "What Is a Prototype?",
+      "text": "In JavaScript, every object has an internal slot called [[Prototype]]. This is a reference to another object from which it can inherit properties. The prototype itself has its own [[Prototype]], forming a chain that ends with Object.prototype whose [[Prototype]] is null. This chain is what enables prototypal inheritance — a powerful and flexible alternative to classical inheritance."
+    },
+    {
+      "heading": "The Difference Between [[Prototype]] and .prototype",
+      "text": "The [[Prototype]] is an internal property of all objects (including functions). You can access it via Object.getPrototypeOf(obj) or the deprecated __proto__ getter/setter. The .prototype property, by contrast, exists only on functions (specifically those that can be used as constructors). When you call a function with new, the new object's [[Prototype]] is set to the function's .prototype. This is a common source of confusion: Function.prototype is the [[Prototype]] of functions, but a function's .prototype property is what gets assigned to instances created by that function."
+    },
+    {
+      "heading": "Property Lookup via the Prototype Chain",
+      "list": [
+        "1. Check if the property exists as an <strong>own property</strong> of the object (hasOwnProperty returns true).",
+        "2. If not found, walk up to the object's [[Prototype]] and check there.",
+        "3. Continue up the chain until the property is found or [[Prototype]] is null.",
+        "4. If the chain is exhausted without finding the property, return undefined."
+      ]
+    },
+    {
+      "heading": "Prototype Inheritance vs Classical Inheritance",
+      "text": "Classical inheritance (like Java or C++) involves classes defining blueprints, and instances being copies of those blueprints. JavaScript's prototypal inheritance is delegation-based: objects are linked to other objects, and property access is delegated up the chain. This means changes to a prototype object are immediately reflected in all objects that inherit from it — something not possible with classical inheritance without recompilation."
+    },
+    {
+      "heading": "Creating Objects with Specific Prototypes",
+      "text": "You can set an object's prototype at creation time using Object.create(proto), which creates a new object with the specified [[Prototype]]. You can also modify an existing object's prototype via Object.setPrototypeOf(obj, proto), though this is discouraged for performance reasons. The modern approach is to use class syntax (which is syntactic sugar over prototypes) or Object.create."
+    }
+  ],
+  "interviewAnswer": "A prototype is a base object from which other objects inherit properties and methods. In JavaScript, every object has an internal [[Prototype]] property that references another object. When a property is accessed on an object and not found, JavaScript follows the prototype chain until it finds the property or reaches null. Functions have a .prototype property that is used with the new keyword — it becomes the prototype of created instances. This forms the foundation of prototypal inheritance, which is delegation-based rather than copy-based like classical inheritance. Key methods include Object.create() for setting prototypes, Object.getPrototypeOf() for reading them, and hasOwnProperty() for distinguishing own vs inherited properties.",
+  "interviewQuestions": [
+    {
+      "question": "What is a prototype in JavaScript?",
+      "answer": "A prototype is an internal object from which other objects inherit properties. Every JavaScript object has a [[Prototype]] property (accessible via Object.getPrototypeOf()) that points to another object. When you access a property that doesn't exist on the object itself, JavaScript looks up the prototype chain."
+    },
+    {
+      "question": "What is the difference between [[Prototype]] and prototype?",
+      "answer": "[[Prototype]] is an internal property on every object that points to its parent in the inheritance chain. The 'prototype' property is a regular property that exists only on functions. It is used when the function is called with 'new' — the new instance's [[Prototype]] is set to the function's .prototype. Example: Array.prototype exists and its methods are inherited by all array instances via their [[Prototype]]."
+    },
+    {
+      "question": "How does property lookup work with prototypes?",
+      "answer": "When you access obj.prop, JavaScript: 1) Checks if obj has an own property named 'prop'. 2) If not, checks obj's [[Prototype]]. 3) Continues up the chain. 4) Returns undefined if not found at any level. This lookup is dynamic — if a property is later added to a prototype, all inheriting objects immediately see it."
+    },
+    {
+      "question": "How do you create an object with a specific prototype?",
+      "answer": "Use Object.create(proto): <code>const animal = { eat() { console.log('eating'); } };\nconst dog = Object.create(animal);\ndog.eat(); // inherited</code> You can also use the 'class' syntax with 'extends', which sets up prototype chains under the hood."
+    },
+    {
+      "question": "What is Object.prototype and where does the chain end?",
+      "answer": "Object.prototype is the root of the prototype chain for most objects. Its [[Prototype]] is null. This is why methods like toString(), hasOwnProperty(), and valueOf() are available on almost all objects — they are inherited via the prototype chain. When the chain reaches null, property lookup stops and returns undefined."
+    },
+    {
+      "question": "What is the difference between own properties and inherited properties?",
+      "answer": "Own properties are directly on the object itself. Inherited properties come from the prototype chain. Use hasOwnProperty() to distinguish: <code>obj.hasOwnProperty('toString') // false\n'toString' in obj // true (inherited)</code> The 'in' operator checks the full chain, while hasOwnProperty checks only the object itself."
+    },
+    {
+      "question": "How does prototypal inheritance differ from classical inheritance?",
+      "answer": "Prototypal inheritance is delegation-based: objects are linked to other objects, and property access is delegated up the chain. Classical inheritance (Java, C++) is copy-based: classes define blueprints and instances copy them. In JavaScript, changes to a prototype are immediately visible to all inheriting objects, which is not the case in classical inheritance."
+    },
+    {
+      "question": "What is prototype shadowing?",
+      "answer": "Shadowing occurs when an object defines its own property with the same name as a prototype property. The own property hides (shadows) the inherited one: <code>const obj = Object.create({ x: 10 });\nobj.x = 20; // shadows the prototype's x\nconsole.log(obj.x); // 20</code> The prototype's property still exists but is no longer accessible via that object (unless using delete or Reflect)."
+    },
+    {
+      "question": "Can you change an object's prototype after creation?",
+      "answer": "Yes, using Object.setPrototypeOf(obj, proto), but this is strongly discouraged for performance reasons. Changing prototypes after creation forces engines to de-optimize property access. It's better to set the prototype at creation time with Object.create() or use constructor functions / class syntax."
+    },
+    {
+      "question": "How do constructor functions use prototypes?",
+      "answer": "When a function is called with new, the new object's [[Prototype]] is set to the function's .prototype property. Methods added to Constructor.prototype are shared across all instances: <code>function Person(name) { this.name = name; }\nPerson.prototype.greet = function() { return 'Hi ' + this.name; };\nconst p = new Person('Alice');\np.greet(); // 'Hi Alice'</code>"
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 700 480\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:700px;\"><defs><marker id=\"arrow\" markerWidth=\"10\" markerHeight=\"7\" refX=\"10\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0, 10 3.5, 0 7\" fill=\"#6c9fff\"/></marker><linearGradient id=\"grad1\" x1=\"0%\" y1=\"0%\" x2=\"100%\" y2=\"100%\"><stop offset=\"0%\" style=\"stop-color:#2a2f45\"/><stop offset=\"100%\" style=\"stop-color:#1a1d28\"/></linearGradient></defs><rect x=\"10\" y=\"10\" width=\"680\" height=\"460\" rx=\"10\" fill=\"var(--bg-card)\" stroke=\"var(--border)\" stroke-width=\"1\"/><text x=\"350\" y=\"45\" text-anchor=\"middle\" fill=\"#e8eaed\" font-size=\"16\" font-weight=\"bold\">Prototype Chain Structure</text><!-- Object: dog --><rect x=\"200\" y=\"65\" width=\"300\" height=\"70\" rx=\"8\" fill=\"url(#grad1)\" stroke=\"#98c379\" stroke-width=\"1.5\"/><text x=\"350\" y=\"90\" text-anchor=\"middle\" fill=\"#98c379\" font-size=\"13\" font-weight=\"bold\">dog (Instance)</text><text x=\"220\" y=\"112\" fill=\"#e8eaed\" font-size=\"12\" font-family=\"monospace\">name: 'Buddy' (own)</text><text x=\"220\" y=\"128\" fill=\"#aaa\" font-size=\"12\" font-family=\"monospace\">[[Prototype]] --></text><!-- Arrow to Animal.prototype --><line x1=\"500\" y1=\"100\" x2=\"570\" y2=\"100\" stroke=\"#6c9fff\" stroke-width=\"2\" marker-end=\"url(#arrow)\"/><!-- Object: Animal.prototype --><rect x=\"570\" y=\"65\" width=\"110\" height=\"70\" rx=\"8\" fill=\"url(#grad1)\" stroke=\"#fbbf24\" stroke-width=\"1.5\"/><text x=\"625\" y=\"90\" text-anchor=\"middle\" fill=\"#fbbf24\" font-size=\"11\" font-weight=\"bold\">Animal</text><text x=\"580\" y=\"108\" fill=\"#e8eaed\" font-size=\"11\" font-family=\"monospace\">speak()</text><text x=\"580\" y=\"124\" fill=\"#e8eaed\" font-size=\"11\" font-family=\"monospace\">eat()</text><line x1=\"625\" y1=\"135\" x2=\"625\" y2=\"175\" stroke=\"#6c9fff\" stroke-width=\"2\" stroke-dasharray=\"4\" marker-end=\"url(#arrow)\"/><!-- Object: Object.prototype --><rect x=\"200\" y=\"175\" width=\"300\" height=\"70\" rx=\"8\" fill=\"url(#grad1)\" stroke=\"#f87171\" stroke-width=\"1.5\"/><text x=\"350\" y=\"200\" text-anchor=\"middle\" fill=\"#f87171\" font-size=\"13\" font-weight=\"bold\">Object.prototype</text><text x=\"220\" y=\"220\" fill=\"#e8eaed\" font-size=\"12\" font-family=\"monospace\">toString(), hasOwnProperty()</text><text x=\"220\" y=\"236\" fill=\"#e8eaed\" font-size=\"12\" font-family=\"monospace\">valueOf(), constructor...</text><line x1=\"350\" y1=\"245\" x2=\"350\" y2=\"285\" stroke=\"#6c9fff\" stroke-width=\"2\" stroke-dasharray=\"4\" marker-end=\"url(#arrow)\"/><!-- null --><rect x=\"275\" y=\"285\" width=\"150\" height=\"50\" rx=\"25\" fill=\"#2a2f45\" stroke=\"#aaa\" stroke-width=\"1\" stroke-dasharray=\"4\"/><text x=\"350\" y=\"316\" text-anchor=\"middle\" fill=\"#aaa\" font-size=\"14\" font-family=\"monospace\">null</text><text x=\"350\" y=\"380\" text-anchor=\"middle\" fill=\"#888\" font-size=\"12\">Property lookup walks up this chain until found or null</text></svg>",
+  "codeExamples": [
+    {
+      "title": "Object.create for Prototypal Inheritance",
+      "useCase": "Setting a Prototype at Creation",
+      "code": "const animal = {\n  speak() { return `${this.name} makes a sound.`; },\n  eat()   { return `${this.name} is eating.`; }\n};\n\nconst dog = Object.create(animal);\ndog.name = 'Buddy';\n\nconsole.log(dog.speak()); // 'Buddy makes a sound.'\nconsole.log(dog.eat());   // 'Buddy is eating.'\nconsole.log(dog.hasOwnProperty('speak')); // false (inherited)",
+      "description": "Object.create(animal) creates a new object with its [[Prototype]] set to animal. The dog object inherits speak() and eat() from its prototype."
+    },
+    {
+      "title": "Constructor Function with .prototype",
+      "useCase": "Shared Methods via Constructor",
+      "code": "function Vehicle(type) {\n  this.type = type;\n  this.miles = 0;\n}\n\nVehicle.prototype.drive = function(dist) {\n  this.miles += dist;\n  return `Drove ${dist} miles. Total: ${this.miles}`;\n};\n\nconst car = new Vehicle('Car');\nconst truck = new Vehicle('Truck');\n\nconsole.log(car.drive(100)); // 'Drove 100 miles. Total: 100'\nconsole.log(truck.drive(50)); // 'Drove 50 miles. Total: 50'\nconsole.log(car.drive === truck.drive); // true (same function)",
+      "description": "Methods added to Vehicle.prototype are shared across all instances. Both car and truck use the same drive function, saving memory."
+    },
+    {
+      "title": "Checking Own vs Inherited Properties",
+      "useCase": "Property Inspection",
+      "code": "const parent = { inherited: true };\nconst child = Object.create(parent);\nchild.own = 'mine';\n\nconsole.log(child.own);        // 'mine'\nconsole.log(child.inherited);   // true (via prototype)\n\nconsole.log(child.hasOwnProperty('own'));       // true\nconsole.log(child.hasOwnProperty('inherited')); // false\n\nconsole.log('inherited' in child); // true (checks full chain)",
+      "description": "hasOwnProperty() checks only the object itself. The 'in' operator checks the full prototype chain."
+    },
+    {
+      "title": "Prototype Shadowing",
+      "useCase": "Overriding Inherited Properties",
+      "code": "const base = { value: 10 };\nconst derived = Object.create(base);\n\nconsole.log(derived.value); // 10 (inherited)\n\nderived.value = 20; // shadows the prototype property\nconsole.log(derived.value); // 20\nconsole.log(base.value);    // 10 (unchanged)\n\ndelete derived.value;\nconsole.log(derived.value); // 10 (inherited again)",
+      "description": "Setting a property on the derived object creates an own property that shadows the inherited one. Deleting it restores access to the prototype version."
+    },
+    {
+      "title": "Prototype Chain with Multiple Levels",
+      "useCase": "Deep Inheritance",
+      "code": "const grandParent = { grand: true };\nconst parent = Object.create(grandParent);\nparent.parentProp = 'from parent';\nconst child = Object.create(parent);\nchild.childProp = 'from child';\n\nconsole.log(child.childProp);       // 'from child' (own)\nconsole.log(child.parentProp);      // 'from parent' (1 level up)\nconsole.log(child.grand);           // true (2 levels up)\nconsole.log(child.toString);        // function (from Object.prototype)\n\n// Walk the chain manually:\nlet proto = Object.getPrototypeOf(child);\nwhile (proto) {\n  console.log(Object.keys(proto));\n  proto = Object.getPrototypeOf(proto);\n}",
+      "description": "Prototype chains can be arbitrarily deep. Property lookup walks up the chain level by level until the property is found or null is reached."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What does Object.getPrototypeOf(obj) return?",
+      "options": [
+        "The obj's constructor function",
+        "The obj's [[Prototype]]",
+        "The obj's .prototype property",
+        "A copy of obj"
+      ],
+      "answer": 1,
+      "explanation": "Object.getPrototypeOf(obj) returns the internal [[Prototype]] of the object, which is the object it inherits from."
+    },
+    {
+      "question": "What is the [[Prototype]] of Object.prototype?",
+      "options": [
+        "undefined",
+        "Function.prototype",
+        "null",
+        "Object.prototype itself"
+      ],
+      "answer": 2,
+      "explanation": "Object.prototype is at the root of the prototype chain. Its [[Prototype]] is null, which terminates property lookup."
+    },
+    {
+      "question": "What will the following log? function F() {}; F.prototype.x = 10; const a = new F(); const b = new F(); a.x = 20; console.log(b.x);",
+      "options": [
+        "10",
+        "20",
+        "undefined",
+        "ReferenceError"
+      ],
+      "answer": 0,
+      "explanation": "Setting a.x = 20 creates an own property on a, shadowing the prototype's x. b still inherits x from the prototype, so b.x is 10."
+    },
+    {
+      "question": "Which method checks only own properties, ignoring the prototype chain?",
+      "options": [
+        "propertyIsEnumerable()",
+        "hasOwnProperty()",
+        "in operator",
+        "Object.keys()"
+      ],
+      "answer": 1,
+      "explanation": "hasOwnProperty() checks only whether the property exists directly on the object, not on its prototype chain."
+    },
+    {
+      "question": "What is the .prototype property of a function used for?",
+      "options": [
+        "To access the function's own prototype",
+        "To set the [[Prototype]] of instances created via new",
+        "To store static methods",
+        "To configure the function's scope"
+      ],
+      "answer": 1,
+      "explanation": "When a function is called with 'new', the new object's [[Prototype]] is set to the function's .prototype property."
+    },
+    {
+      "question": "What will this return? const a = { x: 1 }; const b = Object.create(a); console.log('x' in b);",
+      "options": [
+        "true",
+        "false",
+        "undefined",
+        "TypeError"
+      ],
+      "answer": 0,
+      "explanation": "The 'in' operator checks the full prototype chain. 'x' exists on a which is b's prototype, so it returns true."
+    },
+    {
+      "question": "Which of the following creates an object with a specific prototype?",
+      "options": [
+        "Object.assign()",
+        "Object.create()",
+        "Object.defineProperty()",
+        "Object.freeze()"
+      ],
+      "answer": 1,
+      "explanation": "Object.create(proto) creates a new object with its [[Prototype]] set to the provided proto object."
+    },
+    {
+      "question": "What happens when you add a method to a prototype after instances exist?",
+      "options": [
+        "Existing instances do not see the new method",
+        "Only new instances get the method",
+        "All existing instances immediately see the new method",
+        "It throws an error"
+      ],
+      "answer": 2,
+      "explanation": "Prototypes are live. Adding a method to a prototype immediately makes it available to all existing instances via the prototype chain."
+    },
+    {
+      "question": "What is the relationship between an array's prototype and Array.prototype?",
+      "options": [
+        "The array's [[Prototype]] is Array.prototype",
+        "Array.prototype is the array's constructor",
+        "The array copies Array.prototype methods",
+        "There is no relationship"
+      ],
+      "answer": 0,
+      "explanation": "When you create an array with [] or new Array(), its internal [[Prototype]] is set to Array.prototype, giving it access to methods like push, pop, map, etc."
+    },
+    {
+      "question": "What is prototype shadowing?",
+      "options": [
+        "Deleting a prototype property",
+        "Creating an own property that hides a prototype property with the same name",
+        "Adding a new method to the prototype",
+        "Removing an object from the prototype chain"
+      ],
+      "answer": 1,
+      "explanation": "Shadowing occurs when an own property has the same name as a prototype property. The own property takes precedence in property lookup, effectively hiding the inherited one."
+    }
+  ]
+};

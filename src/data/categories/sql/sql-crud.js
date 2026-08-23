@@ -1,0 +1,179 @@
+export const sql_crud = {
+  "id": "sql-crud",
+  "title": "CRUD Operations",
+  "difficulty": "beginner",
+  "estimatedMinutes": 20,
+  "tldr": [
+    "CRUD stands for Create (INSERT), Read (SELECT), Update (UPDATE), Delete (DELETE) — the four basic data operations.",
+    "INSERT adds new rows: INSERT INTO table (columns) VALUES (values); Can insert multiple rows in one statement.",
+    "SELECT retrieves data: SELECT columns FROM table WHERE condition; Supports filtering, sorting, and joining.",
+    "UPDATE modifies existing rows: UPDATE table SET column = value WHERE condition; Always use WHERE to avoid updating all rows."
+  ],
+  "laymanDefinition": "CRUD operations are the ABCs of database interaction — they let you create new records, read existing ones, update them, and delete them.",
+  "deepDive": [
+    {
+      "heading": "INSERT Statement",
+      "text": "Insert single row: INSERT INTO t (c1, c2) VALUES (v1, v2). Multi-row: INSERT INTO t (c1) VALUES (v1), (v2), (v3). Insert from query: INSERT INTO t SELECT * FROM other_t. RETURNING clause (PostgreSQL) returns inserted data."
+    },
+    {
+      "heading": "SELECT Statement",
+      "text": "SELECT column1, column2 FROM table WHERE condition ORDER BY column LIMIT n. SELECT * returns all columns (avoid in production). WHERE filters rows. ORDER BY sorts results. LIMIT / OFFSET restricts results."
+    },
+    {
+      "heading": "UPDATE Statement",
+      "text": "UPDATE table SET column1 = value1, column2 = value2 WHERE condition. Without WHERE, all rows are updated! RETURNING clause returns updated rows. Can update from another table using subquery or FROM clause."
+    },
+    {
+      "heading": "DELETE Statement",
+      "text": "DELETE FROM table WHERE condition. Without WHERE, all rows are deleted (use TRUNCATE for performance). DELETE can use RETURNING (PostgreSQL). DELETE FROM using JOIN or USING for multi-table deletes."
+    },
+    {
+      "heading": "RETURNING Clause (PostgreSQL)",
+      "text": "PostgreSQL extension: INSERT ... RETURNING * returns inserted rows. UPDATE ... RETURNING id returns updated row IDs. DELETE ... RETURNING * returns deleted rows. Extremely useful for getting auto-generated values without a separate query."
+    }
+  ],
+  "interviewAnswer": "CRUD operations are the foundation of database interaction. Mastering INSERT, SELECT, UPDATE, DELETE with all their variations is essential for any SQL developer.",
+  "interviewQuestions": [
+    {
+      "question": "What does INSERT do?",
+      "answer": "Adds new rows to a table. INSERT INTO table (columns) VALUES (values);"
+    },
+    {
+      "question": "How do you select specific columns?",
+      "answer": "SELECT column1, column2 FROM table; Avoid SELECT * in production queries."
+    },
+    {
+      "question": "What happens if UPDATE has no WHERE clause?",
+      "answer": "All rows in the table are updated. Always use WHERE with UPDATE unless that is intentional."
+    },
+    {
+      "question": "How do you delete specific rows?",
+      "answer": "DELETE FROM table WHERE condition; Without WHERE, all rows are deleted."
+    },
+    {
+      "question": "What is the RETURNING clause?",
+      "answer": "A PostgreSQL extension that returns affected rows from INSERT, UPDATE, or DELETE operations."
+    },
+    {
+      "question": "How do you insert multiple rows at once?",
+      "answer": "INSERT INTO t (c1) VALUES (v1), (v2), (v3); — single statement, multiple rows."
+    },
+    {
+      "question": "What columns should you avoid selecting with *?",
+      "answer": "Large text/BLOB columns, sensitive data (passwords), unnecessary columns. SELECT * causes unnecessary data transfer."
+    },
+    {
+      "question": "How do you limit results in SELECT?",
+      "answer": "PostgreSQL/MySQL: LIMIT n. SQL Server: SELECT TOP n. Oracle: FETCH FIRST n ROWS ONLY."
+    },
+    {
+      "question": "What is the difference between DELETE and TRUNCATE?",
+      "answer": "DELETE can have WHERE, triggers row-level triggers, slower, can be rolled back. TRUNCATE removes all rows fast, resets sequences, cannot be filtered."
+    },
+    {
+      "question": "How do you insert data from another table?",
+      "answer": "INSERT INTO target_table SELECT * FROM source_table WHERE condition;"
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"300\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">CRUD Operations</text><rect x=\"10\" y=\"40\" width=\"100\" height=\"30\" rx=\"5\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1.5\"/><text x=\"60\" y=\"56\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">CREATE</text><text x=\"60\" y=\"64\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">INSERT</text><rect x=\"10\" y=\"80\" width=\"100\" height=\"30\" rx=\"5\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1.5\"/><text x=\"60\" y=\"96\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">READ</text><text x=\"60\" y=\"104\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">SELECT</text><rect x=\"10\" y=\"120\" width=\"100\" height=\"30\" rx=\"5\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1.5\"/><text x=\"60\" y=\"136\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">UPDATE</text><text x=\"60\" y=\"144\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">UPDATE</text><rect x=\"10\" y=\"160\" width=\"100\" height=\"30\" rx=\"5\" fill=\"#dc3545\" stroke=\"#dc3545\" stroke-width=\"1.5\"/><text x=\"60\" y=\"176\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">DELETE</text><text x=\"60\" y=\"184\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">DELETE</text><line x1=\"110\" y1=\"55\" x2=\"140\" y2=\"55\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"110\" y1=\"95\" x2=\"140\" y2=\"95\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"110\" y1=\"135\" x2=\"140\" y2=\"135\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"110\" y1=\"175\" x2=\"140\" y2=\"175\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"150\" y=\"40\" width=\"230\" height=\"160\" rx=\"5\" fill=\"#17a2b8\" stroke=\"#17a2b8\" stroke-width=\"1.5\"/><text x=\"265\" y=\"56\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">CRUD Operations</text><text x=\"265\" y=\"183\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Create / Read / Update / Delete — The fou</text><text x=\"265\" y=\"194\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">r fundamental data operations.</text><text x=\"240\" y=\"225\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">CRUD: INSERT, SELECT, UPDATE, DELETE — the four ba</text><text x=\"240\" y=\"237\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">sic data operations.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "INSERT Examples",
+      "useCase": "Various insert techniques.",
+      "code": "-- Single row\nINSERT INTO users (name, email) VALUES ('Alice', 'alice@example.com');\n\n-- Multiple rows\nINSERT INTO users (name, email) VALUES ('Bob', 'bob@x.com'), ('Carol', 'carol@x.com');\n\n-- With RETURNING (PostgreSQL)\nINSERT INTO users (name, email) VALUES ('Dave', 'dave@x.com') RETURNING id;",
+      "description": "Single insert, multi-row insert, and RETURNING clause."
+    },
+    {
+      "title": "SELECT Examples",
+      "useCase": "Filtering and sorting.",
+      "code": "SELECT name, salary, department\nFROM employees\nWHERE department = 'Engineering'\nORDER BY salary DESC\nLIMIT 10;",
+      "description": "Selects top 10 Engineering salaries."
+    },
+    {
+      "title": "UPDATE with WHERE",
+      "useCase": "Safe update pattern.",
+      "code": "UPDATE employees\nSET salary = 85000, last_raised = CURRENT_DATE\nWHERE id = 5\nRETURNING id, name, salary;",
+      "description": "Updates specific employee, returns updated data."
+    },
+    {
+      "title": "DELETE with Subquery",
+      "useCase": "Delete based on related data.",
+      "code": "DELETE FROM orders\nWHERE user_id IN (\n  SELECT id FROM users WHERE last_login < '2024-01-01'\n);",
+      "description": "Deletes orders of inactive users using a subquery."
+    },
+    {
+      "title": "Conditional UPDATE (CASE)",
+      "useCase": "Different updates per row.",
+      "code": "UPDATE employees\nSET salary = CASE\n  WHEN department = 'Engineering' THEN salary * 1.10\n  WHEN department = 'Sales' THEN salary * 1.08\n  ELSE salary * 1.05\nEND;",
+      "description": "Updates salaries with different percentages per department."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What does CRUD stand for?",
+      "options": [
+        "Create, Read, Update, Delete",
+        "Copy, Retrieve, Update, Drop",
+        "Create, Retrieve, Use, Delete",
+        "Copy, Read, Update, Drop"
+      ],
+      "answer": 0,
+      "explanation": "CRUD: Create, Read, Update, Delete."
+    },
+    {
+      "question": "Which SQL statement creates new rows?",
+      "options": [
+        "SELECT",
+        "INSERT",
+        "UPDATE",
+        "CREATE"
+      ],
+      "answer": 1,
+      "explanation": "INSERT adds new rows to a table."
+    },
+    {
+      "question": "What happens if UPDATE has no WHERE?",
+      "options": [
+        "Updates nothing",
+        "Updates all rows",
+        "Errors",
+        "Updates one row"
+      ],
+      "answer": 1,
+      "explanation": "Without WHERE, UPDATE modifies all rows."
+    },
+    {
+      "question": "Which clause returns affected rows (PostgreSQL)?",
+      "options": [
+        "RETURNING",
+        "OUTPUT",
+        "RESULTS",
+        "FEEDBACK"
+      ],
+      "answer": 0,
+      "explanation": "RETURNING returns affected rows in PostgreSQL."
+    },
+    {
+      "question": "How do you insert multiple rows in one statement?",
+      "options": [
+        "Multiple VALUES",
+        "Multiple INSERTs",
+        "INSERT ALL",
+        "INSERT MULTIPLE"
+      ],
+      "answer": 0,
+      "explanation": "Use multiple value tuples: VALUES (v1), (v2)."
+    },
+    {
+      "question": "Which deletes all rows but keeps structure?",
+      "options": [
+        "DELETE",
+        "TRUNCATE",
+        "DROP",
+        "CLEAR"
+      ],
+      "answer": 1,
+      "explanation": "TRUNCATE removes all rows, keeps table structure."
+    }
+  ]
+};

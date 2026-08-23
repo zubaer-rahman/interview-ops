@@ -1,0 +1,153 @@
+export const react_reconciliation = {
+  "id": "react-reconciliation",
+  "title": "React Reconciliation",
+  "difficulty": "advanced",
+  "estimatedMinutes": 25,
+  "tldr": [
+    "Reconciliation is the process by which React updates the DOM by comparing the new VDOM tree with the previous one.",
+    "React uses a heuristic O(n) algorithm: different element types produce different trees; stable keys identify elements across renders.",
+    "When root element types differ, React tears down the old tree and builds a new one from scratch.",
+    "Keys on list children allow React to match, reuse, and reorder elements efficiently."
+  ],
+  "laymanDefinition": "Like comparing new photos with current ones on a bulletin board. If the frame changed (element type), replace entirely. For photos in a row, use name tags (keys) to know which stayed, which are new, which were removed.",
+  "deepDive": [
+    {
+      "heading": "The Two Assumptions",
+      "text": "1) Different element types produce different trees. 2) Developers provide stable keys for element identity across renders. These enable O(n) complexity."
+    },
+    {
+      "heading": "Recursing on Children",
+      "text": "When diffing same-type elements, React recurses on children positionally. Matching type updates existing DOM node. Different type removes old and inserts new."
+    },
+    {
+      "heading": "List Reconciliation with Keys",
+      "text": "Keys allow React to match children across renders. React determines insertions, deletions, reorderings, and updates using key identity."
+    },
+    {
+      "heading": "Component Instance Reuse",
+      "text": "Same type and key = reuse component instance. State persists (useState), only props update."
+    },
+    {
+      "heading": "Step by Step Process",
+      "text": "1. Render phase: produce new VDOM. 2. Diff: compare element by element. 3. Effect list: insert/update/remove/reorder. 4. Commit: apply to real DOM."
+    }
+  ],
+  "interviewAnswer": "Reconciliation is React's algorithm for efficiently updating the DOM when state changes. It compares new VDOM with previous using heuristic O(n) diffing. Same type + key = component instance preserved. Split into render phase (interruptible diffing) and commit phase (synchronous DOM mutations).",
+  "interviewQuestions": [
+    {
+      "question": "What is reconciliation?",
+      "answer": "The process of updating the DOM to match the new VDOM tree, computing minimal DOM mutations."
+    },
+    {
+      "question": "What happens with different element types at same position?",
+      "answer": "React tears down old component and builds new one from scratch. State lost, new DOM subtree inserted."
+    },
+    {
+      "question": "How do keys help list reconciliation?",
+      "answer": "Uniquely identify items across renders. React matches, preserves state, efficiently inserts/removes."
+    },
+    {
+      "question": "Why is array index as key problematic?",
+      "answer": "Incorrect matching when items are added/removed/reordered. React matches by position, not identity."
+    },
+    {
+      "question": "What happens when type and key match?",
+      "answer": "Component instance reused. DOM node updated with new props. Hook state preserved."
+    },
+    {
+      "question": "Render phase vs commit phase?",
+      "answer": "Render: compute diff (can pause). Commit: apply mutations (synchronous)."
+    },
+    {
+      "question": "How to skip unnecessary reconciliation?",
+      "answer": "React.memo, shouldComponentUpdate, useMemo, useCallback prevent re-rendering when props unchanged."
+    },
+    {
+      "question": "Wrong key bug?",
+      "answer": "Non-unique/unstable keys cause element mismatch and state corruption. Keys must be stable and unique among siblings."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 700 460\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:700px;\"><defs><marker id=\"arrRec\" markerWidth=\"10\" markerHeight=\"7\" refX=\"10\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,10 3.5,0 7\" fill=\"#6c9fff\"/></marker></defs><rect x=\"10\" y=\"10\" width=\"680\" height=\"440\" rx=\"10\" fill=\"var(--bg-card)\" stroke=\"var(--border)\" stroke-width=\"1\"/><text x=\"350\" y=\"38\" text-anchor=\"middle\" fill=\"#e8eaed\" font-size=\"14\" font-weight=\"bold\">Reconciliation Process</text><rect x=\"40\" y=\"55\" width=\"290\" height=\"160\" rx=\"6\" fill=\"#1a1d28\" stroke=\"#6c9fff\" stroke-width=\"1.5\"/><text x=\"185\" y=\"78\" text-anchor=\"middle\" fill=\"#6c9fff\" font-size=\"11\" font-weight=\"bold\">Previous VDOM Tree</text><rect x=\"60\" y=\"90\" width=\"250\" height=\"28\" rx=\"3\" fill=\"#2a2f45\"/><text x=\"185\" y=\"109\" text-anchor=\"middle\" fill=\"#e8eaed\" font-family=\"monospace\" font-size=\"11\">&lt;div&gt;</text><rect x=\"75\" y=\"125\" width=\"220\" height=\"28\" rx=\"3\" fill=\"#2a2f45\"/><text x=\"185\" y=\"144\" text-anchor=\"middle\" fill=\"#e8eaed\" font-family=\"monospace\" font-size=\"11\">&lt;h1&gt;Hello&lt;/h1&gt;</text><rect x=\"75\" y=\"158\" width=\"220\" height=\"28\" rx=\"3\" fill=\"#2a2f45\"/><text x=\"185\" y=\"177\" text-anchor=\"middle\" fill=\"#e8eaed\" font-family=\"monospace\" font-size=\"11\">&lt;p&gt;World&lt;/p&gt;</text><rect x=\"370\" y=\"55\" width=\"290\" height=\"160\" rx=\"6\" fill=\"#1a1d28\" stroke=\"#e5c07b\" stroke-width=\"1.5\"/><text x=\"515\" y=\"78\" text-anchor=\"middle\" fill=\"#e5c07b\" font-size=\"11\" font-weight=\"bold\">New VDOM Tree</text><rect x=\"390\" y=\"90\" width=\"250\" height=\"28\" rx=\"3\" fill=\"#2a2f45\"/><text x=\"515\" y=\"109\" text-anchor=\"middle\" fill=\"#e8eaed\" font-family=\"monospace\" font-size=\"11\">&lt;div&gt;</text><rect x=\"405\" y=\"125\" width=\"220\" height=\"28\" rx=\"3\" fill=\"#2a2f45\"/><text x=\"515\" y=\"144\" text-anchor=\"middle\" fill=\"#e8eaed\" font-family=\"monospace\" font-size=\"11\">&lt;h1&gt;Goodbye&lt;/h1&gt;</text><rect x=\"405\" y=\"158\" width=\"220\" height=\"28\" rx=\"3\" fill=\"#2a2f45\"/><text x=\"515\" y=\"177\" text-anchor=\"middle\" fill=\"#e8eaed\" font-family=\"monospace\" font-size=\"11\">&lt;span&gt;World&lt;/span&gt;</text><line x1=\"330\" y1=\"107\" x2=\"368\" y2=\"107\" stroke=\"#fbbf24\" stroke-width=\"2\" marker-end=\"url(#arrRec)\"/><line x1=\"320\" y1=\"144\" x2=\"376\" y2=\"144\" stroke=\"#fbbf24\" stroke-width=\"2\" stroke-dasharray=\"4\"/><line x1=\"320\" y1=\"173\" x2=\"376\" y2=\"173\" stroke=\"#f87171\" stroke-width=\"2\"/><text x=\"350\" y=\"100\" fill=\"#fbbf24\" font-size=\"8\" text-anchor=\"middle\">same type update</text><text x=\"350\" y=\"137\" fill=\"#fbbf24\" font-size=\"8\" text-anchor=\"middle\">same type text change</text><text x=\"350\" y=\"167\" fill=\"#f87171\" font-size=\"8\" text-anchor=\"middle\">type changed replace</text><line x1=\"350\" y1=\"220\" x2=\"350\" y2=\"250\" stroke=\"#f87171\" stroke-width=\"2\" marker-end=\"url(#arrRec)\"/><rect x=\"100\" y=\"250\" width=\"500\" height=\"50\" rx=\"6\" fill=\"#1a1d28\" stroke=\"#34d399\" stroke-width=\"1.5\"/><text x=\"350\" y=\"273\" text-anchor=\"middle\" fill=\"#34d399\" font-size=\"12\" font-weight=\"bold\">Commit Phase: Apply minimal DOM mutations</text><text x=\"350\" y=\"290\" text-anchor=\"middle\" fill=\"#9aa0b0\" font-size=\"10\">Update h1 text | Replace p with span</text></svg>",
+  "codeExamples": [
+    {
+      "title": "Correct Key Usage",
+      "useCase": "Efficient list rendering",
+      "code": "function TaskList({ tasks }) {\n  return (\n    <ul>\n      {tasks.map(task => (\n        <li key={task.id}>\n          <TaskCard task={task} />\n        </li>\n      ))}\n    </ul>\n  );\n}",
+      "description": "Stable keys (task.id) let React optimally reconcile list updates."
+    },
+    {
+      "title": "React.memo for Skipping",
+      "useCase": "Prevent unnecessary re-renders",
+      "code": "const ExpensiveList = React.memo(function ExpensiveList({ items }) {\n  return <ul>{items.map(i => <li key={i.id}>{i.name}</li>)}</ul>;\n});\nfunction App() {\n  const [count, setCount] = useState(0);\n  return <div>\n    <button onClick={() => setCount(c => c + 1)}>{count}</button>\n    <ExpensiveList items={items} />\n  </div>;\n}",
+      "description": "React.memo skips re-rendering if props haven't changed (shallow comparison)."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "Different types at same position?",
+      "options": [
+        "Updates existing node",
+        "Unmounts old and mounts new",
+        "Reuses DOM node",
+        "Throws warning"
+      ],
+      "answer": 1,
+      "explanation": "Different types = different trees."
+    },
+    {
+      "question": "Why recommend stable keys?",
+      "options": [
+        "Syntax correctness",
+        "Efficient matching across renders",
+        "Accessibility only",
+        "Optional no impact"
+      ],
+      "answer": 1,
+      "explanation": "Keys enable optimal DOM updates."
+    },
+    {
+      "question": "Consequence of index as key?",
+      "options": [
+        "No issues",
+        "Wrong instance reuse, state bugs",
+        "App crash",
+        "Ignored"
+      ],
+      "answer": 1,
+      "explanation": "Index keys cause incorrect positioning."
+    },
+    {
+      "question": "When is component state preserved?",
+      "options": [
+        "When type and key match",
+        "Only class components",
+        "No state components",
+        "Never"
+      ],
+      "answer": 0,
+      "explanation": "Matching type+key preserves state."
+    },
+    {
+      "question": "What does React.memo do?",
+      "options": [
+        "Skips render if props unchanged",
+        "Caches state",
+        "Prevents unmount",
+        "Optimizes bundle"
+      ],
+      "answer": 0,
+      "explanation": "Shallow compares props to skip re-render."
+    },
+    {
+      "question": "Which phase can be interrupted?",
+      "options": [
+        "Both",
+        "Only render",
+        "Only commit",
+        "Neither"
+      ],
+      "answer": 1,
+      "explanation": "Render phase is interruptible."
+    }
+  ]
+};

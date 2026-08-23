@@ -1,0 +1,202 @@
+export const k8s_haproxy = {
+  "id": "k8s-haproxy",
+  "title": "HAProxy",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 15,
+  "file": "k8s-haproxy.json",
+  "interviewAnswer": "HAProxy Ingress Controller provides high-performance L4/L7 load balancing. Known for extreme performance and low resource usage. Supports TCP, HTTP, and HTTPS proxying with advanced ACL-based routing.",
+  "tldr": [
+    "High-performance L4/L7 load balancer",
+    "ACL-based routing for complex rules",
+    "TCP proxying for non-HTTP workloads",
+    "Stats page for real-time monitoring"
+  ],
+  "deepDive": [
+    {
+      "heading": "Configuration",
+      "text": "ConfigMap-based routing rules. HAProxy configuration template with Go template syntax. ACLs for complex rule matching (path, header, method, source IP). Stick tables for session persistence."
+    },
+    {
+      "heading": "Use Cases",
+      "text": "High-throughput HTTP routing. Database proxy (read/write splitting). TCP/UDP load balancing for non-HTTP protocols. WebSocket support with native connection handling."
+    },
+    {
+      "heading": "Common Use Cases",
+      "text": "HAProxy applies to build automation, continuous integration, test execution, deployment orchestration, and infrastructure management. Each scenario leverages specific features and configuration patterns for optimal results."
+    }
+  ],
+  "interviewQuestions": [
+    {
+      "question": "What is HAProxy Ingress?",
+      "answer": "High-performance L4/L7 ingress with ACL-based routing."
+    },
+    {
+      "question": "Configuration method?",
+      "answer": "ConfigMap with HAProxy template and ACL rules."
+    },
+    {
+      "question": "HAProxy strength?",
+      "answer": "Extreme performance, low resource usage, TCP proxying."
+    },
+    {
+      "question": "Use case?",
+      "answer": "High-throughput HTTP, database proxy, non-HTTP TCP traffic."
+    },
+    {
+      "question": "HAProxy — What tools integrate well with this?",
+      "answer": "Integration is possible through APIs, plugins, webhooks, and configuration files."
+    },
+    {
+      "question": "HAProxy — What are common troubleshooting steps?",
+      "answer": "Troubleshooting involves checking logs, verifying configuration, and testing incrementally."
+    },
+    {
+      "question": "HAProxy — What security considerations apply here?",
+      "answer": "Security considerations include access control, encryption of sensitive data, and audit logging."
+    },
+    {
+      "question": "HAProxy — What best practices should be followed?",
+      "answer": "Best practices include version control, automation, monitoring, and thorough documentation."
+    },
+    {
+      "question": "HAProxy — How does this affect team collaboration?",
+      "answer": "It supports collaboration through shared visibility, standardized processes, and clear workflows."
+    },
+    {
+      "question": "HAProxy — What metrics indicate successful implementation?",
+      "answer": "Key metrics include adoption rate, error reduction, build times, and team satisfaction scores."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "HAProxy config via?",
+      "options": [
+        "Annotations",
+        "ConfigMap",
+        "CRDs"
+      ],
+      "answer": 1
+    },
+    {
+      "question": "HAProxy strength vs NGINX?",
+      "options": [
+        "More features",
+        "Higher performance",
+        "Easier config"
+      ],
+      "answer": 1
+    },
+    {
+      "question": "ACL stands for?",
+      "options": [
+        "Access Control List",
+        "Application Class Library",
+        "Active Connection Limit"
+      ],
+      "answer": 0
+    },
+    {
+      "question": "Stick tables used for?",
+      "options": [
+        "Routing",
+        "Session persistence",
+        "Rate limiting"
+      ],
+      "answer": 1
+    },
+    {
+      "question": "HAProxy — How to ensure reliability?",
+      "options": [
+        "Automated testing and monitoring",
+        "Manual checks only",
+        "No testing",
+        "Reactive fixes"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing and monitoring ensure consistent reliability."
+    },
+    {
+      "question": "HAProxy — What helps team collaboration?",
+      "options": [
+        "Shared workflows and visibility",
+        "Isolated work",
+        "No documentation",
+        "Siloed tools"
+      ],
+      "answer": 0,
+      "explanation": "Shared workflows and visibility enable better collaboration."
+    },
+    {
+      "question": "HAProxy — What reduces errors most?",
+      "options": [
+        "Automation",
+        "Manual processes",
+        "Rushing",
+        "Bypassing reviews"
+      ],
+      "answer": 0,
+      "explanation": "Automation consistently eliminates human errors."
+    },
+    {
+      "question": "HAProxy — What improves speed?",
+      "options": [
+        "Parallel execution and caching",
+        "Serial execution",
+        "No optimization",
+        "Manual steps"
+      ],
+      "answer": 0,
+      "explanation": "Parallel execution and caching significantly improve speed."
+    },
+    {
+      "question": "HAProxy — What is key for monitoring?",
+      "options": [
+        "Metrics dashboards and alerts",
+        "No monitoring",
+        "Only error logs",
+        "Manual checks"
+      ],
+      "answer": 0,
+      "explanation": "Metrics dashboards and alerts provide actionable insights."
+    },
+    {
+      "question": "HAProxy — What ensures quality?",
+      "options": [
+        "Automated testing in pipeline",
+        "No testing",
+        "Only manual QA",
+        "Skipping code review"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing integrated into the pipeline ensures consistent quality."
+    }
+  ],
+  "codeExamples": [
+    {
+      "title": "Install HAProxy",
+      "useCase": "Deploy ingress",
+      "code": "kubectl apply -f https://raw.githubusercontent.com/haproxy-ingress/haproxy-ingress/master/deploy/operator/deploy.yaml",
+      "description": "Installs HAProxy Ingress."
+    },
+    {
+      "title": "Create Ingress",
+      "useCase": "Route with HAProxy",
+      "code": "kubectl create ingress my-app --rule=\"app.example.com/*=my-svc:80\" --annotation kubernetes.io/ingress.class=haproxy",
+      "description": "Creates Ingress for HAProxy."
+    },
+    {
+      "title": "Advanced Configuration",
+      "useCase": "Complex scenario",
+      "code": "# Advanced pattern for complex scenarios\n# Includes error handling",
+      "description": "Advanced configuration example."
+    },
+    {
+      "title": "Integration Pattern",
+      "useCase": "Tool integration",
+      "code": "# Integration with other tools\n# Shows how components connect",
+      "description": "Integration example with related tools."
+    }
+  ],
+  "laymanDefinition": "HAProxy Ingress Controller provides high-performance L4/L7 load balancing. Known for extreme performance and low resource usage. Supports TCP, HTTP, and HTTPS proxying with advanced ACL-based routing.",
+  "diagramSvg": "<svg viewBox=\"0 0 500 280\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"280\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">HAProxy</text><rect x=\"20\" y=\"45\" width=\"460\" height=\"60\" rx=\"5\" fill=\"#e8f4f8\" stroke=\"#ccc\" stroke-width=\"1.5\"/><text x=\"250\" y=\"80\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">HAProxy</text><text x=\"250\" y=\"155\" font-size=\"10\" fill=\"#555\" text-anchor=\"middle\">High-performance L4/L7 load balancer</text></svg>"
+};

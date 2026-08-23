@@ -1,0 +1,179 @@
+export const nextjs_ssg = {
+  "id": "nextjs-ssg",
+  "title": "Static Site Generation",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 25,
+  "tldr": [
+    "Static Site Generation (SSG) pre-renders pages at build time, producing static HTML files that can be served instantly from a CDN.",
+    "In the Pages Router, SSG is achieved via getStaticProps. In the App Router, Static Generation is the default behavior when no dynamic functions are used.",
+    "SSG provides the fastest possible load times since HTML is pre-built and does not require server processing at request time.",
+    "Best for content that does not change frequently: blogs, documentation, marketing pages, and e-commerce product pages with stable data."
+  ],
+  "laymanDefinition": "SSG is like printing a book: you write all the content, print it (build), and then anyone can read it instantly without waiting for pages to be written on the spot.",
+  "deepDive": [
+    {
+      "heading": "How SSG Works in Next.js",
+      "text": "At build time (next build), Next.js executes getStaticProps (Pages Router) or runs Server Components (App Router) for each page, generates the HTML, and saves it as static .html files. These files are served directly from a CDN or web server without any server-side processing."
+    },
+    {
+      "heading": "SSG in the Pages Router",
+      "text": "Export getStaticProps from a page to opt into SSG. The function runs at build time, fetches data, and returns props. For dynamic routes, getStaticPaths specifies which paths to pre-render. The fallback option controls behavior for paths not specified at build time."
+    },
+    {
+      "heading": "SSG in the App Router",
+      "text": "In the App Router, all pages are statically rendered by default unless they use dynamic functions (cookies(), headers(), searchParams()) or export const dynamic = \"force-dynamic\". Static pages are rendered at build time and cached. Data fetching with fetch() is automatically cached."
+    },
+    {
+      "heading": "Incremental Static Regeneration (ISR)",
+      "text": "ISR extends SSG by allowing pages to be re-rendered after build time without rebuilding the entire site. Set revalidate in getStaticProps or use next.revalidate in fetch() options. Pages are served from cache while being regenerated in the background."
+    },
+    {
+      "heading": "SSG Performance and Caching",
+      "text": "SSG pages can be aggressively cached at CDN edge nodes because they are identical for all users. This results in near-instant page loads regardless of geographic location. SSG significantly reduces server load and hosting costs compared to SSR."
+    }
+  ],
+  "interviewAnswer": "SSG is the foundation of high-performance websites. It eliminates server processing at request time, enables global CDN distribution, and provides the best possible user experience. Combined with ISR, SSG can handle dynamic content while maintaining static-level performance.",
+  "interviewQuestions": [
+    {
+      "question": "What is Static Site Generation in Next.js?",
+      "answer": "SSG pre-renders pages into static HTML at build time. These HTML files are served directly to users without server-side processing on each request. This results in the fastest possible page loads and excellent SEO."
+    },
+    {
+      "question": "How do you implement SSG in the Pages Router?",
+      "answer": "Export an async getStaticProps function from the page. This function runs at build time, fetches data, and returns props. For dynamic routes, also export getStaticPaths to specify which paths to pre-render."
+    },
+    {
+      "question": "How does SSG work in the App Router?",
+      "answer": "In the App Router, static generation is the default. Pages are pre-rendered at build time unless they use dynamic functions like cookies(), headers(), or searchParams(). Data fetching with fetch() is automatically cached and deduplicated."
+    },
+    {
+      "question": "What is the build-time execution context for getStaticProps?",
+      "answer": "getStaticProps runs during next build on the server. It has access to the params for dynamic routes, preview mode, and the full Node.js API. It cannot access request-time data like cookies (unless using preview mode) or query parameters."
+    },
+    {
+      "question": "What is the fallback option in getStaticPaths?",
+      "answer": "fallback determines behavior for paths not generated at build time. false: show 404. true: generate on first request and cache. \"blocking\": generate on first request without a loading state (SSR-like)."
+    },
+    {
+      "question": "How does SSG benefit SEO?",
+      "answer": "SSG produces complete HTML at build time, so search engine crawlers receive fully-rendered pages with all content. Static HTML loads instantly, improving Core Web Vitals scores. Pages can be indexed immediately without JavaScript execution."
+    },
+    {
+      "question": "What are the limitations of SSG?",
+      "answer": "Build time increases with the number of pages. Dynamic or user-specific content cannot use SSG. Content updates require a rebuild (or ISR). Large sites may need incremental builds. Not suitable for authenticated pages or real-time data."
+    },
+    {
+      "question": "How does SSG handle environment variables?",
+      "answer": "Environment variables used in getStaticProps are resolved at build time. Public environment variables (NEXT_PUBLIC_) are inlined into the JavaScript bundle. Server-only environment variables are only available during build and are not exposed to the client."
+    },
+    {
+      "question": "Can you use SSG with API routes?",
+      "answer": "Yes, API routes are separate from SSG. API routes run server-side on each request. SSG generates static HTML pages. A page can use SSG while its data source is an API route that runs dynamically."
+    },
+    {
+      "question": "How do you debug SSG build issues?",
+      "answer": "Check the build output for errors. Use console.log in getStaticProps during build. Verify that data sources are accessible at build time. For ISR revalidation issues, check the revalidate interval and ensure CDN respects cache headers."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 200\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><rect x=\"0\" y=\"0\" width=\"500\" height=\"200\" rx=\"8\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"24\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">Static Site Generation</text><rect x=\"10\" y=\"40\" width=\"120\" height=\"40\" rx=\"4\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1\"/><text x=\"70\" y=\"56\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">next build</text><text x=\"70\" y=\"68\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Build Time</text><line x1=\"130\" y1=\"60\" x2=\"160\" y2=\"60\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"170\" y=\"40\" width=\"120\" height=\"40\" rx=\"4\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1\"/><text x=\"230\" y=\"56\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">getStaticProps</text><text x=\"230\" y=\"68\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Fetch Data</text><line x1=\"290\" y1=\"60\" x2=\"320\" y2=\"60\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"330\" y=\"40\" width=\"120\" height=\"40\" rx=\"4\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1\"/><text x=\"390\" y=\"56\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Generate HTML</text><text x=\"390\" y=\"68\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Static Files</text><line x1=\"330\" y1=\"80\" x2=\"330\" y2=\"100\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"230\" y=\"110\" width=\"140\" height=\"40\" rx=\"4\" fill=\"#17a2b8\" stroke=\"#17a2b8\" stroke-width=\"1\"/><text x=\"300\" y=\"126\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">CDN Cache</text><text x=\"300\" y=\"138\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Served Globally</text><line x1=\"150\" y1=\"130\" x2=\"230\" y2=\"130\" stroke=\"#999\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"10\" y=\"110\" width=\"130\" height=\"40\" rx=\"4\" fill=\"#6610f2\" stroke=\"#6610f2\" stroke-width=\"1\"/><text x=\"75\" y=\"126\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">User Request</text><text x=\"75\" y=\"138\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Instant Load</text><text x=\"250\" y=\"180\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">SSG: Pages pre-built at build time, served statically from CDN for instant loads.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "SSG with getStaticProps",
+      "useCase": "When building a marketing site with content from a CMS.",
+      "code": "export async function getStaticProps() {\n  const data = await fetch(\"https://cms.example.com/pages/home\").then(r => r.json());\n  return { props: { content: data } };\n}\n\nexport default function Home({ content }) {\n  return <div><h1>{content.title}</h1><div>{content.body}</div></div>\n}",
+      "description": "Fetches CMS data at build time and generates a static HTML page."
+    },
+    {
+      "title": "SSG with Dynamic Routes",
+      "useCase": "When building a blog with many posts.",
+      "code": "export async function getStaticPaths() {\n  const posts = await fetch(\"https://api.example.com/posts\").then(r => r.json());\n  return { paths: posts.map(p => ({ params: { slug: p.slug } })), fallback: \"blocking\" };\n}\n\nexport async function getStaticProps({ params }) {\n  const post = await fetch(`https://api.example.com/posts/${params.slug}`).then(r => r.json());\n  return { props: { post } };\n}",
+      "description": "Pre-renders all blog posts at build time with fallback: \"blocking\" for new posts."
+    },
+    {
+      "title": "SSG in App Router (Default)",
+      "useCase": "When building static pages in the App Router.",
+      "code": "// app/page.js — This is statically rendered by default\nexport default async function Home() {\n  const data = await fetch(\"https://api.example.com/content\");\n  const json = await data.json();\n  return <div>{json.title}</div>\n}",
+      "description": "No special exports needed. App Router defaults to static rendering with cached fetch()."
+    },
+    {
+      "title": "SSG with Revalidation (ISR)",
+      "useCase": "When you need static performance with periodic updates.",
+      "code": "export async function getStaticProps() {\n  const data = await fetch(\"https://api.example.com/products\");\n  const products = await data.json();\n  return { props: { products }, revalidate: 3600 };\n}",
+      "description": "Regenerates the page at most once every 3600 seconds (1 hour) while serving cached pages."
+    },
+    {
+      "title": "SSG with Preview Mode",
+      "useCase": "When editors need to preview draft content before publishing.",
+      "code": "export async function getStaticProps({ preview, previewData }) {\n  const data = await fetch(`https://cms.example.com/pages/home${preview ? \"?draft=true\" : \"\"}`);\n  return { props: { content: await data.json(), isPreview: !!preview } };\n}",
+      "description": "Preview mode enables draft content viewing at build time by passing a preview flag to the data source."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "When does getStaticProps execute?",
+      "options": [
+        "On every request",
+        "At build time",
+        "On the client",
+        "On every navigation"
+      ],
+      "answer": 1,
+      "explanation": "getStaticProps runs during next build to pre-render pages."
+    },
+    {
+      "question": "What is the default rendering behavior in the App Router?",
+      "options": [
+        "Dynamic (SSR)",
+        "Static (SSG)",
+        "Client-side (CSR)",
+        "No rendering"
+      ],
+      "answer": 1,
+      "explanation": "App Router defaults to static generation unless dynamic functions are used."
+    },
+    {
+      "question": "What does fallback: true do in getStaticPaths?",
+      "options": [
+        "Shows 404 for unknown paths",
+        "Generates unknown paths on first request",
+        "Prevents all path generation",
+        "Requires all paths at build time"
+      ],
+      "answer": 1,
+      "explanation": "fallback: true generates pages on first request and caches them for subsequent requests."
+    },
+    {
+      "question": "Which option extends SSG by allowing periodic page regeneration?",
+      "options": [
+        "revalidate",
+        "refresh",
+        "regenerate",
+        "update"
+      ],
+      "answer": 0,
+      "explanation": "The revalidate option in getStaticProps enables ISR for periodic page regeneration."
+    },
+    {
+      "question": "What is a limitation of SSG?",
+      "options": [
+        "Fast page loads",
+        "Excellent SEO",
+        "Build time grows with page count",
+        "Reduced server load"
+      ],
+      "answer": 2,
+      "explanation": "Build time increases as more pages are added, which can be a limitation for large sites."
+    },
+    {
+      "question": "Can SSG pages use data from cookies?",
+      "options": [
+        "Yes, always",
+        "Only with getServerSideProps",
+        "Only with preview mode",
+        "Yes, via client-side JS"
+      ],
+      "answer": 1,
+      "explanation": "SSG pages cannot access cookies or request-time data because they are pre-built. Use getServerSideProps for this."
+    }
+  ]
+};

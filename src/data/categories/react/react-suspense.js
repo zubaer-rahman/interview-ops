@@ -1,0 +1,161 @@
+export const react_suspense = {
+  "id": "react-suspense",
+  "title": "React Suspense",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 20,
+  "tldr": [
+    "Suspense lets components \"wait\" for something (lazy loading, data fetching) before rendering, showing a fallback UI in the meantime.",
+    "It works with React.lazy for code splitting and is being extended for data fetching in React 18+.",
+    "Suspense boundaries can be nested for granular loading states - each boundary independently controls its fallback.",
+    "In React 18, Suspense integrates with streaming SSR and concurrent features for better perceived performance."
+  ],
+  "laymanDefinition": "Suspense is like a placeholder frame at a construction site that says \"Building coming soon!\" while workers finish the actual building behind it. In React, when a component is loading (either code via lazy loading or data via a fetching library), Suspense automatically shows a fallback (spinner, skeleton, placeholder) in place of that component until its ready. Multiple Suspense boundaries can be nested like Russian dolls - each one manages its own loading state independently. The key benefit is declarative loading states: you tell React \"show this spinner while this section loads\", and React handles the timing automatically.",
+  "deepDive": [
+    {
+      "heading": "How Suspense Works Under the Hood",
+      "text": "Suspense relies on the concept of \"thrown promises\". When React attempts to render a component tree and encounters a lazy component (or a data-fetching component wrapped with a Suspense-enabled library), the component \"throws\" a Promise instead of returning JSX. React catches this thrown promise, looks up the nearest parent Suspense boundary, and renders that boundary's fallback instead of the component subtree. When the promise resolves, React retries the render. If the promise rejects, the error propagates to the nearest error boundary. This throw/catch mechanism is the core of Suspense - it is not a React-specific feature but a pattern built on JavaScripts error handling. Async React in concurrent mode allows Suspense to work with interrupted and resumed renders."
+    },
+    {
+      "heading": "Suspense for Code Splitting (React.lazy)",
+      "text": "This is the most mature Suspense use case. React.lazy creates a component that throws a promise when its chunk is not yet loaded. The Suspense boundary catches it and shows the fallback. Key patterns: (1) One Suspense per route for independent loading. (2) Nested Suspense - layout shell has its own Suspense, child sections have nested Suspense with smaller fallbacks. (3) Suspense with <Outlet /> in React Router v6 for route-level code splitting. (4) Avoid wrapping everything in a single Suspense - the entire page content is replaced by a spinner, creating a poor UX. (5) For frequently used lazy components, consider prefetching the chunk so Suspense resolves immediately."
+    },
+    {
+      "heading": "Suspense for Data Fetching (React 18+)",
+      "text": "React 18 introduces Suspense support for data fetching via libraries like Relay, SWR, TanStack Query, and the new use hook. The pattern: (1) A component reads from a resource (e.g., fetchData(id)) that may suspend. (2) If the data is not ready, the resource throws a promise. (3) Suspense catches it and shows fallback. (4) When data resolves, the component re-renders with data. Benefits: (a) No manual loading/error state management - Suspense handles it. (b) Race conditions are eliminated because Suspense coordinates renders with data readiness. (c) Automatic parallel data loading - siblings under Suspense load concurrently. (d) Streaming SSR with Suspense boundaries for progressive HTML delivery."
+    },
+    {
+      "heading": "Nested Suspense and Coordinated Loading",
+      "text": "Nested Suspense boundaries provide granular loading UX: (1) Outer Suspense shows page skeleton. (2) Inner Suspense boundaries show section-specific placeholders (e.g., sidebar skeleton, content skeleton, comments skeleton). (3) As each section loads independently, it replaces its placeholder without affecting other sections. (4) useTransition (React 18) defers showing fallback for pending transitions, maintaining the current UI until the new content is ready. (5) SuspenseList (experimental) coordinates the order of appearance - \"together\" (all reveal at once), \"forwards\" (top to bottom sequential reveal), or \"backwards\" (bottom to top). This prevents content from jumping around as sections load."
+    },
+    {
+      "heading": "Error Handling with Suspense",
+      "text": "Suspense does not handle errors from rejected promises. Error boundaries are required: wrap Suspense with an error boundary to catch rendering errors including rejected Suspense promises. The error boundary renders a fallback UI when chunk loading fails or data fetching throws. This separation of concerns is intentional: Suspense handles loading (pending states), error boundaries handle failure (rejected states). The combination provides a complete async rendering model: pending -> Suspense fallback, resolved -> component renders, rejected -> error boundary fallback."
+    }
+  ],
+  "interviewAnswer": "Suspense is a React component that shows a fallback UI while child components are loading (code via React.lazy or data via Suspense-enabled libraries). It works via the thrown promise pattern - components throw a promise during loading, Suspense catches it and shows fallback. Multiple Suspense boundaries can be nested for granular loading states. In React 18, Suspense extends to data fetching and streaming SSR. Suspense does NOT handle errors - pair it with error boundaries for complete async handling. Avoid wrapping the entire app in a single Suspense - use focused boundaries for better UX.",
+  "interviewQuestions": [
+    {
+      "question": "What is the thrown promise pattern in Suspense?",
+      "answer": "When a component needs to load data or code, it throws a Promise instead of returning JSX. React catches this, finds the nearest Suspense boundary, and renders its fallback. When the Promise resolves, React retries the render."
+    },
+    {
+      "question": "What are the primary use cases for Suspense?",
+      "answer": "(1) Code splitting with React.lazy - loading component chunks on demand. (2) Data fetching with Suspense-enabled libraries (Relay, SWR, TanStack Query) - showing fallback while data loads. (3) Streaming SSR in React 18 - progressive HTML delivery."
+    },
+    {
+      "question": "Can Suspense be nested? How does it behave?",
+      "answer": "Yes. Each Suspense boundary independently manages its fallback. Outer boundaries show larger skeletons while inner boundaries show section-specific placeholders. When an inner section loads, only its fallback is replaced - other sections remain."
+    },
+    {
+      "question": "How does Suspense differ from a simple conditional loader?",
+      "answer": "Suspense is declarative and automatic. You define the boundary and fallback once; React handles timing, transitions, and race conditions. Conditional loaders require manual state management (loading, error, success flags) in every component and are prone to race conditions."
+    },
+    {
+      "question": "Does Suspense handle errors?",
+      "answer": "No. Errors from rejected promises (failed chunk loads, API errors) propagate to the nearest error boundary. Always wrap Suspense with an error boundary for robust error handling."
+    },
+    {
+      "question": "What is the relationship between Suspense and useTransition?",
+      "answer": "useTransition marks state updates as non-urgent. When a transition triggers a Suspense boundary, React can keep showing the current UI (instead of switching to fallback) while preparing the new content. This prevents jarring loading spinners during navigation."
+    },
+    {
+      "question": "How does React 18s streaming SSR use Suspense?",
+      "answer": "The server streams HTML progressively. Suspense boundaries on the server create \"holes\" filled later with server-rendered content. The client shows Suspense fallbacks for unresolved boundaries. This reduces TTFB (Time to First Byte) and Time to Interactive."
+    },
+    {
+      "question": "What happens if two sibling components both suspend?",
+      "answer": "Both suspend independently. React shows the common parent Suspense fallback until all siblings resolve. If each sibling has its own Suspense boundary, they load in parallel and each reveals independently."
+    },
+    {
+      "question": "What is the SuspenseList component?",
+      "answer": "SuspenseList (experimental) coordinates the reveal order of multiple Suspense boundaries. Options: \"together\" (all reveal at once), \"forwards\" (top to bottom sequentially), or \"backwards\" (bottom to top). Prevents layout shifts and improves perceived performance."
+    },
+    {
+      "question": "Can Suspense be used for server-side data fetching in Next.js?",
+      "answer": "Next.js 13+ App Router uses Suspense boundaries for streaming with React Server Components. Each Suspense boundary can independently stream its content from the server, enabling progressive rendering without blocking the page shell."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 720 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:720px;\"><defs><marker id=\"a\" markerWidth=\"10\" markerHeight=\"7\" refX=\"10\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,10 3.5,0 7\" fill=\"#6c9fff\"/></marker></defs><rect x=\"10\" y=\"10\" width=\"700\" height=\"280\" rx=\"10\" fill=\"var(--bg-card)\" stroke=\"var(--border)\" stroke-width=\"1\"/><text x=\"360\" y=\"38\" fill=\"#e8eaed\" font-size=\"14\" font-weight=\"bold\" text-anchor=\"middle\">Suspense Flow</text><rect x=\"30\" y=\"55\" width=\"200\" height=\"45\" rx=\"6\" fill=\"#1a1d28\" stroke=\"#6c9fff\" stroke-width=\"1.5\"/><text x=\"130\" y=\"72.5\" fill=\"#e8eaed\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">Component Renders</text><text x=\"130\" y=\"89.5\" fill=\"#9aa0b0\" font-size=\"10\" text-anchor=\"middle\">Lazy import or data fetch needed</text><line x1=\"130\" y1=\"100\" x2=\"130\" y2=\"125\" stroke=\"#6c9fff\" stroke-width=\"2\" marker-end=\"url(#a)\"/><rect x=\"30\" y=\"125\" width=\"200\" height=\"45\" rx=\"6\" fill=\"#1a1d28\" stroke=\"#f59e0b\" stroke-width=\"1.5\"/><text x=\"130\" y=\"142.5\" fill=\"#e8eaed\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">Throws Promise</text><text x=\"130\" y=\"159.5\" fill=\"#9aa0b0\" font-size=\"10\" text-anchor=\"middle\">React catches the thrown promise</text><line x1=\"130\" y1=\"170\" x2=\"130\" y2=\"195\" stroke=\"#6c9fff\" stroke-width=\"2\" marker-end=\"url(#a)\"/><rect x=\"30\" y=\"195\" width=\"200\" height=\"45\" rx=\"6\" fill=\"#1a1d28\" stroke=\"#f87171\" stroke-width=\"1.5\"/><text x=\"130\" y=\"212.5\" fill=\"#e8eaed\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">Suspense Fallback</text><text x=\"130\" y=\"229.5\" fill=\"#9aa0b0\" font-size=\"10\" text-anchor=\"middle\">Loading spinner/skeleton shown</text><line x1=\"130\" y1=\"240\" x2=\"130\" y2=\"258\" stroke=\"#6c9fff\" stroke-width=\"2\" marker-end=\"url(#a)\"/><rect x=\"30\" y=\"258\" width=\"200\" height=\"40\" rx=\"6\" fill=\"#1a1d28\" stroke=\"#34d399\" stroke-width=\"1.5\"/><text x=\"130\" y=\"273\" fill=\"#e8eaed\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">Promise Resolves</text><text x=\"130\" y=\"290\" fill=\"#9aa0b0\" font-size=\"10\" text-anchor=\"middle\">React retries render, component shows</text></svg>",
+  "codeExamples": [
+    {
+      "title": "Nested Suspense for Granular Loading",
+      "useCase": "Page shell loads first, sections load independently",
+      "code": "function DashboardPage() {\n  return (\n    <Suspense fallback={<PageSkeleton />}>\n      <Header />\n\n      <div className=\"grid\">\n        <Suspense fallback={<CardSkeleton />}>\n          <RevenueChart />\n        </Suspense>\n\n        <Suspense fallback={<CardSkeleton />}>\n          <UserActivityFeed />\n        </Suspense>\n      </div>\n\n      <Suspense fallback={<ListSkeleton />}>\n        <RecentOrdersTable />\n      </Suspense>\n    </Suspense>\n  );\n}\n\n// Each lazy-loaded section:\nconst RevenueChart = React.lazy(() => import(\"./RevenueChart\"));\nconst UserActivityFeed = React.lazy(() => import(\"./UserActivityFeed\"));\nconst RecentOrdersTable = React.lazy(() => import(\"./RecentOrdersTable\"));",
+      "description": "The outer Suspense shows a full page skeleton. Inner Suspense boundaries show card/list skeletons. As each section loads, its skeleton is replaced independently. The Header (not lazy) renders immediately."
+    },
+    {
+      "title": "Suspense with Data Fetching (React 18 + use)",
+      "useCase": "Declarative data loading with Suspense integration",
+      "code": "import { use, Suspense } from \"react\";\n\n// A Suspense-enabled data resource\nfunction fetchUser(id) {\n  const promise = fetch(\"/api/users/\" + id).then(r => r.json());\n  return {\n    read() {\n      if (this.data) return this.data;\n      if (this.error) throw this.error;\n      if (this.promise) throw this.promise;\n      this.promise = promise.then(d => { this.data = d; },\n                                         e => { this.error = e; });\n      throw this.promise;\n    }\n  };\n}\n\nfunction UserProfile({ userId }) {\n  const user = use(fetchUser(userId));\n  return <div><h2>{user.name}</h2><p>{user.email}</p></div>;\n}\n\nfunction App() {\n  return (\n    <Suspense fallback={<div className=\"spinner\" />}>\n      <UserProfile userId={42} />\n    </Suspense>\n  );\n}",
+      "description": "The UserProfile component suspends until the fetch resolves. Suspense shows the fallback spinner automatically. When data arrives, the component re-renders with the user data. No manual loading/error state management needed."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What mechanism does Suspense use to detect loading?",
+      "options": [
+        "Checking a global loading variable",
+        "The thrown promise pattern - components throw a Promise while loading",
+        "Using setTimeout callbacks",
+        "React.memo comparison"
+      ],
+      "answer": 1,
+      "explanation": "Suspense relies on components throwing a Promise during loading. React catches it and shows the fallback."
+    },
+    {
+      "question": "Does Suspense handle error states?",
+      "options": [
+        "Yes it shows error fallbacks",
+        "No - errors must be caught by Error Boundaries",
+        "Yes but only for code splitting",
+        "No - errors crash the app"
+      ],
+      "answer": 1,
+      "explanation": "Suspense only handles pending (loading) states. Errors (rejected promises) propagate to the nearest error boundary."
+    },
+    {
+      "question": "What is the benefit of nested Suspense?",
+      "options": [
+        "Faster initial load",
+        "Granular loading UX - each section independently shows its loading state and reveals when ready",
+        "Smaller bundle size",
+        "Better SEO"
+      ],
+      "answer": 1,
+      "explanation": "Nested Suspense provides a better user experience by allowing sections to load independently without affecting other already-loaded sections."
+    },
+    {
+      "question": "What does useTransition do in relation to Suspense?",
+      "options": [
+        "It disables Suspense",
+        "It defers showing the fallback during transitions, keeping the current UI visible",
+        "It turns off lazy loading",
+        "It shows multiple fallbacks at once"
+      ],
+      "answer": 1,
+      "explanation": "useTransition marks an update as non-urgent. React can keep showing the current UI instead of switching to a loading state during navigation or data transitions."
+    },
+    {
+      "question": "In React 18, how does Suspense enhance SSR?",
+      "options": [
+        "It blocks SSR entirely",
+        "Streaming SSR - the server sends HTML progressively, Suspense boundaries stream independently",
+        "It makes SSR slower but more reliable",
+        "It replaces SSR with static generation"
+      ],
+      "answer": 1,
+      "explanation": "React 18s streaming SSR uses Suspense boundaries as streaming points. Each boundary can independently stream its content, reducing TTFB."
+    },
+    {
+      "question": "Which library is NOT Suspense-compatible for data fetching?",
+      "options": [
+        "Relay",
+        "SWR",
+        "Axios (directly, without a wrapper)",
+        "TanStack Query"
+      ],
+      "answer": 2,
+      "explanation": "Axios needs a Suspense-compatible wrapper (like use() from React 18 or a library like @tanstack/react-query with suspense: true). Plain Axios calls do not integrate with Suspense."
+    }
+  ]
+};

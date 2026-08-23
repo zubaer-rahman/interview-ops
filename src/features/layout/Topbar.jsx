@@ -1,6 +1,6 @@
-import { Flame, Menu } from "lucide-react";
+import { Flame, Menu, Clock, Target } from "lucide-react";
 
-export function Topbar({ overallPct, completedCount, TOTAL_TOPICS, loadingProfile, storageError, isSidebarOpen, setIsSidebarOpen }) {
+export function Topbar({ overallPct, completedCount, TOTAL_TOPICS, loadingProfile, storageError, isSidebarOpen, setIsSidebarOpen, activeTopic }) {
   return (
     <header className="io-topbar">
       <div className="io-topbar-progress">
@@ -31,17 +31,35 @@ export function Topbar({ overallPct, completedCount, TOTAL_TOPICS, loadingProfil
           </div>
         </div>
       </div>
-      <div className="io-streak">
-        <Flame size={14} />
-        <span>
-          {loadingProfile
-            ? "Loading saved progress…"
-            : storageError
-            ? "Starting fresh — couldn't reach saved progress"
-            : completedCount > 0
-            ? "Keep going"
-            : "Start your first topic"}
-        </span>
+      <div className="io-topbar-actions" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        {activeTopic && (
+          <div className="io-topbar-meta" style={{ display: 'flex', gap: '8px' }}>
+            {activeTopic.difficulty && (
+              <div className={`io-meta-badge diff-${activeTopic.difficulty.toLowerCase()}`}>
+                <Target size={14} />
+                <span>{activeTopic.difficulty}</span>
+              </div>
+            )}
+            {activeTopic.estimatedMinutes && (
+              <div className="io-meta-badge time-badge">
+                <Clock size={14} />
+                <span>{activeTopic.estimatedMinutes}m</span>
+              </div>
+            )}
+          </div>
+        )}
+        <div className="io-streak">
+          <Flame size={14} />
+          <span>
+            {loadingProfile
+              ? "Loading saved progress…"
+              : storageError
+              ? "Starting fresh — couldn't reach saved progress"
+              : completedCount > 0
+              ? "Keep going"
+              : "Start your first topic"}
+          </span>
+        </div>
       </div>
     </header>
   );

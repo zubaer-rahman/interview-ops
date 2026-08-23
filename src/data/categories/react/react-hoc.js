@@ -1,0 +1,178 @@
+export const react_hoc = {
+  "id": "react-hoc",
+  "title": "Higher-Order Components",
+  "difficulty": "advanced",
+  "estimatedMinutes": 25,
+  "tldr": [
+    "A Higher-Order Component (HOC) is a function that takes a component and returns an enhanced component.",
+    "HOCs are a pattern to reuse component logic: authentication, logging, data fetching, styling.",
+    "The pattern: const EnhancedComponent = withFeature(WrappedComponent). Name conventionally starts with \"with\".",
+    "HOCs compose via nesting: withAuth(withLogger(MyComponent)). Avoid HOCs for new code — prefer hooks instead."
+  ],
+  "laymanDefinition": "A Higher-Order Component is like a gift-wrapping service. You give them your plain box (component), and they wrap it with fancy paper, add a bow, and attach a gift tag (extra props/behavior). You get back a wrapped component that looks nicer and has additional features, but the original box is still inside. The wrapper doesn't change what's inside — it just adds decoration around it.",
+  "deepDive": [
+    {
+      "heading": "Basic HOC Pattern",
+      "text": "A HOC is a function that receives a component and returns a new component that renders the original component with additional props. Example: function withLogger(WrappedComponent) { return function Enhanced(props) { console.log('Rendering with props:', props); return <WrappedComponent {...props} />; }; }. The HOC can add state, lifecycle methods, event handlers, or modify props before passing them down. The wrapped component receives all original props plus any injected props."
+    },
+    {
+      "heading": "Common Use Cases",
+      "text": "Authentication: withAuth redirects unauthenticated users to login. Data fetching: withData fetches data and passes it as props. Logging: withLogger logs renders and prop changes. Styling: withStyles injects CSS classes or inline styles. Permission: withPermission checks user roles and conditionally renders. Redux's connect() is a classic HOC that injects state and dispatch as props. React Router's withRouter injects location, match, history."
+    },
+    {
+      "heading": "Composing HOCs",
+      "text": "Multiple HOCs are composed via nesting: withAuth(withLogger(withData(MyComponent))). For better readability, use compose utility (from Redux or lodash): compose(withAuth, withLogger, withData)(MyComponent). The order matters — innermost HOC wraps the base component, outermost HOC is applied last. Each HOC adds a layer of wrapper components in the React devtools tree, which can make debugging harder."
+    },
+    {
+      "heading": "HOC Pitfalls and Best Practices",
+      "text": "(1) Copy static methods: the wrapped component's static methods are lost; use hoist-non-react-statics. (2) Forward refs: refs don't pass through HOCs; use React.forwardRef. (3) Display name: set displayName for debugging — withLogger.displayName = `withLogger(${getDisplayName(WrappedComponent)})`. (4) Don't mutate the original component — return a new wrapper component. (5) Pass unrelated props through via {...props}. (6) Prefer hooks over HOCs for new code — hooks are simpler, more composable, and don't create wrapper nesting."
+    },
+    {
+      "heading": "Migrating from HOCs to Hooks",
+      "text": "The same logic can usually be expressed as a custom hook: function useLogger(props) { useEffect(() => { console.log('Props changed:', props); }); } then used directly: function MyComponent(props) { useLogger(props); return <div>...</div>; }. Hooks avoid wrapper nesting, are easier to type with TypeScript, and don't have the static method/ref forwarding issues. However, HOCs remain useful for cross-cutting concerns in class components and for libraries that need to inject props declaratively."
+    }
+  ],
+  "interviewAnswer": "A Higher-Order Component is a function that takes a component and returns a new component with additional props or behavior. It's a pattern for reusing component logic: withAuth, withLogger, withData. HOCs compose via nesting or compose(). Key considerations: copy static methods, forward refs, set display names, and don't mutate the original. For new code, prefer React hooks over HOCs — hooks are simpler, compose naturally without nesting, and avoid the static method/ref forwarding issues. HOCs remain relevant for class components and library APIs.",
+  "interviewQuestions": [
+    {
+      "question": "What is a Higher-Order Component?",
+      "answer": "A function that takes a component and returns an enhanced component with additional props or behavior. Example: const Enhanced = withHOC(Base)."
+    },
+    {
+      "question": "What are common use cases for HOCs?",
+      "answer": "Authentication (withAuth), data fetching (withData), logging (withLogger), styling (withStyles), permission checks, Redux connect(), React Router withRouter."
+    },
+    {
+      "question": "How do you compose multiple HOCs?",
+      "answer": "Nesting: withAuth(withLogger(MyComponent)). Or using a compose utility: compose(withAuth, withLogger)(MyComponent). The order matters — each adds a wrapper layer."
+    },
+    {
+      "question": "What are the main pitfalls with HOCs?",
+      "answer": "(1) Static methods are lost — use hoist-non-react-statics. (2) Refs don't pass through — use React.forwardRef. (3) Debugging is harder due to wrapper nesting. (4) Display names need manual setting."
+    },
+    {
+      "question": "Why do hooks replace HOCs?",
+      "answer": "Hooks are simpler, compose naturally without nesting, don't require static method copying, work seamlessly with refs, and are easier to type with TypeScript. Custom hooks like useAuth() or useData() replace HOC patterns."
+    },
+    {
+      "question": "How do you handle refs in HOCs?",
+      "answer": "Use React.forwardRef to pass refs through the HOC to the wrapped component: function withLogger(WrappedComponent) { return React.forwardRef((props, ref) => <WrappedComponent ref={ref} {...props} />); }."
+    },
+    {
+      "question": "What is the display name convention for HOCs?",
+      "answer": "Set a custom displayName for debugging: EnhancedComponent.displayName = `withLogger(${getDisplayName(WrappedComponent)})`. Helper: function getDisplayName(WC) { return WC.displayName || WC.name || \"Component\"; }."
+    },
+    {
+      "question": "Can HOCs be used with functional components?",
+      "answer": "Yes. HOCs wrap both class and functional components. However, hooks are preferred for new functional component code as they achieve the same results with less complexity."
+    },
+    {
+      "question": "How does Redux's connect() work as a HOC?",
+      "answer": "connect(mapStateToProps, mapDispatchToProps)(Component) returns an enhanced component that subscribes to the Redux store and injects state and dispatch as props. It handles optimizations like selector memoization and re-render prevention."
+    },
+    {
+      "question": "What is the difference between HOC and Render Props?",
+      "answer": "HOC: function that returns a new component wrapping the input. Render Props: a component that accepts a function prop to render its content. HOCs add wrapper layers, render props don't. Both are superseded by hooks for most use cases."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 650 320\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:650px;\"><defs><marker id=\"hArr\" markerWidth=\"10\" markerHeight=\"7\" refX=\"10\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,10 3.5,0 7\" fill=\"#6c9fff\"/></marker></defs><rect x=\"10\" y=\"10\" width=\"630\" height=\"300\" rx=\"10\" fill=\"var(--bg-card)\" stroke=\"var(--border)\" stroke-width=\"1\"/><text x=\"325\" y=\"38\" fill=\"#e8eaed\" font-size=\"14\" font-weight=\"bold\" text-anchor=\"middle\">Higher-Order Component Pattern</text><rect x=\"40\" y=\"55\" width=\"200\" height=\"40\" rx=\"6\" fill=\"#1a1d28\" stroke=\"#fbbf24\" stroke-width=\"1.5\"/><text x=\"140\" y=\"80\" fill=\"#fbbf24\" font-size=\"12\" font-weight=\"bold\" text-anchor=\"middle\">withAuth(WrappedComponent)</text><line x1=\"140\" y1=\"95\" x2=\"140\" y2=\"125\" stroke=\"#6c9fff\" stroke-width=\"2\" marker-end=\"url(#hArr)\"/><rect x=\"40\" y=\"125\" width=\"200\" height=\"40\" rx=\"6\" fill=\"#1a1d28\" stroke=\"#fbbf24\" stroke-width=\"1.5\"/><text x=\"140\" y=\"150\" fill=\"#fbbf24\" font-size=\"12\" font-weight=\"bold\" text-anchor=\"middle\">withLogger(WrappedComponent)</text><line x1=\"140\" y1=\"165\" x2=\"140\" y2=\"195\" stroke=\"#6c9fff\" stroke-width=\"2\" marker-end=\"url(#hArr)\"/><rect x=\"40\" y=\"195\" width=\"200\" height=\"40\" rx=\"6\" fill=\"#1a1d28\" stroke=\"#34d399\" stroke-width=\"1.5\"/><text x=\"140\" y=\"220\" fill=\"#34d399\" font-size=\"12\" font-weight=\"bold\" text-anchor=\"middle\">WrappedComponent</text><line x1=\"240\" y1=\"215\" x2=\"310\" y2=\"175\" stroke=\"#6c9fff\" stroke-width=\"2\" marker-end=\"url(#hArr)\"/><text x=\"350\" y=\"160\" fill=\"#9aa0b0\" font-size=\"11\" text-anchor=\"middle\">Enhanced props flow</text><text x=\"350\" y=\"175\" fill=\"#9aa0b0\" font-size=\"11\" text-anchor=\"middle\">(original + injected)</text><line x1=\"240\" y1=\"215\" x2=\"310\" y2=\"255\" stroke=\"#f87171\" stroke-width=\"2\" marker-end=\"url(#hArr)\"/><rect x=\"310\" y=\"245\" width=\"250\" height=\"30\" rx=\"6\" fill=\"#1a1d28\" stroke=\"#f87171\" stroke-width=\"1.5\"/><text x=\"435\" y=\"265\" fill=\"#f87171\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">HOC concerns: static methods, refs, displayName</text></svg>",
+  "codeExamples": [
+    {
+      "title": "Simple withLogger HOC",
+      "useCase": "Logging component renders",
+      "code": "function withLogger(WrappedComponent) {\n  function Enhanced(props) {\n    useEffect(() => {\n      console.log(\"Rendered:\", WrappedComponent.name, props);\n    });\n    return <WrappedComponent {...props} />;\n  }\n  Enhanced.displayName = `withLogger(${getDisplayName(WrappedComponent)})`;\n  return Enhanced;\n}\n\nconst LoggedButton = withLogger(Button);",
+      "description": "HOC wraps component, adds logging behavior. displayName helps debugging."
+    },
+    {
+      "title": "withAuth Authentication HOC",
+      "useCase": "Protecting routes",
+      "code": "function withAuth(WrappedComponent) {\n  function Enhanced(props) {\n    const { user, loading } = useAuth();\n    if (loading) return <Spinner />;\n    if (!user) return <Navigate to=\"/login\" />;\n    return <WrappedComponent user={user} {...props} />;\n  }\n  return Enhanced;\n}\n\nconst ProtectedDashboard = withAuth(Dashboard);\n\n// Usage in router:\n<Route path=\"/dashboard\" element={<ProtectedDashboard />} />",
+      "description": "HOC handles authentication logic. Unauthenticated users are redirected."
+    },
+    {
+      "title": "withData Data Fetching HOC",
+      "useCase": "Injecting fetched data as props",
+      "code": "function withData(fetchFn, dataProp = \"data\") {\n  return function(WrappedComponent) {\n    function Enhanced(props) {\n      const [data, setData] = useState(null);\n      const [loading, setLoading] = useState(true);\n      useEffect(() => {\n        setLoading(true);\n        fetchFn(props).then((result) => {\n          setData(result);\n          setLoading(false);\n        });\n      }, []);\n      const injected = { [dataProp]: data, loading };\n      return <WrappedComponent {...props} {...injected} />;\n    }\n    return Enhanced;\n  };\n}\n\nconst UserProfileWithData = withData(fetchUser, \"user\")(UserProfile);",
+      "description": "HOC fetches data and injects it as prop. Configurable: fetch function and prop name."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What does a Higher-Order Component return?",
+      "options": [
+        "A React element",
+        "A new component with enhanced behavior",
+        "A hook",
+        "A context provider"
+      ],
+      "answer": 1,
+      "explanation": "HOC is a function that returns a new component wrapping the input with additional behavior."
+    },
+    {
+      "question": "Why should you copy static methods in HOCs?",
+      "options": [
+        "Better performance",
+        "Static methods are lost when wrapping — use hoist-non-react-statics",
+        "Static methods are automatically inherited",
+        "Static methods are not needed"
+      ],
+      "answer": 1,
+      "explanation": "The wrapper component does not inherit static methods from the wrapped component."
+    },
+    {
+      "question": "How do you handle refs in HOCs?",
+      "options": [
+        "Refs work automatically",
+        "Use React.forwardRef to forward refs through the HOC",
+        "HOCs cannot use refs",
+        "Ignore refs"
+      ],
+      "answer": 1,
+      "explanation": "React.forwardRef allows the HOC to forward refs to the wrapped component."
+    },
+    {
+      "question": "What is the modern alternative to HOCs?",
+      "options": [
+        "Class components",
+        "React hooks",
+        "Render props",
+        "Context API"
+      ],
+      "answer": 1,
+      "explanation": "React hooks are the recommended modern alternative — they are simpler and more composable."
+    },
+    {
+      "question": "How are multiple HOCs composed?",
+      "options": [
+        "Using + operator",
+        "Via nesting or compose() utility",
+        "Using HOC.add() method",
+        "They cannot be composed"
+      ],
+      "answer": 1,
+      "explanation": "HOCs compose via nesting: HOC1(HOC2(Component)) or compose(HOC1, HOC2)(Component)."
+    },
+    {
+      "question": "What naming convention do HOCs follow?",
+      "options": [
+        "Prefix \"hoc\"",
+        "Prefix \"with\" (e.g., withAuth)",
+        "Suffix \"HOC\"",
+        "No convention"
+      ],
+      "answer": 1,
+      "explanation": "HOCs conventionally start with the prefix \"with\" (e.g., withAuth, withLogger, withRouter)."
+    },
+    {
+      "question": "What issue does HOC nesting cause in development?",
+      "options": [
+        "Slower performance",
+        "Deeper component tree in React DevTools, harder debugging",
+        "Larger bundle size",
+        "Cannot use TypeScript"
+      ],
+      "answer": 1,
+      "explanation": "Each HOC adds a wrapper component layer, making the React DevTools tree deeper and harder to debug."
+    }
+  ]
+};

@@ -1,0 +1,209 @@
+export const devops_devsecops = {
+  "id": "devops-devsecops",
+  "title": "DevSecOps",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 20,
+  "tldr": [
+    "DevSecOps integrates security into every phase of the DevOps lifecycle, making security a shared responsibility.",
+    "\"Shift Left on Security\" — security from the start, not bolted on as a final gate.",
+    "Practices: threat modeling, secure coding, SAST, DAST, SCA, container scanning, policy as code.",
+    "Replaces the traditional \"security gate\" model with continuous security validation throughout the pipeline."
+  ],
+  "laymanDefinition": "DevSecOps is like building a house with a security system installed during construction, not after move-in. Security is part of every step: foundation is secure, walls are reinforced, locks are tested before the roof goes on.",
+  "deepDive": [
+    {
+      "heading": "SAST, DAST, SCA",
+      "text": "SAST (Static): analyze source code without execution (SonarQube, CodeQL, Semgrep). DAST (Dynamic): test running app (OWASP ZAP, Burp Suite). SCA (Composition): scan dependencies for CVEs (Snyk, npm audit, Trivy). All integrated into CI/CD."
+    },
+    {
+      "heading": "Policy as Code",
+      "text": "Security policies as machine-readable code. OPA (Open Policy Agent) / Rego. Automated, consistent decisions. Examples: \"containers must not run as root\", \"all APIs must have rate limiting\", \"deployments must have resource limits\". Tested and versioned."
+    },
+    {
+      "heading": "Container Security",
+      "text": "Image scanning for CVEs (Trivy, Clair). Build-time: no root user, minimal base images (distroless). Runtime: Falco (behavioral monitoring), AppArmor. Registry: only signed images. Admission control: Kyverno, OPA."
+    }
+  ],
+  "interviewAnswer": "DevSecOps makes security continuous and automated. Integrate SAST, DAST, SCA in CI/CD. Use policy as code (OPA). Scan containers. Shift security left. Security is everyone's responsibility.",
+  "interviewQuestions": [
+    {
+      "question": "What is DevSecOps?",
+      "answer": "Integrating security into every phase of the DevOps lifecycle as a shared responsibility."
+    },
+    {
+      "question": "What is the difference between SAST and DAST?",
+      "answer": "SAST analyzes source code without execution. DAST tests running applications."
+    },
+    {
+      "question": "What is SCA?",
+      "answer": "Software Composition Analysis — scanning dependencies for known vulnerabilities."
+    },
+    {
+      "question": "What is Policy as Code?",
+      "answer": "Security policies defined as version-controlled, automated code enforced by tools like OPA."
+    },
+    {
+      "question": "DevSecOps — What tools integrate well with this?",
+      "answer": "Integration is possible through APIs, plugins, webhooks, and configuration files."
+    },
+    {
+      "question": "DevSecOps — What are common troubleshooting steps?",
+      "answer": "Troubleshooting involves checking logs, verifying configuration, and testing incrementally."
+    },
+    {
+      "question": "DevSecOps — What security considerations apply here?",
+      "answer": "Security considerations include access control, encryption of sensitive data, and audit logging."
+    },
+    {
+      "question": "DevSecOps — What best practices should be followed?",
+      "answer": "Best practices include version control, automation, monitoring, and thorough documentation."
+    },
+    {
+      "question": "DevSecOps — How does this affect team collaboration?",
+      "answer": "It supports collaboration through shared visibility, standardized processes, and clear workflows."
+    },
+    {
+      "question": "DevSecOps — What metrics indicate successful implementation?",
+      "answer": "Key metrics include adoption rate, error reduction, build times, and team satisfaction scores."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"300\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">DevSecOps</text><rect x=\"10\" y=\"35\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1.5\"/><text x=\"65\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Code</text><text x=\"65\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">SAST + lint</text><rect x=\"10\" y=\"65\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1.5\"/><text x=\"65\" y=\"81\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Dependencies</text><text x=\"65\" y=\"84\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">SCA</text><rect x=\"10\" y=\"95\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1.5\"/><text x=\"65\" y=\"111\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Build</text><text x=\"65\" y=\"114\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Container scan</text><rect x=\"10\" y=\"125\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#dc3545\" stroke=\"#dc3545\" stroke-width=\"1.5\"/><text x=\"65\" y=\"141\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Deploy</text><text x=\"65\" y=\"144\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">OPA policy</text><rect x=\"10\" y=\"155\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#e83e8c\" stroke=\"#e83e8c\" stroke-width=\"1.5\"/><text x=\"65\" y=\"171\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Runtime</text><text x=\"65\" y=\"174\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Falco monitor</text><line x1=\"120\" y1=\"48\" x2=\"150\" y2=\"48\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"120\" y1=\"78\" x2=\"150\" y2=\"78\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"120\" y1=\"108\" x2=\"150\" y2=\"108\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"120\" y1=\"138\" x2=\"150\" y2=\"138\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"120\" y1=\"168\" x2=\"150\" y2=\"168\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"160\" y=\"35\" width=\"220\" height=\"155\" rx=\"5\" fill=\"#dc3545\" stroke=\"#dc3545\" stroke-width=\"1.5\"/><text x=\"270\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">DevSecOps</text><text x=\"270\" y=\"173\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Security in every phase. SAST, DAST, SCA</text><text x=\"270\" y=\"184\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">, container scanning, policy as code.</text><text x=\"240\" y=\"220\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">DevSecOps: Security integrated throughout the pipe</text><text x=\"240\" y=\"232\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">line. Automated, continuous, shared responsibility</text><text x=\"240\" y=\"244\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "Security Scanning in CI",
+      "useCase": "SAST + SCA + container scan.",
+      "code": "name: DevSecOps Pipeline\non: [push, pull_request]\njobs:\n  security:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v3\n      - name: CodeQL Analysis\n        uses: github/codeql-action/analyze@v2\n      - name: Dependency Audit\n        run: npm audit --audit-level=high\n      - name: Snyk Scan\n        uses: snyk/actions/node@master\n      - name: Trivy Scan\n        uses: aquasecurity/trivy-action@master\n        with:\n          image-ref: \"myapp:${{ github.sha }}\"",
+      "description": "CI pipeline integrating SAST, SCA, and container scanning for continuous security."
+    },
+    {
+      "title": "OPA Policy (Rego)",
+      "useCase": "Kubernetes admission policy.",
+      "code": "package kubernetes.admission\ndeny[msg] {\n  input.request.kind.kind == \"Pod\"\n  c := input.request.object.spec.containers[_]\n  not c.securityContext.runAsNonRoot\n  msg := sprintf(\"Container %v must runAsNonRoot\", [c.name])\n}\ndeny[msg] {\n  c := input.request.object.spec.containers[_]\n  not c.resources.limits\n  msg := sprintf(\"Container %v needs resource limits\", [c.name])\n}",
+      "description": "OPA/Rego policies enforcing security rules for Kubernetes admission control."
+    },
+    {
+      "title": "Advanced Configuration",
+      "useCase": "Complex scenario",
+      "code": "# Advanced pattern for complex scenarios\n# Includes error handling",
+      "description": "Advanced configuration example."
+    },
+    {
+      "title": "Integration Pattern",
+      "useCase": "Tool integration",
+      "code": "# Integration with other tools\n# Shows how components connect",
+      "description": "Integration example with related tools."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What is DevSecOps?",
+      "options": [
+        "Separate security team",
+        "Security in every DevOps phase",
+        "Security only at deployment",
+        "Manual review"
+      ],
+      "answer": 1,
+      "explanation": "DevSecOps integrates security into every phase of the DevOps lifecycle."
+    },
+    {
+      "question": "What is SAST vs DAST?",
+      "options": [
+        "SAST=running app; DAST=source",
+        "SAST=source code; DAST=running app",
+        "Same thing",
+        "Both test dependencies"
+      ],
+      "answer": 1,
+      "explanation": "SAST analyzes source code statically; DAST tests the running application dynamically."
+    },
+    {
+      "question": "What is SCA?",
+      "options": [
+        "Static code analysis",
+        "Software Composition Analysis (dependency scanning)",
+        "System audit",
+        "Security audit"
+      ],
+      "answer": 1,
+      "explanation": "SCA scans dependencies for known vulnerabilities. Tools: Snyk, npm audit, Trivy."
+    },
+    {
+      "question": "DevSecOps — What is important for security?",
+      "options": [
+        "Access control and encryption",
+        "Open access",
+        "Shared passwords",
+        "No auditing"
+      ],
+      "answer": 0,
+      "explanation": "Access control and encryption are fundamental security measures."
+    },
+    {
+      "question": "DevSecOps — How to ensure reliability?",
+      "options": [
+        "Automated testing and monitoring",
+        "Manual checks only",
+        "No testing",
+        "Reactive fixes"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing and monitoring ensure consistent reliability."
+    },
+    {
+      "question": "DevSecOps — What helps team collaboration?",
+      "options": [
+        "Shared workflows and visibility",
+        "Isolated work",
+        "No documentation",
+        "Siloed tools"
+      ],
+      "answer": 0,
+      "explanation": "Shared workflows and visibility enable better collaboration."
+    },
+    {
+      "question": "DevSecOps — What reduces errors most?",
+      "options": [
+        "Automation",
+        "Manual processes",
+        "Rushing",
+        "Bypassing reviews"
+      ],
+      "answer": 0,
+      "explanation": "Automation consistently eliminates human errors."
+    },
+    {
+      "question": "DevSecOps — What improves speed?",
+      "options": [
+        "Parallel execution and caching",
+        "Serial execution",
+        "No optimization",
+        "Manual steps"
+      ],
+      "answer": 0,
+      "explanation": "Parallel execution and caching significantly improve speed."
+    },
+    {
+      "question": "DevSecOps — What is key for monitoring?",
+      "options": [
+        "Metrics dashboards and alerts",
+        "No monitoring",
+        "Only error logs",
+        "Manual checks"
+      ],
+      "answer": 0,
+      "explanation": "Metrics dashboards and alerts provide actionable insights."
+    },
+    {
+      "question": "DevSecOps — What ensures quality?",
+      "options": [
+        "Automated testing in pipeline",
+        "No testing",
+        "Only manual QA",
+        "Skipping code review"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing integrated into the pipeline ensures consistent quality."
+    }
+  ]
+};

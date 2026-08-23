@@ -1,0 +1,179 @@
+export const cdn_http_2 = {
+  "id": "cdn-http-2",
+  "title": "HTTP/2",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 20,
+  "tldr": [
+    "HTTP/2 is a major revision of the HTTP protocol that improves performance through multiplexing, header compression, server push, and binary framing.",
+    "Key features: multiplexed streams (multiple requests over single TCP connection), HPACK header compression, server push, stream prioritization, and binary protocol.",
+    "HTTP/2 eliminates head-of-line blocking (where one slow request blocks others) and reduces connection overhead (from 6+ TCP connections to 1).",
+    "CDNs benefit significantly from HTTP/2: multiplexing improves cache fill performance and header compression reduces overhead."
+  ],
+  "laymanDefinition": "HTTP/2 is like upgrading from a single-lane road to a multi-lane highway with a carpool lane. HTTP/1.1 forced you to open 6 separate roads to send 6 cars (requests). HTTP/2 is one wide road where all cars travel simultaneously. It compresses the license plates (headers) so each car is smaller.",
+  "deepDive": [
+    {
+      "heading": "Binary Framing Layer",
+      "text": "HTTP/2 is binary (not text). All communication is broken into frames (HEADERS, DATA, SETTINGS, PRIORITY). Frames from different streams are multiplexed over a single TCP connection. Binary format is more efficient to parse and less error-prone."
+    },
+    {
+      "heading": "Multiplexing and HOL Blocking",
+      "text": "HTTP/1.1: one request per connection, 6-8 parallel connections. If one connection is slow, it blocks the queue. HTTP/2: all requests share one TCP connection. If one stream is slow, other streams continue unaffected."
+    },
+    {
+      "heading": "HPACK Header Compression",
+      "text": "HTTP/1.1 sends headers as plaintext (800 bytes+ per request). HTTP/2 uses HPACK: static table, dynamic table, and Huffman encoding. Typical reduction: 85-90% header size."
+    },
+    {
+      "heading": "Server Push",
+      "text": "Server can proactively send resources before the client requests them. Being deprecated in Chrome. Preload links (<link rel=\"preload\">) are recommended instead."
+    },
+    {
+      "heading": "HTTP/2 and CDNs",
+      "text": "All major CDNs support HTTP/2. CDNs terminate HTTP/2 with clients and may use HTTP/1.1 or HTTP/2 to origin. Benefits: improved cache fill, reduced connection overhead, better mobile performance."
+    }
+  ],
+  "interviewAnswer": "HTTP/2 improves performance through multiplexing, HPACK header compression, and binary framing. It eliminates HTTP/1.1's head-of-line blocking and reduces connection overhead. All major CDNs support HTTP/2.",
+  "interviewQuestions": [
+    {
+      "question": "What is HTTP/2?",
+      "answer": "A major HTTP protocol revision with multiplexing, HPACK compression, and binary framing."
+    },
+    {
+      "question": "What is multiplexing?",
+      "answer": "Multiple request/response streams over a single TCP connection."
+    },
+    {
+      "question": "What is head-of-line blocking?",
+      "answer": "In HTTP/1.1, one slow request on a connection blocks subsequent requests on that connection."
+    },
+    {
+      "question": "What is HPACK?",
+      "answer": "HTTP/2 header compression — reduces header size by 85-90%."
+    },
+    {
+      "question": "What is server push?",
+      "answer": "Server proactively sends resources before the client requests them. Being deprecated."
+    },
+    {
+      "question": "How does HTTP/2 improve CDN performance?",
+      "answer": "Multiplexing speeds up cache fill, reduces connection overhead."
+    },
+    {
+      "question": "Is HTTP/2 binary or text?",
+      "answer": "Binary — all frames are binary, more efficient to parse."
+    },
+    {
+      "question": "How many TCP connections does HTTP/2 use?",
+      "answer": "One connection per origin (vs 6-8 in HTTP/1.1)."
+    },
+    {
+      "question": "Did HTTP/2 change HTTP semantics?",
+      "answer": "No — methods, status codes, headers, and URLs remain the same."
+    },
+    {
+      "question": "What is ALPN?",
+      "answer": "TLS extension that negotiates HTTP/2 during the TLS handshake."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"300\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">HTTP/2</text><rect x=\"10\" y=\"35\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1.5\"/><text x=\"65\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">HTTP/1.1</text><text x=\"65\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">6 connections</text><rect x=\"10\" y=\"65\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1.5\"/><text x=\"65\" y=\"81\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">HTTP/2</text><text x=\"65\" y=\"84\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">1 connection</text><line x1=\"120\" y1=\"48\" x2=\"150\" y2=\"48\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"120\" y1=\"78\" x2=\"150\" y2=\"78\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"160\" y=\"35\" width=\"320\" height=\"55\" rx=\"5\" fill=\"#17a2b8\" stroke=\"#17a2b8\" stroke-width=\"1.5\"/><text x=\"320\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">HTTP/2 Benefits</text><text x=\"320\" y=\"73\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Multiplexing: single TCP connection. HPACK: 85-90% header </text><text x=\"320\" y=\"84\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">compression. Binary framing.</text><rect x=\"160\" y=\"100\" width=\"120\" height=\"25\" rx=\"5\" fill=\"#dc3545\" stroke=\"#dc3545\" stroke-width=\"1.5\"/><text x=\"220\" y=\"116\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Multiplexing</text><text x=\"220\" y=\"119\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">No HOL blocking</text><rect x=\"160\" y=\"130\" width=\"120\" height=\"25\" rx=\"5\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1.5\"/><text x=\"220\" y=\"146\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">HPACK</text><text x=\"220\" y=\"149\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Header compression</text><rect x=\"160\" y=\"160\" width=\"120\" height=\"25\" rx=\"5\" fill=\"#e83e8c\" stroke=\"#e83e8c\" stroke-width=\"1.5\"/><text x=\"220\" y=\"176\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Server Push</text><text x=\"220\" y=\"179\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Proactive push</text><text x=\"240\" y=\"210\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">HTTP/2: Multiplexing, HPACK, binary framing. Singl</text><text x=\"240\" y=\"222\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">e TCP connection per origin.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "HTTP/2 Server Configuration (Nginx)",
+      "useCase": "Enabling HTTP/2 on Nginx.",
+      "code": "server {\n  listen 443 ssl http2;\n  server_name cdn.example.com;\n  ssl_certificate /etc/ssl/certs/example.pem;\n  ssl_certificate_key /etc/ssl/private/example.key;\n  ssl_protocols TLSv1.2 TLSv1.3;\n  ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256;\n  ssl_prefer_server_ciphers on;\n  add_header Strict-Transport-Security \"max-age=63072000\" always;\n  location / { root /var/www; }\n}",
+      "description": "Nginx HTTP/2 configuration with SSL/TLS requirements."
+    },
+    {
+      "title": "Verifying HTTP/2 with Curl",
+      "useCase": "Check HTTP version.",
+      "code": "curl -s -I --http2 https://cdn.example.com/\n# HTTP/2 200\n\ncurl -s -I --http1.1 https://cdn.example.com/\n# HTTP/1.1 200 OK\n\necho \"=== HTTP/2 ===\"\ncurl -w \"Connect: %{time_connect}s TTFB: %{time_starttransfer}s Total: %{time_total}s\\n\" -o /dev/null -s --http2 https://cdn.example.com/\necho \"=== HTTP/1.1 ===\"\ncurl -w \"Connect: %{time_connect}s TTFB: %{time_starttransfer}s Total: %{time_total}s\\n\" -o /dev/null -s --http1.1 https://cdn.example.com/",
+      "description": "Curl commands to verify HTTP/2 support and compare performance."
+    },
+    {
+      "title": "CloudFront HTTP/2 Configuration",
+      "useCase": "Enabling HTTP/2 on CloudFront.",
+      "code": "aws cloudfront get-distribution --id E123456789ABCD --query \"Distribution.DistributionConfig.HttpVersion\"\n# Should be \"http2\" or \"http2and3\"\n\naws cloudfront update-distribution --id E123456789ABCD --http-version http2\n# CloudFront HTTP/2 is enabled by default for new distributions",
+      "description": "AWS CLI commands to check and configure HTTP/2 support on CloudFront."
+    },
+    {
+      "title": "HTTP/2 Multiplexing Visualization",
+      "useCase": "Performance comparison.",
+      "code": "# HTTP/1.1: 100 requests across 6 connections\n# Connection 1: req1 -> req2 -> req3 ... (blocking)\n# Connection 2: req1 -> req2 -> req3 ... (blocking)\n# ... up to 6 connections total\n\n# HTTP/2: 100 requests over 1 connection\n# |--- req1 ---|\n# |--- req2 ---|  (all in parallel)\n# |--- req3 ---|\n# Single TCP connection, multiplexed streams",
+      "description": "Visual comparison of HTTP/1.1 vs HTTP/2 request handling."
+    },
+    {
+      "title": "HTTP/2 Connection Coalescing",
+      "useCase": "Multiple domains sharing one connection.",
+      "code": "# When cdn.example.com and static.example.com\n# resolve to the same CDN edge IP, the browser\n# can reuse the same HTTP/2 connection for both.\n\n# SSL certificate must cover both hostnames:\n# Subject: *.example.com\n\n# Reduces connection overhead by 50-80%",
+      "description": "HTTP/2 connection coalescing allows multiple domains to share one CDN connection."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What is the key advantage of HTTP/2?",
+      "options": [
+        "Encryption by default",
+        "Multiplexing over single connection",
+        "New status codes",
+        "Larger bodies"
+      ],
+      "answer": 1,
+      "explanation": "HTTP/2 multiplexes multiple streams over a single TCP connection."
+    },
+    {
+      "question": "What is HPACK?",
+      "options": [
+        "HTTP/2 header compression",
+        "Hardware packet accelerator",
+        "HTTP toolkit",
+        "Protocol for API calls"
+      ],
+      "answer": 0,
+      "explanation": "HPACK compresses HTTP/2 headers by 85-90%."
+    },
+    {
+      "question": "How many TCP connections does HTTP/2 use?",
+      "options": [
+        "6",
+        "8",
+        "1",
+        "2"
+      ],
+      "answer": 2,
+      "explanation": "HTTP/2 uses one TCP connection per origin."
+    },
+    {
+      "question": "What problem does multiplexing solve?",
+      "options": [
+        "Slow server response",
+        "Head-of-line blocking",
+        "DNS delay",
+        "SSL overhead"
+      ],
+      "answer": 1,
+      "explanation": "Multiplexing eliminates head-of-line blocking."
+    },
+    {
+      "question": "Is HTTP/2 binary or text?",
+      "options": [
+        "Text",
+        "Binary",
+        "Both",
+        "XML"
+      ],
+      "answer": 1,
+      "explanation": "HTTP/2 uses a binary framing layer."
+    },
+    {
+      "question": "What is ALPN?",
+      "options": [
+        "TLS extension for HTTP/2 negotiation",
+        "Compression algorithm",
+        "Cache invalidation",
+        "Load balancing"
+      ],
+      "answer": 0,
+      "explanation": "ALPN negotiates HTTP/2 during the TLS handshake."
+    }
+  ]
+};

@@ -1,0 +1,213 @@
+export const devops_rolling = {
+  "id": "devops-rolling",
+  "title": "Rolling Deployment",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 20,
+  "tldr": [
+    "Rolling deployment gradually replaces instances of the previous version with the new version one by one.",
+    "Unlike Blue-Green (instant switch) or Canary (subset exposure), rolling updates instances incrementally with no additional environment.",
+    "Kubernetes uses rolling updates by default — pods are replaced incrementally with zero downtime.",
+    "Benefits: no additional infrastructure cost, zero-downtime, gradual. Challenge: slow rollback (must roll instance by instance)."
+  ],
+  "laymanDefinition": "Rolling deployment is like changing tires on a moving car. You replace one tire at a time while the car keeps driving. At any moment, most tires are the old ones, but gradually all become new. If the new tires vibrate, you must replace them back one at a time.",
+  "deepDive": [
+    {
+      "heading": "Kubernetes Rolling Update",
+      "text": "Default deployment strategy. Parameters: maxSurge (extra pods above desired), maxUnavailable (pods that can be down during update). Example: maxSurge=25%, maxUnavailable=25%. New ReplicaSet created. Old scaled down, new scaled up incrementally."
+    },
+    {
+      "heading": "Rolling Update Process",
+      "text": "1. New ReplicaSet created with 0 replicas. 2. Old ReplicaSet scaled down by maxUnavailable. 3. New ReplicaSet scaled up by maxSurge. 4. Repeat until all pods are on new version. 5. Old ReplicaSet scaled to 0. Progress monitored via kubectl rollout status."
+    },
+    {
+      "heading": "Rolling vs Blue-Green vs Canary",
+      "text": "Rolling: incremental instance replacement, no extra cost, slow rollback. Blue-Green: two full environments, instant rollback, double cost. Canary: traffic-based percentage, sophisticated routing, auto-rollback on metrics."
+    },
+    {
+      "heading": "Rollback",
+      "text": "kubectl rollout undo deployment/myapp. Reverses the rolling update instance by instance. Slower than Blue-Green rollback. Can specify --to-revision for specific version. History kept (default: 10 revisions)."
+    }
+  ],
+  "interviewAnswer": "Rolling deployment is the default Kubernetes strategy. Zero extra cost, zero downtime, but slow rollback. Best for: stateless services, when you don't need instant rollback. Configure maxSurge/maxUnavailable based on capacity requirements.",
+  "interviewQuestions": [
+    {
+      "question": "What is Rolling deployment?",
+      "answer": "Gradually replacing instances of the old version with the new version one by one."
+    },
+    {
+      "question": "What is the main benefit of Rolling?",
+      "answer": "No additional infrastructure cost — uses the same number of instances, just incrementally updated."
+    },
+    {
+      "question": "What is the main disadvantage?",
+      "answer": "Slow rollback — must reverse the update instance by instance."
+    },
+    {
+      "question": "What is maxSurge in Kubernetes?",
+      "answer": "Maximum number of extra pods that can be created above the desired count during a rolling update."
+    },
+    {
+      "question": "What is maxUnavailable?",
+      "answer": "Maximum number of pods that can be unavailable during a rolling update."
+    },
+    {
+      "question": "How do you rollback a rolling update?",
+      "answer": "kubectl rollout undo deployment/myapp."
+    },
+    {
+      "question": "Rolling Deployment — What security considerations apply here?",
+      "answer": "Security considerations include access control, encryption of sensitive data, and audit logging."
+    },
+    {
+      "question": "Rolling Deployment — What best practices should be followed?",
+      "answer": "Best practices include version control, automation, monitoring, and thorough documentation."
+    },
+    {
+      "question": "Rolling Deployment — How does this affect team collaboration?",
+      "answer": "It supports collaboration through shared visibility, standardized processes, and clear workflows."
+    },
+    {
+      "question": "Rolling Deployment — What metrics indicate successful implementation?",
+      "answer": "Key metrics include adoption rate, error reduction, build times, and team satisfaction scores."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"300\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">Rolling Deployment</text><rect x=\"10\" y=\"35\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1.5\"/><text x=\"65\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">v1 (old)</text><text x=\"65\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">5 running pods</text><rect x=\"10\" y=\"65\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1.5\"/><text x=\"65\" y=\"81\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">v2 (new)</text><text x=\"65\" y=\"84\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">0 pods</text><rect x=\"10\" y=\"95\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1.5\"/><text x=\"65\" y=\"111\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Rolling</text><text x=\"65\" y=\"114\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Replace 1 by 1</text><line x1=\"120\" y1=\"75\" x2=\"150\" y2=\"75\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"120\" y1=\"108\" x2=\"150\" y2=\"108\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"160\" y=\"35\" width=\"150\" height=\"25\" rx=\"5\" fill=\"#dc3545\" stroke=\"#dc3545\" stroke-width=\"1.5\"/><text x=\"235\" y=\"53\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Step 1: +1 v2 pod (maxSurge)</text><rect x=\"160\" y=\"65\" width=\"150\" height=\"25\" rx=\"5\" fill=\"#e83e8c\" stroke=\"#e83e8c\" stroke-width=\"1.5\"/><text x=\"235\" y=\"83\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Step 2: -1 v1 pod (maxUnavail)</text><rect x=\"160\" y=\"95\" width=\"150\" height=\"25\" rx=\"5\" fill=\"#6610f2\" stroke=\"#6610f2\" stroke-width=\"1.5\"/><text x=\"235\" y=\"113\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Step 3: Repeat until all v2</text><rect x=\"10\" y=\"130\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#17a2b8\" stroke=\"#17a2b8\" stroke-width=\"1.5\"/><text x=\"65\" y=\"146\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Rollback</text><text x=\"65\" y=\"138\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">undo instance by ins</text><text x=\"65\" y=\"149\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">tance</text><rect x=\"320\" y=\"35\" width=\"160\" height=\"130\" rx=\"5\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1.5\"/><text x=\"400\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Rolling Update</text><text x=\"400\" y=\"137\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Incremental pod replacement. </text><text x=\"400\" y=\"148\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Zero extra cost. Zero downtim</text><text x=\"400\" y=\"159\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">e. Slow rollback.</text><text x=\"240\" y=\"200\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">Rolling: Replace instances incrementally. Default </text><text x=\"240\" y=\"212\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">in Kubernetes. Zero extra cost, zero downtime.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "Kubernetes Rolling Update Config",
+      "useCase": "Rolling update parameters.",
+      "code": "apiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: myapp\nspec:\n  replicas: 5\n  strategy:\n    type: RollingUpdate\n    rollingUpdate:\n      maxSurge: 1\n      maxUnavailable: 0\n  selector:\n    matchLabels:\n      app: myapp\n  template:\n    metadata:\n      labels:\n        app: myapp\n    spec:\n      containers:\n        - name: app\n          image: myapp:2.0.0",
+      "description": "Kubernetes deployment with RollingUpdate strategy. maxSurge=1 creates one extra pod at a time."
+    },
+    {
+      "title": "Rolling Update Commands",
+      "useCase": "Manage rolling updates.",
+      "code": "# Trigger rolling update (update image)\nkubectl set image deployment/myapp\n  app=myapp:2.0.0\n\n# Check rollout status\nkubectl rollout status deployment/myapp\n\n# Pause rollout\nkubectl rollout pause deployment/myapp\n\n# Resume rollout\nkubectl rollout resume deployment/myapp\n\n# Rollback to previous version\nkubectl rollout undo deployment/myapp\n\n# Rollback to specific revision\nkubectl rollout undo deployment/myapp\n  --to-revision=2\n\n# View rollout history\nkubectl rollout history deployment/myapp",
+      "description": "Commands for managing rolling updates: trigger, monitor, pause, resume, and rollback."
+    },
+    {
+      "title": "Advanced Configuration",
+      "useCase": "Complex scenario",
+      "code": "# Advanced pattern for complex scenarios\n# Includes error handling",
+      "description": "Advanced configuration example."
+    },
+    {
+      "title": "Integration Pattern",
+      "useCase": "Tool integration",
+      "code": "# Integration with other tools\n# Shows how components connect",
+      "description": "Integration example with related tools."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What is the main benefit of Rolling deployment?",
+      "options": [
+        "Instant rollback",
+        "No additional infrastructure cost",
+        "Double environment",
+        "Traffic routing"
+      ],
+      "answer": 1,
+      "explanation": "Rolling deployment uses the same number of instances, just updated incrementally — no extra cost."
+    },
+    {
+      "question": "What is the main disadvantage?",
+      "options": [
+        "Higher cost",
+        "Slow rollback",
+        "Downtime",
+        "Complex setup"
+      ],
+      "answer": 1,
+      "explanation": "Rollback is slow — must reverse the update instance by instance, unlike Blue-Green\\'s instant switch."
+    },
+    {
+      "question": "What Kubernetes parameter controls extra pods?",
+      "options": [
+        "maxUnavailable",
+        "maxSurge",
+        "replicas",
+        "minReadySeconds"
+      ],
+      "answer": 1,
+      "explanation": "maxSurge controls how many extra pods can be created above the desired count during rolling update."
+    },
+    {
+      "question": "Rolling Deployment — What is important for security?",
+      "options": [
+        "Access control and encryption",
+        "Open access",
+        "Shared passwords",
+        "No auditing"
+      ],
+      "answer": 0,
+      "explanation": "Access control and encryption are fundamental security measures."
+    },
+    {
+      "question": "Rolling Deployment — How to ensure reliability?",
+      "options": [
+        "Automated testing and monitoring",
+        "Manual checks only",
+        "No testing",
+        "Reactive fixes"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing and monitoring ensure consistent reliability."
+    },
+    {
+      "question": "Rolling Deployment — What helps team collaboration?",
+      "options": [
+        "Shared workflows and visibility",
+        "Isolated work",
+        "No documentation",
+        "Siloed tools"
+      ],
+      "answer": 0,
+      "explanation": "Shared workflows and visibility enable better collaboration."
+    },
+    {
+      "question": "Rolling Deployment — What reduces errors most?",
+      "options": [
+        "Automation",
+        "Manual processes",
+        "Rushing",
+        "Bypassing reviews"
+      ],
+      "answer": 0,
+      "explanation": "Automation consistently eliminates human errors."
+    },
+    {
+      "question": "Rolling Deployment — What improves speed?",
+      "options": [
+        "Parallel execution and caching",
+        "Serial execution",
+        "No optimization",
+        "Manual steps"
+      ],
+      "answer": 0,
+      "explanation": "Parallel execution and caching significantly improve speed."
+    },
+    {
+      "question": "Rolling Deployment — What is key for monitoring?",
+      "options": [
+        "Metrics dashboards and alerts",
+        "No monitoring",
+        "Only error logs",
+        "Manual checks"
+      ],
+      "answer": 0,
+      "explanation": "Metrics dashboards and alerts provide actionable insights."
+    },
+    {
+      "question": "Rolling Deployment — What ensures quality?",
+      "options": [
+        "Automated testing in pipeline",
+        "No testing",
+        "Only manual QA",
+        "Skipping code review"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing integrated into the pipeline ensures consistent quality."
+    }
+  ]
+};

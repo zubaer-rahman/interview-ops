@@ -1,0 +1,149 @@
+export const react_lifting_state_up = {
+  "id": "react-lifting-state-up",
+  "title": "React Lifting State Up",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 20,
+  "tldr": [
+    "Lifting state up means moving shared state to the nearest common ancestor component.",
+    "Multiple sibling components that need the same data should get it from a shared parent.",
+    "The parent owns the state and passes it down via props, along with callback functions to modify it.",
+    "This follows React's unidirectional data flow and keeps components predictable."
+  ],
+  "laymanDefinition": "Imagine three kids sharing a single toy. Instead of giving each kid their own toy (duplicating state), you put one toy in the living room (parent component) and all kids come to the living room to play with it. The living room (parent) controls who can play with it and when - this is lifting state up.",
+  "deepDive": [
+    {
+      "heading": "The Problem: Sibling Communication",
+      "text": "Siblings cannot directly share state. React data flows down (props). If two siblings need to sync, the state must live in a common parent, not in either sibling."
+    },
+    {
+      "heading": "How Lifting Works",
+      "text": "1. Identify the common ancestor of components that need shared data. 2. Move state to that ancestor. 3. Pass state down as props. 4. Pass callbacks down for children to update the shared state."
+    },
+    {
+      "heading": "Example: Two Dependent Inputs",
+      "text": "A Celsius and Fahrenheit converter. Both inputs need to show the same temperature. State (temperature in Celsius) lives in the parent. Each input receives value as prop and calls onChange callback. Parent converts between units."
+    },
+    {
+      "heading": "When Not to Lift",
+      "text": "Lifting too high can cause unnecessary re-renders. Use Context or state management for deeply shared global state. Only lift to the nearest common ancestor, not all the way to the root."
+    }
+  ],
+  "interviewAnswer": "Lifting state up is moving state to the nearest common ancestor of components that need to share it. The ancestor owns the state and passes it down via props. Children communicate changes via callback props. This keeps data flow predictable and components reusable. For deeply nested or global state, prefer Context API or state management.",
+  "interviewQuestions": [
+    {
+      "question": "What is lifting state up?",
+      "answer": "Moving shared state to the nearest common ancestor of components that need it."
+    },
+    {
+      "question": "Why lift state up instead of duplicating?",
+      "answer": "Duplicating causes sync issues. One source of truth in the parent ensures consistency."
+    },
+    {
+      "question": "How do children update lifted state?",
+      "answer": "The parent passes down callback functions. Children call them with new values."
+    },
+    {
+      "question": "What is the common ancestor?",
+      "answer": "The first parent component that is an ancestor of all components needing the shared state."
+    },
+    {
+      "question": "When should you NOT lift state up?",
+      "answer": "When state is global or deeply nested - use Context API or Redux instead."
+    },
+    {
+      "question": "Does lifting state up cause performance issues?",
+      "answer": "Can cause unnecessary re-renders if lifted too high. Use React.memo and useMemo to optimize."
+    },
+    {
+      "question": "How does lifting affect component reusability?",
+      "answer": "Components become more reusable - they receive data via props and don't depend on sibling state."
+    },
+    {
+      "question": "What's the alternative to lifting?",
+      "answer": "Context API for shared state without prop drilling. Redux/Zustand for complex global state."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 700 380\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:700px;\"><defs><marker id=\"arrL\" markerWidth=\"10\" markerHeight=\"7\" refX=\"10\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,10 3.5,0 7\" fill=\"#6c9fff\"/></marker><marker id=\"arrLU\" markerWidth=\"10\" markerHeight=\"7\" refX=\"0\" refY=\"3.5\" orient=\"auto\"><polygon points=\"10 0,0 3.5,10 7\" fill=\"#f87171\"/></marker></defs><rect x=\"10\" y=\"10\" width=\"680\" height=\"360\" rx=\"10\" fill=\"var(--bg-card)\" stroke=\"var(--border)\" stroke-width=\"1\"/><text x=\"350\" y=\"38\" fill=\"#e8eaed\" font-size=\"14\" font-weight=\"bold\" text-anchor=\"middle\">Lifting State Up</text><rect x=\"180\" y=\"55\" width=\"340\" height=\"60\" rx=\"6\" fill=\"#1a1d28\" stroke=\"#34d399\" stroke-width=\"2\"/><text x=\"350\" y=\"78\" fill=\"#34d399\" font-size=\"13\" font-weight=\"bold\" text-anchor=\"middle\">Parent (Common Ancestor)</text><text x=\"350\" y=\"95\" fill=\"#9aa0b0\" font-size=\"10\" text-anchor=\"middle\">Owns the state: const [value, setValue] = useState('')</text><line x1=\"220\" y1=\"115\" x2=\"120\" y2=\"155\" stroke=\"#6c9fff\" stroke-width=\"2\" marker-end=\"url(#arrL)\"/><line x1=\"480\" y1=\"115\" x2=\"580\" y2=\"155\" stroke=\"#6c9fff\" stroke-width=\"2\" marker-end=\"url(#arrL)\"/><rect x=\"30\" y=\"155\" width=\"240\" height=\"80\" rx=\"6\" fill=\"#1a1d28\" stroke=\"#fbbf24\" stroke-width=\"1.5\"/><text x=\"150\" y=\"178\" fill=\"#fbbf24\" font-size=\"12\" font-weight=\"bold\" text-anchor=\"middle\">Sibling A</text><rect x=\"45\" y=\"192\" width=\"210\" height=\"30\" rx=\"3\" fill=\"#2a2f45\"/><text x=\"150\" y=\"211\" fill=\"#e8eaed\" font-family=\"monospace\" font-size=\"10\" text-anchor=\"middle\">Receives value and onValueChange</text><rect x=\"430\" y=\"155\" width=\"240\" height=\"80\" rx=\"6\" fill=\"#1a1d28\" stroke=\"#fbbf24\" stroke-width=\"1.5\"/><text x=\"550\" y=\"178\" fill=\"#fbbf24\" font-size=\"12\" font-weight=\"bold\" text-anchor=\"middle\">Sibling B</text><rect x=\"445\" y=\"192\" width=\"210\" height=\"30\" rx=\"3\" fill=\"#2a2f45\"/><text x=\"550\" y=\"211\" fill=\"#e8eaed\" font-family=\"monospace\" font-size=\"10\" text-anchor=\"middle\">Displays value, can trigger change</text><line x1=\"150\" y1=\"235\" x2=\"350\" y2=\"280\" stroke=\"#f87171\" stroke-width=\"1.5\" marker-end=\"url(#arrLU)\"/><line x1=\"550\" y1=\"235\" x2=\"350\" y2=\"280\" stroke=\"#f87171\" stroke-width=\"1.5\" marker-end=\"url(#arrLU)\"/><rect x=\"100\" y=\"280\" width=\"500\" height=\"50\" rx=\"6\" fill=\"#1a1d28\" stroke=\"#f87171\" stroke-width=\"1.5\"/><text x=\"350\" y=\"303\" fill=\"#f87171\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">Callbacks Flow Up: siblings call onValueChange(newValue)</text></svg>",
+  "codeExamples": [
+    {
+      "title": "Temperature Converter (Lifted State)",
+      "useCase": "Sibling sync",
+      "code": "function TemperatureConverter() {\n  const [celsius, setCelsius] = useState(0);\n\n  return (\n    <div>\n      <CelsiusInput value={celsius} onChange={setCelsius} />\n      <FahrenheitDisplay celsius={celsius} />\n    </div>\n  );\n}\nfunction CelsiusInput({ value, onChange }) {\n  return (\n    <input type=\"number\" value={value}\n      onChange={e => onChange(Number(e.target.value))} />\n  );\n}\nfunction FahrenheitDisplay({ celsius }) {\n  const f = (celsius * 9/5) + 32;\n  return <p>{celsius}C = {f}F</p>;\n}",
+      "description": "State (celsius) lifted to TemperatureConverter. Both children receive data via props. Input component sends changes via callback."
+    },
+    {
+      "title": "Seat Selector Example",
+      "useCase": "Coordinated UI state",
+      "code": "function MovieApp() {\n  const [selectedSeat, setSelectedSeat] = useState(null);\n  return (\n    <div>\n      <SeatGrid selected={selectedSeat} onSelect={setSelectedSeat} />\n      <BookingPanel selected={selectedSeat} />\n    </div>\n  );\n}",
+      "description": "selectedSeat state lives in MovieApp. SeatGrid displays and updates selection. BookingPanel reads the selection. Both sync via lifted state."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What is lifting state up?",
+      "options": [
+        "Adding more state",
+        "Moving state to common ancestor",
+        "Removing state",
+        "Duplicating state"
+      ],
+      "answer": 1,
+      "explanation": "State moves to nearest shared ancestor."
+    },
+    {
+      "question": "Why lift state instead of duplicating?",
+      "options": [
+        "Duplicating causes sync issues",
+        "It's faster",
+        "Less code",
+        "Easier styling"
+      ],
+      "answer": 0,
+      "explanation": "Single source of truth in parent."
+    },
+    {
+      "question": "How do children update lifted state?",
+      "options": [
+        "Directly modify state",
+        "Via callback props",
+        "Using global variables",
+        "Through refs"
+      ],
+      "answer": 1,
+      "explanation": "Children call callback functions from props."
+    },
+    {
+      "question": "What is the common ancestor?",
+      "options": [
+        "The app root",
+        "Nearest ancestor of all needing state",
+        "Any parent",
+        "The child itself"
+      ],
+      "answer": 1,
+      "explanation": "Nearest common ancestor of sibling components."
+    },
+    {
+      "question": "When use Context instead of lifting?",
+      "options": [
+        "Always",
+        "For deeply nested global state",
+        "Never",
+        "Only in classes"
+      ],
+      "answer": 1,
+      "explanation": "Context for deeply shared state avoids excessive lifting."
+    },
+    {
+      "question": "Does lifting improve reusability?",
+      "options": [
+        "Yes, components are prop-driven",
+        "No, makes them less reusable",
+        "No effect",
+        "Depends"
+      ],
+      "answer": 0,
+      "explanation": "Components become more reusable with props."
+    }
+  ]
+};

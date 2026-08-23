@@ -1,0 +1,179 @@
+export const mongodb_text_index = {
+  "id": "mongodb-text-index",
+  "title": "Text Index",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 25,
+  "tldr": [
+    "Text indexes support full-text search on string content with stemming and relevance scoring.",
+    "Can cover multiple fields with different weights. Uses $text operator.",
+    "Supports word/phrase search, exclusion, and relevance sorting via textScore $meta.",
+    "One text index per collection, covering multiple fields."
+  ],
+  "laymanDefinition": "A text index is like a search engine for your collection. It breaks text into words, handles word forms (running/ran), and ranks results by relevance.",
+  "deepDive": [
+    {
+      "heading": "Creating Text Indexes",
+      "text": "Single: createIndex({ content: \"text\" }). Multi-field with weights: createIndex({ title: \"text\", body: \"text\" }, { weights: { title: 10, body: 5 } })."
+    },
+    {
+      "heading": "$text Operator",
+      "text": "{ $text: { $search: \"keywords\" } } for words. $search: \"\"exact phrase\"\" for phrases. Minus prefix excludes. Multiple words = OR."
+    },
+    {
+      "heading": "Relevance Scoring",
+      "text": "Text score via $meta: { score: { $meta: \"textScore\" } }. Sort by textScore for relevance ranking."
+    },
+    {
+      "heading": "Language Support",
+      "text": "Multiple languages with stemming and stop words. Default: english. Set default_language: \"none\" for no stemming."
+    },
+    {
+      "heading": "Limitations",
+      "text": "One text index per collection. No CJK without plugins. Not for large-scale search (use Elasticsearch)."
+    }
+  ],
+  "interviewAnswer": "Text indexes bring basic search to MongoDB. Not as powerful as dedicated search engines but handles common scenarios well.",
+  "interviewQuestions": [
+    {
+      "question": "What is a text index?",
+      "answer": "Full-text search index on string fields. Word/phrase matching with stemming and relevance."
+    },
+    {
+      "question": "How to create?",
+      "answer": "createIndex({ field: \"text\" }). Multi-field with weights: createIndex({ title: \"text\", body: \"text\" }, { weights: { title: 10 } })."
+    },
+    {
+      "question": "How to search?",
+      "answer": "find({ $text: { $search: \"keywords\" } }). Phrase: \"\"exact phrase\"\". Exclude with -."
+    },
+    {
+      "question": "How to sort by relevance?",
+      "answer": "Project { score: { $meta: \"textScore\" } }, sort by it."
+    },
+    {
+      "question": "How many text indexes?",
+      "answer": "At most one per collection. Can cover multiple fields."
+    },
+    {
+      "question": "What languages?",
+      "answer": "Multiple with stemming and stop words. Default english."
+    },
+    {
+      "question": "What are weights?",
+      "answer": "Field importance. title: 10 means 10x more important than default (1)."
+    },
+    {
+      "question": "How does stemming work?",
+      "answer": "Words reduced to root form. \"running\", \"ran\", \"runs\" all match \"run\"."
+    },
+    {
+      "question": "What are stop words?",
+      "answer": "Common words (the, a, is) ignored in text search."
+    },
+    {
+      "question": "When to use dedicated search?",
+      "answer": "Production search at scale, faceted search, autocomplete, CJK support. Use Elasticsearch or Atlas Search."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"300\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">Text Index</text><rect x=\"10\" y=\"40\" width=\"140\" height=\"30\" rx=\"5\" fill=\"#47A248\" stroke=\"#47A248\" stroke-width=\"1.5\"/><text x=\"80\" y=\"56\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Text Index</text><text x=\"80\" y=\"64\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">{ title: \"text\" }</text><line x1=\"150\" y1=\"55\" x2=\"180\" y2=\"55\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"190\" y=\"40\" width=\"140\" height=\"35\" rx=\"5\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1.5\"/><text x=\"260\" y=\"56\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Tokenization</text><text x=\"260\" y=\"69\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Split words</text><line x1=\"190\" y1=\"75\" x2=\"190\" y2=\"95\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"190\" y=\"95\" width=\"140\" height=\"35\" rx=\"5\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1.5\"/><text x=\"260\" y=\"111\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Stemming</text><text x=\"260\" y=\"124\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">run/running</text><line x1=\"330\" y1=\"78\" x2=\"370\" y2=\"78\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"380\" y=\"65\" width=\"100\" height=\"30\" rx=\"5\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1.5\"/><text x=\"430\" y=\"81\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">$search</text><text x=\"430\" y=\"89\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Find matches</text><text x=\"240\" y=\"170\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">Text Index: Full-text search with stemming, weight</text><text x=\"240\" y=\"182\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">s, scoring.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "Create Text Index",
+      "useCase": "Multi-field with weights.",
+      "code": "db.collection('articles').createIndex({ title: \"text\", body: \"text\" }, { weights: { title: 10, body: 3 } });",
+      "description": "Text index with higher weight on title."
+    },
+    {
+      "title": "Basic Search",
+      "useCase": "Find articles about MongoDB.",
+      "code": "await db.collection('articles').find({ $text: { $search: \"mongodb aggregation\" } }).toArray();",
+      "description": "Finds articles with mongodb OR aggregation."
+    },
+    {
+      "title": "Phrase Search",
+      "useCase": "Exact phrase.",
+      "code": "await db.collection('articles').find({ $text: { $search: \"\"data modeling\" mongodb\" } }).toArray();",
+      "description": "Articles with \"data modeling\" AND mongodb."
+    },
+    {
+      "title": "Sort by Relevance",
+      "useCase": "Best matches first.",
+      "code": "await db.collection('articles').find({ $text: { $search: \"performance\" } }, { score: { $meta: \"textScore\" } }).sort({ score: { $meta: \"textScore\" } }).toArray();",
+      "description": "Sorted by relevance score, highest first."
+    },
+    {
+      "title": "Exclude Words",
+      "useCase": "Search without term.",
+      "code": "await db.collection('articles').find({ $text: { $search: \"mongodb -aggregation\" } }).toArray();",
+      "description": "Articles with mongodb but not aggregation."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What does a text index enable?",
+      "options": [
+        "String compare",
+        "Full-text search",
+        "Field validation",
+        "Encryption"
+      ],
+      "answer": 1,
+      "explanation": "Full-text search with stemming."
+    },
+    {
+      "question": "How many text indexes per collection?",
+      "options": [
+        "Unlimited",
+        "One",
+        "Two",
+        "Depends"
+      ],
+      "answer": 1,
+      "explanation": "At most one text index per collection."
+    },
+    {
+      "question": "$text operator for?",
+      "options": [
+        "Search",
+        "Text replacement",
+        "Text validation",
+        "Encryption"
+      ],
+      "answer": 0,
+      "explanation": "$text performs text searches."
+    },
+    {
+      "question": "Which field gives relevance?",
+      "options": [
+        "textScore",
+        "relevance",
+        "score",
+        "rank"
+      ],
+      "answer": 0,
+      "explanation": "textScore via $meta."
+    },
+    {
+      "question": "Weight 10 means?",
+      "options": [
+        "Ignored",
+        "10x more important",
+        "Excluded",
+        "Limited to 10"
+      ],
+      "answer": 1,
+      "explanation": "10x more important than default."
+    },
+    {
+      "question": "What are stop words?",
+      "options": [
+        "Common ignored words",
+        "Search limits",
+        "Index terminations",
+        "Weight multipliers"
+      ],
+      "answer": 0,
+      "explanation": "Common words (the, a, is) ignored."
+    }
+  ]
+};

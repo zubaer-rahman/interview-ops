@@ -1,0 +1,209 @@
+export const git_basics = {
+  "id": "git-basics",
+  "title": "Git Basics",
+  "difficulty": "beginner",
+  "estimatedMinutes": 15,
+  "tldr": [
+    "Git is a distributed version control system (DVCS) created by Linus Torvalds in 2005.",
+    "Every developer has a complete copy of the entire repository history (distributed).",
+    "Key concepts: repository, commit, branch, merge, remote, staging area, working directory.",
+    "Git tracks content by SHA-1 hash, not filenames."
+  ],
+  "laymanDefinition": "Git is a time machine for your code. Every commit takes a photo of your project. You can go back to any photo, create alternate timelines (branches), and merge them together. Everyone has a complete copy of the photo album.",
+  "deepDive": [
+    {
+      "heading": "Distributed vs Centralized",
+      "text": "Centralized (SVN): single server with all history, network required for most operations. Distributed (Git): every clone has complete history, most operations are local (fast, offline)."
+    },
+    {
+      "heading": "The Three Trees",
+      "text": "Working Directory: editable files. Staging Area (index): files staged for next commit. Repository (.git): committed history. Workflow: edit → git add → git commit."
+    },
+    {
+      "heading": "Git Object Types",
+      "text": "Blob: file content. Tree: directory listing. Commit: snapshot (points to tree, has parent, author, message). Tag: named pointer to commit. All identified by SHA-1 hash."
+    }
+  ],
+  "interviewAnswer": "Git is a distributed VCS where every clone is a full backup. Understand the three trees: working directory, staging, repository. Content-addressed by SHA-1 hashes.",
+  "interviewQuestions": [
+    {
+      "question": "What is Git?",
+      "answer": "A distributed version control system created by Linus Torvalds for tracking source code changes."
+    },
+    {
+      "question": "What are the three trees of Git?",
+      "answer": "Working Directory (editable), Staging Area (index), Repository (committed history)."
+    },
+    {
+      "question": "How is Git different from SVN?",
+      "answer": "Git is distributed (full history locally). SVN is centralized (server required, latest version only)."
+    },
+    {
+      "question": "Git Basics — How do you get started with this concept?",
+      "answer": "Getting started involves understanding the basics, setting up a proof of concept, and iterating."
+    },
+    {
+      "question": "Git Basics — What tools integrate well with this?",
+      "answer": "Integration is possible through APIs, plugins, webhooks, and configuration files."
+    },
+    {
+      "question": "Git Basics — What are common troubleshooting steps?",
+      "answer": "Troubleshooting involves checking logs, verifying configuration, and testing incrementally."
+    },
+    {
+      "question": "Git Basics — What security considerations apply here?",
+      "answer": "Security considerations include access control, encryption of sensitive data, and audit logging."
+    },
+    {
+      "question": "Git Basics — What best practices should be followed?",
+      "answer": "Best practices include version control, automation, monitoring, and thorough documentation."
+    },
+    {
+      "question": "Git Basics — How does this affect team collaboration?",
+      "answer": "It supports collaboration through shared visibility, standardized processes, and clear workflows."
+    },
+    {
+      "question": "Git Basics — What metrics indicate successful implementation?",
+      "answer": "Key metrics include adoption rate, error reduction, build times, and team satisfaction scores."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"300\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">Git Basics</text><rect x=\"10\" y=\"35\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1.5\"/><text x=\"65\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Working Dir</text><text x=\"65\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Editable files</text><line x1=\"120\" y1=\"48\" x2=\"150\" y2=\"48\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"160\" y=\"35\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1.5\"/><text x=\"215\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Staging Area</text><text x=\"215\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">git add</text><line x1=\"270\" y1=\"48\" x2=\"290\" y2=\"48\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"300\" y=\"35\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1.5\"/><text x=\"355\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Repository</text><text x=\"355\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">git commit</text><rect x=\"10\" y=\"70\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#dc3545\" stroke=\"#dc3545\" stroke-width=\"1.5\"/><text x=\"65\" y=\"86\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Remote</text><text x=\"65\" y=\"89\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">GitHub/GitLab</text><rect x=\"10\" y=\"100\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#e83e8c\" stroke=\"#e83e8c\" stroke-width=\"1.5\"/><text x=\"65\" y=\"116\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Branch</text><text x=\"65\" y=\"119\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Alternate timeline</text><rect x=\"10\" y=\"130\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#6610f2\" stroke=\"#6610f2\" stroke-width=\"1.5\"/><text x=\"65\" y=\"146\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Merge</text><text x=\"65\" y=\"149\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Combine branches</text><rect x=\"10\" y=\"160\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#17a2b8\" stroke=\"#17a2b8\" stroke-width=\"1.5\"/><text x=\"65\" y=\"176\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">SHA-1</text><text x=\"65\" y=\"179\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Content hash</text><text x=\"240\" y=\"210\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">Git: Distributed version control. Every clone is a</text><text x=\"240\" y=\"222\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\"> full backup. Offline-capable.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "Git Configuration",
+      "useCase": "First-time setup.",
+      "code": "git config --global user.name \"Your Name\"\ngit config --global user.email \"your@email.com\"\ngit config --global init.defaultBranch main",
+      "description": "Global Git configuration."
+    },
+    {
+      "title": "Basic Workflow",
+      "useCase": "Edit → Stage → Commit.",
+      "code": "git init\ngit add .\ngit commit -m \"Initial commit\"\ngit log --oneline",
+      "description": "Basic Git workflow."
+    },
+    {
+      "title": "Advanced Configuration",
+      "useCase": "Complex scenario",
+      "code": "# Advanced pattern for complex scenarios\n# Includes error handling",
+      "description": "Advanced configuration example."
+    },
+    {
+      "title": "Integration Pattern",
+      "useCase": "Tool integration",
+      "code": "# Integration with other tools\n# Shows how components connect",
+      "description": "Integration example with related tools."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What is the key Git difference from SVN?",
+      "options": [
+        "Git is faster",
+        "Git is distributed, SVN is centralized",
+        "Git is newer",
+        "SVN is open source"
+      ],
+      "answer": 1,
+      "explanation": "Git is distributed (full history locally); SVN is centralized (server required)."
+    },
+    {
+      "question": "What are the three trees?",
+      "options": [
+        "Local, Remote, Staging",
+        "Working, Staging, Repository",
+        "Branch, Merge, Tag",
+        "Commit, Push, Pull"
+      ],
+      "answer": 1,
+      "explanation": "Three trees: Working Directory, Staging Area, Repository."
+    },
+    {
+      "question": "Git Basics — What should be prioritized?",
+      "options": [
+        "Reliability and consistency",
+        "Speed only",
+        "Features over quality",
+        "Manual processes"
+      ],
+      "answer": 0,
+      "explanation": "Reliability and consistency are foundational priorities."
+    },
+    {
+      "question": "Git Basics — What is important for security?",
+      "options": [
+        "Access control and encryption",
+        "Open access",
+        "Shared passwords",
+        "No auditing"
+      ],
+      "answer": 0,
+      "explanation": "Access control and encryption are fundamental security measures."
+    },
+    {
+      "question": "Git Basics — How to ensure reliability?",
+      "options": [
+        "Automated testing and monitoring",
+        "Manual checks only",
+        "No testing",
+        "Reactive fixes"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing and monitoring ensure consistent reliability."
+    },
+    {
+      "question": "Git Basics — What helps team collaboration?",
+      "options": [
+        "Shared workflows and visibility",
+        "Isolated work",
+        "No documentation",
+        "Siloed tools"
+      ],
+      "answer": 0,
+      "explanation": "Shared workflows and visibility enable better collaboration."
+    },
+    {
+      "question": "Git Basics — What reduces errors most?",
+      "options": [
+        "Automation",
+        "Manual processes",
+        "Rushing",
+        "Bypassing reviews"
+      ],
+      "answer": 0,
+      "explanation": "Automation consistently eliminates human errors."
+    },
+    {
+      "question": "Git Basics — What improves speed?",
+      "options": [
+        "Parallel execution and caching",
+        "Serial execution",
+        "No optimization",
+        "Manual steps"
+      ],
+      "answer": 0,
+      "explanation": "Parallel execution and caching significantly improve speed."
+    },
+    {
+      "question": "Git Basics — What is key for monitoring?",
+      "options": [
+        "Metrics dashboards and alerts",
+        "No monitoring",
+        "Only error logs",
+        "Manual checks"
+      ],
+      "answer": 0,
+      "explanation": "Metrics dashboards and alerts provide actionable insights."
+    },
+    {
+      "question": "Git Basics — What ensures quality?",
+      "options": [
+        "Automated testing in pipeline",
+        "No testing",
+        "Only manual QA",
+        "Skipping code review"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing integrated into the pipeline ensures consistent quality."
+    }
+  ]
+};

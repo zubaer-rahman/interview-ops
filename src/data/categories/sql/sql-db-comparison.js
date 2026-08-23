@@ -1,0 +1,179 @@
+export const sql_db_comparison = {
+  "id": "sql-db-comparison",
+  "title": "PostgreSQL vs MySQL vs SQL Server",
+  "difficulty": "beginner",
+  "estimatedMinutes": 20,
+  "tldr": [
+    "PostgreSQL: most advanced open-source RDBMS, strict SQL standards compliance, extensible, feature-rich.",
+    "MySQL: fast for simple read-heavy workloads, widespread LAMP stack usage, simpler replication.",
+    "SQL Server: excellent tooling (SSMS), deep .NET integration, business intelligence features.",
+    "SQLite: embedded database, zero configuration, file-based, ideal for mobile and small applications."
+  ],
+  "laymanDefinition": "Choosing a database is like choosing a vehicle. PostgreSQL is a heavy-duty truck — powerful, can handle any job, but takes more skill. MySQL is a reliable sedan — simple, fast for commuting, and easy to maintain. SQLite is a bicycle — perfect for short trips, no fuel needed.",
+  "deepDive": [
+    {
+      "heading": "PostgreSQL Strengths",
+      "text": "Advanced features: JSONB, full-text search, window functions, CTEs, recursion, GiST/GIN indexes, table inheritance, foreign data wrappers. Strict ACID compliance. Extensible: custom types, operators, functions. Best open-source choice for complex workloads."
+    },
+    {
+      "heading": "MySQL Strengths",
+      "text": "Simple and fast for basic CRUD. Widespread hosting support. Easy replication (built-in). Lighter memory footprint. Great ecosystem (WordPress, Drupal, Laravel). InnoDB with ACID. Good for read-heavy applications."
+    },
+    {
+      "heading": "SQL Server Strengths",
+      "text": "Best tooling: SSMS, SSIS, SSRS, SSAS. Deep .NET integration (Entity Framework). T-SQL with advanced analytics. Columnstore indexes for data warehousing. Always On availability groups. Best for Microsoft shops."
+    },
+    {
+      "heading": "Feature Comparison",
+      "text": "CTEs: PostgreSQL (with recursion), SQL Server (with recursion), MySQL 8+ (no recursion). Window functions: all three modern versions. JSON: PostgreSQL (JSONB best), MySQL (JSON type), SQL Server (JSON functions). Array type: PostgreSQL only."
+    },
+    {
+      "heading": "Performance Characteristics",
+      "text": "MySQL: faster for simple SELECT/INSERT with good indexes. PostgreSQL: faster for complex queries, joins, aggregations. SQL Server: excellent optimizer, best with large data warehouses. SQLite: fastest for single-user/small datasets."
+    }
+  ],
+  "interviewAnswer": "PostgreSQL is the best general-purpose choice for new applications — it is the most feature-rich, standards-compliant, and extensible open-source database. MySQL is a proven choice for simple web applications. SQL Server is the choice for Microsoft ecosystems.",
+  "interviewQuestions": [
+    {
+      "question": "What is PostgreSQL best at?",
+      "answer": "Advanced queries, JSON, full-text search, CTEs, window functions, extensibility, and standards compliance."
+    },
+    {
+      "question": "What is MySQL best at?",
+      "answer": "Simple read-heavy workloads, LAMP stack applications, ubiquitous hosting support, easy replication."
+    },
+    {
+      "question": "What is SQL Server best at?",
+      "answer": ".NET integration, BI/analytics, SSMS tooling, columnstore indexes, enterprise features."
+    },
+    {
+      "question": "Which database has the best JSON support?",
+      "answer": "PostgreSQL with JSONB — indexed, fast operators, binary format."
+    },
+    {
+      "question": "Does MySQL support CTEs?",
+      "answer": "MySQL 8.0+ supports non-recursive CTEs but not recursive CTEs."
+    },
+    {
+      "question": "Which database supports array types?",
+      "answer": "Only PostgreSQL has native array types among the major databases."
+    },
+    {
+      "question": "What is the best database for a new web application?",
+      "answer": "PostgreSQL — best combination of features, performance, and community."
+    },
+    {
+      "question": "What is SQLite best for?",
+      "answer": "Mobile apps, embedded systems, testing, small-scale applications, single-user desktop apps."
+    },
+    {
+      "question": "Which has the best query optimizer?",
+      "answer": "PostgreSQL and SQL Server both have excellent optimizers. MySQL\\'s optimizer has improved significantly."
+    },
+    {
+      "question": "Which database has the best free tooling?",
+      "answer": "PostgreSQL: pgAdmin, DBeaver. MySQL: MySQL Workbench. SQL Server: SSMS (best overall tooling)."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"300\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">PostgreSQL vs MySQL vs SQL Server</text><rect x=\"10\" y=\"35\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1.5\"/><text x=\"65\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">PostgreSQL</text><text x=\"65\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Feature-rich</text><rect x=\"10\" y=\"65\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1.5\"/><text x=\"65\" y=\"81\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">MySQL</text><text x=\"65\" y=\"84\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Simple/fast</text><rect x=\"10\" y=\"95\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1.5\"/><text x=\"65\" y=\"111\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">SQL Server</text><text x=\"65\" y=\"114\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Enterprise</text><rect x=\"10\" y=\"125\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#dc3545\" stroke=\"#dc3545\" stroke-width=\"1.5\"/><text x=\"65\" y=\"141\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">SQLite</text><text x=\"65\" y=\"144\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Embedded</text><rect x=\"10\" y=\"155\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#e83e8c\" stroke=\"#e83e8c\" stroke-width=\"1.5\"/><text x=\"65\" y=\"171\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Choose</text><text x=\"65\" y=\"174\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Match needs</text><line x1=\"120\" y1=\"48\" x2=\"150\" y2=\"48\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"120\" y1=\"78\" x2=\"150\" y2=\"78\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"120\" y1=\"108\" x2=\"150\" y2=\"108\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"120\" y1=\"138\" x2=\"150\" y2=\"138\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"120\" y1=\"168\" x2=\"150\" y2=\"168\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"160\" y=\"35\" width=\"220\" height=\"155\" rx=\"5\" fill=\"#17a2b8\" stroke=\"#17a2b8\" stroke-width=\"1.5\"/><text x=\"270\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Database Comparison</text><text x=\"270\" y=\"173\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">PostgreSQL vs MySQL vs SQL Server vs SQL</text><text x=\"270\" y=\"184\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">ite — choose the right tool.</text><text x=\"240\" y=\"220\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">Database Comparison: Strengths, weaknesses, and us</text><text x=\"240\" y=\"232\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">e cases for each major SQL database.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "Feature Comparison Table",
+      "useCase": "Key features across databases.",
+      "code": "-- Feature           | PostgreSQL | MySQL  | SQL Server |\n-- CTEs (Recursive) | Yes        | 8+ only| Yes        |\n-- Window Functions | Yes        | 8+     | Yes        |\n-- JSON/JSONB       | Yes (best) | Yes    | Functions  |\n-- Array Type       | Yes        | No     | No         |\n-- Full-Text Search | Excellent  | Basic  | Excellent  |\n-- GIN/GiST Index   | Yes        | No     | No         |\n-- FDW/Linked Srvr  | Yes (FDW)  | FEDERATED| Linked Svr|\n-- Materialized View| Yes        | No     | Yes        |\n-- Table Partition  | Yes        | Yes    | Yes        |\n-- UUID Type        | Native     | Binary | GUID       |\n-- License          | Open (MIT) | Dual   | Commercial |\n-- Default Port     | 5432       | 3306   | 1433       |",
+      "description": "Feature comparison across major SQL databases."
+    },
+    {
+      "title": "Migration Paths",
+      "useCase": "Moving between databases.",
+      "code": "-- PostgreSQL to MySQL:\n--   Replace SERIAL with AUTO_INCREMENT\n--   Replace || with CONCAT()\n--   Replace ILIKE with LOWER() + LIKE\n--   Remove RETURNING, change order\n\n-- MySQL to PostgreSQL:\n--   Replace AUTO_INCREMENT with SERIAL\n--   Replace CONCAT() with ||\n--   Add explicit type casts\n--   Change backtick quoting to double quotes\n\n-- Common gotchas:\n--   LIMIT/OFFSET syntax is the same\n--   JOIN syntax is standard across all\n--   String comparison: PostgreSQL is case-sensitive",
+      "description": "Key differences when migrating between databases."
+    },
+    {
+      "title": "Sample Query Comparison",
+      "useCase": "Same query in different dialects.",
+      "code": "-- PostgreSQL:\nSELECT name, salary FROM employees\nWHERE salary > (SELECT AVG(salary) FROM employees)\nORDER BY salary DESC LIMIT 10;\n\n-- MySQL (same, but backtick quoting):\nSELECT `name`, `salary` FROM `employees`\nWHERE `salary` > (SELECT AVG(`salary`) FROM `employees`)\nORDER BY `salary` DESC LIMIT 10;\n\n-- SQL Server (TOP instead of LIMIT):\nSELECT TOP 10 name, salary FROM employees\nWHERE salary > (SELECT AVG(salary) FROM employees)\nORDER BY salary DESC;",
+      "description": "Syntax differences for the same query across databases."
+    },
+    {
+      "title": "Benchmarking Advice",
+      "useCase": "How to choose.",
+      "code": "-- Read-heavy web app: MySQL or PostgreSQL\n-- Complex analytics/reporting: PostgreSQL or SQL Server\n-- .NET / Microsoft ecosystem: SQL Server\n-- Embedded / mobile: SQLite\n-- Full-text search heavy: PostgreSQL\n-- JSON document needs: PostgreSQL (JSONB is best)\n-- Budget constrained: PostgreSQL (free, full-featured)\n-- Enterprise with support needs: SQL Server or MySQL (Oracle)\n\n-- Best practice: benchmark with YOUR workload,\n-- not generic benchmarks",
+      "description": "Decision guide for choosing the right database for your project."
+    },
+    {
+      "title": "SQLite for Testing",
+      "useCase": "SQLite in development.",
+      "code": "-- Why SQLite for testing:\n--   No server setup needed\n--   In-memory option for tests\n--   Fast test execution\n--   File-based for easy clean-up\n\n-- Gotchas when using SQLite vs PostgreSQL:\n--   No array type\n--   Limited ALTER TABLE\n--   No JSON functions (before 3.38)\n--   Flexible type system (no type enforcement)\n--   Different date/time functions",
+      "description": "SQLite is ideal for testing but has important differences from PostgreSQL."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "Which database has the best JSON support?",
+      "options": [
+        "MySQL",
+        "PostgreSQL",
+        "SQL Server",
+        "SQLite"
+      ],
+      "answer": 1,
+      "explanation": "PostgreSQL with JSONB has the best JSON support with indexing and operators."
+    },
+    {
+      "question": "Which databases support recursive CTEs?",
+      "options": [
+        "PostgreSQL and SQL Server",
+        "MySQL only",
+        "SQLite only",
+        "All of them"
+      ],
+      "answer": 0,
+      "explanation": "PostgreSQL and SQL Server support recursive CTEs; MySQL 8+ has non-recursive only."
+    },
+    {
+      "question": "What is SQLite best for?",
+      "options": [
+        "Enterprise apps",
+        "Embedded/mobile",
+        "Web apps",
+        "Data warehousing"
+      ],
+      "answer": 1,
+      "explanation": "SQLite is ideal for embedded systems, mobile apps, and testing."
+    },
+    {
+      "question": "Which database has native array types?",
+      "options": [
+        "MySQL",
+        "PostgreSQL",
+        "SQL Server",
+        "None"
+      ],
+      "answer": 1,
+      "explanation": "PostgreSQL is the only major database with native array types."
+    },
+    {
+      "question": "What port does PostgreSQL use by default?",
+      "options": [
+        "3306",
+        "5432",
+        "1433",
+        "27017"
+      ],
+      "answer": 1,
+      "explanation": "PostgreSQL default port is 5432."
+    },
+    {
+      "question": "Which database uses TOP instead of LIMIT?",
+      "options": [
+        "PostgreSQL",
+        "MySQL",
+        "SQL Server",
+        "SQLite"
+      ],
+      "answer": 2,
+      "explanation": "SQL Server uses SELECT TOP n instead of LIMIT n."
+    }
+  ]
+};

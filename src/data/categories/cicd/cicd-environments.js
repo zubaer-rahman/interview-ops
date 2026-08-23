@@ -1,0 +1,209 @@
+export const cicd_environments = {
+  "id": "cicd-environments",
+  "title": "Environment Management",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 15,
+  "tldr": [
+    "Environment management involves setting up and maintaining separate stages (dev, staging, production) for the software delivery lifecycle.",
+    "Each environment should mirror production as closely as possible to catch issues early.",
+    "Tools: Docker Compose, Terraform, Kubernetes, CloudFormation, environment variables.",
+    "Environment parity across dev, staging, and prod reduces surprises and catches issues early."
+  ],
+  "laymanDefinition": "Environment management is like having different rooms in a house: the workshop (development), showroom (staging), and retail store (production). You build and test in the workshop, verify in the showroom, and only perfect products reach the retail store.",
+  "deepDive": [
+    {
+      "heading": "Environment Types",
+      "text": "Development: dev machine, local containers, dev server. Unlimited changes, unpolished. Staging: pre-production, mirrors prod, QA testing, integration tests. Production: live user traffic, high availability, monitoring, strict access. Optional: QA, UAT, canary, preview environments."
+    },
+    {
+      "heading": "Environment Parity",
+      "text": "Keep environments as similar as possible. Same OS, same dependencies, same config files. Use Docker containers for consistency. Infrastructure as Code for reproducible environments. Version-controlled config. Don\\'t hardcode environment-specific values."
+    },
+    {
+      "heading": "Configuration Management",
+      "text": "Environment variables for config differences (DB URL, API keys). Config files per environment. Secret management: never in code. Feature flags for per-environment behaviors. Environment-specific CI/CD jobs/stages."
+    }
+  ],
+  "interviewAnswer": "Environment management involves setting up and maintaining separate stages (dev, staging, production) for the software delivery lifecycle.",
+  "interviewQuestions": [
+    {
+      "question": "What are the three main environments?",
+      "answer": "Development (coding), Staging (testing), Production (live)."
+    },
+    {
+      "question": "What is environment parity?",
+      "answer": "Keeping environments as similar as possible to catch production issues in earlier stages."
+    },
+    {
+      "question": "How should configuration differ between environments?",
+      "answer": "Via environment variables (not hardcoded values). Secrets stored in secret managers."
+    },
+    {
+      "question": "Environment Management — How do you get started with this concept?",
+      "answer": "Getting started involves understanding the basics, setting up a proof of concept, and iterating."
+    },
+    {
+      "question": "Environment Management — What tools integrate well with this?",
+      "answer": "Integration is possible through APIs, plugins, webhooks, and configuration files."
+    },
+    {
+      "question": "Environment Management — What are common troubleshooting steps?",
+      "answer": "Troubleshooting involves checking logs, verifying configuration, and testing incrementally."
+    },
+    {
+      "question": "Environment Management — What security considerations apply here?",
+      "answer": "Security considerations include access control, encryption of sensitive data, and audit logging."
+    },
+    {
+      "question": "Environment Management — What best practices should be followed?",
+      "answer": "Best practices include version control, automation, monitoring, and thorough documentation."
+    },
+    {
+      "question": "Environment Management — How does this affect team collaboration?",
+      "answer": "It supports collaboration through shared visibility, standardized processes, and clear workflows."
+    },
+    {
+      "question": "Environment Management — What metrics indicate successful implementation?",
+      "answer": "Key metrics include adoption rate, error reduction, build times, and team satisfaction scores."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"300\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">Environment Management</text><rect x=\"10\" y=\"35\" width=\"100\" height=\"25\" rx=\"5\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1.5\"/><text x=\"60\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Development</text><text x=\"60\" y=\"43\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Coding & unit test</text><text x=\"60\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">s</text><line x1=\"110\" y1=\"48\" x2=\"130\" y2=\"48\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"140\" y=\"35\" width=\"100\" height=\"25\" rx=\"5\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1.5\"/><text x=\"190\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Staging</text><text x=\"190\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">QA & integration</text><line x1=\"240\" y1=\"48\" x2=\"260\" y2=\"48\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"270\" y=\"35\" width=\"100\" height=\"25\" rx=\"5\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1.5\"/><text x=\"320\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Production</text><text x=\"320\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Live users</text><text x=\"240\" y=\"110\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">Environment Management: Dev → Staging → Production</text><text x=\"240\" y=\"122\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">. Parity is crucial. Configure via env vars, not h</text><text x=\"240\" y=\"134\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">ardcoding.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "Env Config",
+      "useCase": "Using environment variables.",
+      "code": "export DATABASE_URL=\"postgres://...\"\nexport API_KEY=${{ secrets.API_KEY }}",
+      "description": ""
+    },
+    {
+      "title": "Common Use Case",
+      "useCase": "Typical implementation",
+      "code": "# Common implementation pattern\n# Used in everyday scenarios",
+      "description": "Standard use case example."
+    },
+    {
+      "title": "Advanced Configuration",
+      "useCase": "Complex scenario",
+      "code": "# Advanced pattern for complex scenarios\n# Includes error handling",
+      "description": "Advanced configuration example."
+    },
+    {
+      "title": "Integration Pattern",
+      "useCase": "Tool integration",
+      "code": "# Integration with other tools\n# Shows how components connect",
+      "description": "Integration example with related tools."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What is the most important principle in environment management?",
+      "options": [
+        "Use latest software",
+        "Environment parity (keep environments similar)",
+        "Manual configuration",
+        "Separate codebases"
+      ],
+      "answer": 1,
+      "explanation": "Environment parity — keeping dev, staging, and prod as similar as possible — prevents environment-specific bugs."
+    },
+    {
+      "question": "Environment Management — What is the recommended approach?",
+      "options": [
+        "Start simple and iterate",
+        "Build everything at once",
+        "Skip testing",
+        "Avoid planning"
+      ],
+      "answer": 0,
+      "explanation": "Starting simple and iterating is the most effective approach."
+    },
+    {
+      "question": "Environment Management — What should be prioritized?",
+      "options": [
+        "Reliability and consistency",
+        "Speed only",
+        "Features over quality",
+        "Manual processes"
+      ],
+      "answer": 0,
+      "explanation": "Reliability and consistency are foundational priorities."
+    },
+    {
+      "question": "Environment Management — What is important for security?",
+      "options": [
+        "Access control and encryption",
+        "Open access",
+        "Shared passwords",
+        "No auditing"
+      ],
+      "answer": 0,
+      "explanation": "Access control and encryption are fundamental security measures."
+    },
+    {
+      "question": "Environment Management — How to ensure reliability?",
+      "options": [
+        "Automated testing and monitoring",
+        "Manual checks only",
+        "No testing",
+        "Reactive fixes"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing and monitoring ensure consistent reliability."
+    },
+    {
+      "question": "Environment Management — What helps team collaboration?",
+      "options": [
+        "Shared workflows and visibility",
+        "Isolated work",
+        "No documentation",
+        "Siloed tools"
+      ],
+      "answer": 0,
+      "explanation": "Shared workflows and visibility enable better collaboration."
+    },
+    {
+      "question": "Environment Management — What reduces errors most?",
+      "options": [
+        "Automation",
+        "Manual processes",
+        "Rushing",
+        "Bypassing reviews"
+      ],
+      "answer": 0,
+      "explanation": "Automation consistently eliminates human errors."
+    },
+    {
+      "question": "Environment Management — What improves speed?",
+      "options": [
+        "Parallel execution and caching",
+        "Serial execution",
+        "No optimization",
+        "Manual steps"
+      ],
+      "answer": 0,
+      "explanation": "Parallel execution and caching significantly improve speed."
+    },
+    {
+      "question": "Environment Management — What is key for monitoring?",
+      "options": [
+        "Metrics dashboards and alerts",
+        "No monitoring",
+        "Only error logs",
+        "Manual checks"
+      ],
+      "answer": 0,
+      "explanation": "Metrics dashboards and alerts provide actionable insights."
+    },
+    {
+      "question": "Environment Management — What ensures quality?",
+      "options": [
+        "Automated testing in pipeline",
+        "No testing",
+        "Only manual QA",
+        "Skipping code review"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing integrated into the pipeline ensures consistent quality."
+    }
+  ]
+};

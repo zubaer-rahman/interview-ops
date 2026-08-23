@@ -1,0 +1,179 @@
+export const oop_solid = {
+  "id": "oop-solid",
+  "title": "SOLID Principles",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 20,
+  "tldr": [
+    "SOLID is an acronym for five design principles that make software more understandable, flexible, and maintainable.",
+    "S: SRP, O: OCP, L: LSP, I: ISP, D: DIP.",
+    "These principles, introduced by Robert C. Martin (Uncle Bob), guide object-oriented design toward cleaner architecture.",
+    "Following SOLID reduces coupling, increases cohesion, and makes code easier to test, extend, and refactor."
+  ],
+  "laymanDefinition": "SOLID principles are like building codes for software architecture. Just as building codes ensure a house is structurally sound, safe, and maintainable, SOLID principles ensure your code is robust, flexible, and easy to work with. Ignoring them is like building a house without permits.",
+  "deepDive": [
+    {
+      "heading": "S: Single Responsibility Principle (SRP)",
+      "text": "A class should have only one reason to change. Each class should be responsible for a single part of the functionality. If a class has multiple responsibilities, changes to one may break the others. SRP leads to smaller, more focused, and more testable classes."
+    },
+    {
+      "heading": "O: Open-Closed Principle (OCP)",
+      "text": "Classes should be open for extension but closed for modification. You should be able to add new functionality without changing existing code. Achieved through abstraction (interfaces, abstract classes) and polymorphism."
+    },
+    {
+      "heading": "L: Liskov Substitution Principle (LSP)",
+      "text": "Objects of a superclass should be replaceable with objects of a subclass without altering correctness. Subtypes must satisfy the parent\\'s contract. Violation: Square extends Rectangle changes setWidth behavior."
+    },
+    {
+      "heading": "I: Interface Segregation Principle (ISP)",
+      "text": "Clients should not be forced to depend on interfaces they do not use. Large, \"fat\" interfaces should be split into smaller, specific ones. Better to have multiple focused interfaces than one general-purpose interface."
+    },
+    {
+      "heading": "D: Dependency Inversion Principle (DIP)",
+      "text": "High-level modules should not depend on low-level modules. Both should depend on abstractions. Abstractions should not depend on details; details should depend on abstractions. Achieved through dependency injection."
+    }
+  ],
+  "interviewAnswer": "SOLID principles guide clean OOP design. SRP: one reason to change. OCP: extend without modifying. LSP: subtypes must be substitutable. ISP: small, focused interfaces. DIP: depend on abstractions, not concretions. Apply pragmatically — over-engineering is also a problem.",
+  "interviewQuestions": [
+    {
+      "question": "What does SOLID stand for?",
+      "answer": "SRP, OCP, LSP, ISP, DIP — five design principles for maintainable OOP."
+    },
+    {
+      "question": "What is SRP?",
+      "answer": "A class should have only one reason to change — one focused responsibility."
+    },
+    {
+      "question": "What is OCP?",
+      "answer": "Classes should be open for extension but closed for modification."
+    },
+    {
+      "question": "What is LSP?",
+      "answer": "Subtypes must be substitutable for their base types without breaking the program."
+    },
+    {
+      "question": "What is ISP?",
+      "answer": "Clients should not depend on interfaces they do not use. Prefer small, focused interfaces."
+    },
+    {
+      "question": "What is DIP?",
+      "answer": "Depend on abstractions (interfaces), not concretions (implementations)."
+    },
+    {
+      "question": "Who introduced SOLID principles?",
+      "answer": "Robert C. Martin (Uncle Bob)."
+    },
+    {
+      "question": "What problem does SRP solve?",
+      "answer": "Classes with multiple responsibilities are hard to maintain."
+    },
+    {
+      "question": "What problem does DIP solve?",
+      "answer": "High-level code depending on low-level details creates tight coupling."
+    },
+    {
+      "question": "Are SOLID principles always appropriate?",
+      "answer": "Apply pragmatically. Over-applying can lead to unnecessary complexity."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"300\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">SOLID Principles</text><rect x=\"10\" y=\"35\" width=\"105\" height=\"18\" rx=\"5\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1.5\"/><text x=\"62.5\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">S: SRP</text><text x=\"62.5\" y=\"47\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">One reason</text><rect x=\"115\" y=\"35\" width=\"105\" height=\"18\" rx=\"5\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1.5\"/><text x=\"167.5\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">O: OCP</text><text x=\"167.5\" y=\"47\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Extend</text><rect x=\"220\" y=\"35\" width=\"105\" height=\"18\" rx=\"5\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1.5\"/><text x=\"272.5\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">L: LSP</text><text x=\"272.5\" y=\"47\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Substitute</text><rect x=\"325\" y=\"35\" width=\"105\" height=\"18\" rx=\"5\" fill=\"#dc3545\" stroke=\"#dc3545\" stroke-width=\"1.5\"/><text x=\"377.5\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">I: ISP</text><text x=\"377.5\" y=\"47\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Small IF</text><rect x=\"10\" y=\"60\" width=\"210\" height=\"18\" rx=\"5\" fill=\"#e83e8c\" stroke=\"#e83e8c\" stroke-width=\"1.5\"/><text x=\"115\" y=\"76\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">D: DIP</text><text x=\"115\" y=\"72\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Abstract deps</text><rect x=\"10\" y=\"85\" width=\"210\" height=\"25\" rx=\"5\" fill=\"#6610f2\" stroke=\"#6610f2\" stroke-width=\"1.5\"/><text x=\"115\" y=\"101\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">SOLID Principles</text><text x=\"115\" y=\"104\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Clean OOP design</text><rect x=\"10\" y=\"120\" width=\"210\" height=\"25\" rx=\"5\" fill=\"#17a2b8\" stroke=\"#17a2b8\" stroke-width=\"1.5\"/><text x=\"115\" y=\"136\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Benefits</text><text x=\"115\" y=\"139\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Flexible, testable</text><rect x=\"230\" y=\"60\" width=\"210\" height=\"25\" rx=\"5\" fill=\"#17a2b8\" stroke=\"#17a2b8\" stroke-width=\"1.5\"/><text x=\"335\" y=\"76\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">SOLID</text><text x=\"335\" y=\"79\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Five principles by Uncle Bob</text><line x1=\"120\" y1=\"48\" x2=\"150\" y2=\"48\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"225\" y1=\"48\" x2=\"255\" y2=\"48\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"330\" y1=\"48\" x2=\"360\" y2=\"48\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"10\" y=\"150\" width=\"420\" height=\"35\" rx=\"5\" fill=\"#e83e8c\" stroke=\"#e83e8c\" stroke-width=\"1.5\"/><text x=\"220\" y=\"166\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">SOLID Principles</text><text x=\"220\" y=\"179\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">SRP, OCP, LSP, ISP, DIP — five design principles for maintainable OOP.</text><text x=\"240\" y=\"210\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">SOLID: Five design principles for clean, maintaina</text><text x=\"240\" y=\"222\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">ble OOP — SRP, OCP, LSP, ISP, DIP.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "SRP Example",
+      "useCase": "Single Responsibility Principle.",
+      "code": "// BAD: Multiple responsibilities\nclass Report {\n  constructor(data) { this.data = data; }\n  formatHTML() {}\n  formatPDF() {}\n  saveToFile() {}\n  sendEmail() {}\n}\n\n// GOOD: Separate concerns\nclass ReportData { constructor(data) { this.data = data; } }\nclass ReportFormatter { toHTML(r) {} toPDF(r) {} }\nclass ReportRepository { save(r) {} }\nclass EmailService { sendReport(r, email) {} }",
+      "description": "SRP: each class has one responsibility and one reason to change."
+    },
+    {
+      "title": "OCP Example",
+      "useCase": "Open-Closed Principle.",
+      "code": "class Shape { area() { throw new Error(\"Abstract\"); } }\nclass Circle extends Shape { constructor(r) { super(); this.r = r; } area() { return Math.PI*this.r**2; } }\nclass Rectangle extends Shape { constructor(w,h) { super(); this.w=w; this.h=h; } area() { return this.w*this.h; } }\nclass Triangle extends Shape { constructor(b,h) { super(); this.b=b; this.h=h; } area() { return 0.5*this.b*this.h; } }\nfunction calculateArea(shapes) {\n  return shapes.reduce((sum, s) => sum + s.area(), 0);\n}",
+      "description": "OCP: add new shapes by creating new subclasses — no existing code modified."
+    },
+    {
+      "title": "LSP Violation Example",
+      "useCase": "Liskov Substitution Principle.",
+      "code": "class Rectangle {\n  constructor(w,h) { this.w=w; this.h=h; }\n  setWidth(w) { this.w = w; }\n  setHeight(h) { this.h = h; }\n  area() { return this.w * this.h; }\n}\nclass Square extends Rectangle {\n  setWidth(w) { this.w=w; this.h=w; } // Breaks LSP!\n  setHeight(h) { this.h=h; this.w=h; } // Breaks LSP!\n}\nfunction resize(rect) {\n  rect.setWidth(5); rect.setHeight(10);\n  console.log(rect.area()); // Expected 50, Square gives 100\n}",
+      "description": "LSP violation: Square changes Rectangle behavior. Fix: do not extend Rectangle."
+    },
+    {
+      "title": "ISP Example",
+      "useCase": "Interface Segregation Principle.",
+      "code": "// BAD: Fat interface\ninterface Worker { work(): void; eat(): void; sleep(): void; }\nclass Robot implements Worker {\n  work() {}\n  eat() { throw new Error(\"Robots don't eat\"); }\n  sleep() { throw new Error(\"Robots don't sleep\"); }\n}\n\n// GOOD: Segregated\ninterface Workable { work(): void; }\ninterface Eatable { eat(): void; }\ninterface Sleepable { sleep(): void; }\nclass RobotWorker implements Workable { work() {} }",
+      "description": "ISP: split large interfaces into smaller, specific ones. Robots do not need eat() or sleep()."
+    },
+    {
+      "title": "DIP with Dependency Injection",
+      "useCase": "Dependency Inversion Principle.",
+      "code": "interface Database { query(sql: string): Promise<any[]>; }\nclass MySQLDatabase implements Database { async query(sql) { /* MySQL */ } }\nclass PostgresDatabase implements Database { async query(sql) { /* Postgres */ } }\nclass UserController {\n  constructor(private db: Database) {}\n  async getUsers() { return this.db.query(\"SELECT * FROM users\"); }\n}\nconst ctrl = new UserController(new PostgresDatabase());",
+      "description": "DIP: high-level and low-level modules both depend on abstractions. DI enables loose coupling."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What does SOLID stand for?",
+      "options": [
+        "SRP, OCP, LSP, ISP, DIP",
+        "SIMPLE, OPEN, LARGE, INTERNAL, DYNAMIC",
+        "SINGLE, OBJECT, LINE, INLINE, DATA",
+        "SAFE, ORDERED, LOCAL, INTENT, DEEP"
+      ],
+      "answer": 0,
+      "explanation": "SOLID = SRP, OCP, LSP, ISP, DIP."
+    },
+    {
+      "question": "What does SRP say?",
+      "options": [
+        "One class, one responsibility",
+        "One method, one parameter",
+        "One file, one export",
+        "One project, one class"
+      ],
+      "answer": 0,
+      "explanation": "Single Responsibility: a class should have one reason to change."
+    },
+    {
+      "question": "What does OCP say?",
+      "options": [
+        "Open for extension, closed for modification",
+        "Open for all",
+        "Closed for all changes",
+        "Open for modification, closed for extension"
+      ],
+      "answer": 0,
+      "explanation": "Open-Closed: extend behavior without modifying existing code."
+    },
+    {
+      "question": "What does LSP ensure?",
+      "options": [
+        "Subtypes are substitutable for base types",
+        "Classes are closed",
+        "Interfaces are segregated",
+        "Dependencies are inverted"
+      ],
+      "answer": 0,
+      "explanation": "Liskov Substitution: subtypes must be replaceable for their base types."
+    },
+    {
+      "question": "What does ISP recommend?",
+      "options": [
+        "Large interfaces",
+        "Small, specific interfaces",
+        "No interfaces",
+        "One interface per class"
+      ],
+      "answer": 1,
+      "explanation": "Interface Segregation: prefer small, focused interfaces over large ones."
+    },
+    {
+      "question": "What does DIP require?",
+      "options": [
+        "Depend on concretions",
+        "Depend on abstractions",
+        "Depend on nothing",
+        "Depend on global state"
+      ],
+      "answer": 1,
+      "explanation": "Dependency Inversion: depend on abstractions, not concretions."
+    }
+  ]
+};

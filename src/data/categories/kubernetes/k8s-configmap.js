@@ -1,0 +1,207 @@
+export const k8s_configmap = {
+  "id": "k8s-configmap",
+  "title": "ConfigMap",
+  "difficulty": "beginner",
+  "estimatedMinutes": 10,
+  "file": "k8s-configmap.json",
+  "interviewAnswer": "A ConfigMap stores non-confidential config as key-value pairs, decoupling configuration from container images. Change settings without rebuilding images. Consumed as env vars, command args, or mounted files. Volume mounts auto-update; env vars require Pod restart.",
+  "tldr": [
+    "Decouples configuration from container images",
+    "Consumed as env vars, volume mounts, or command args",
+    "Created from literals, files, env files, or YAML",
+    "Volume mounts auto-update; env vars static after Pod start"
+  ],
+  "deepDive": [
+    {
+      "heading": "Consumption",
+      "text": "Env vars: valueFrom.configMapKeyRef. Volumes: each key = file. optional: true allows missing keys. SubPath mounts individual files."
+    },
+    {
+      "heading": "Updates",
+      "text": "Mounted volumes auto-update (~1 min kubelet sync). Env vars static after Pod start. Immutable ConfigMaps (immutable: true) improve performance."
+    },
+    {
+      "heading": "Common Use Cases",
+      "text": "ConfigMap applies to build automation, continuous integration, test execution, deployment orchestration, and infrastructure management. Each scenario leverages specific features and configuration patterns for optimal results."
+    }
+  ],
+  "interviewQuestions": [
+    {
+      "question": "What is a ConfigMap?",
+      "answer": "Non-sensitive config as key-value pairs, decoupled from images."
+    },
+    {
+      "question": "Consumption methods?",
+      "answer": "Env vars, volume mounts, command args."
+    },
+    {
+      "question": "Volume mount update behavior?",
+      "answer": "Auto-updated (kubelet sync delay)."
+    },
+    {
+      "question": "Env var update behavior?",
+      "answer": "Static after Pod start. Pods must be restarted."
+    },
+    {
+      "question": "ConfigMap — What tools integrate well with this?",
+      "answer": "Integration is possible through APIs, plugins, webhooks, and configuration files."
+    },
+    {
+      "question": "ConfigMap — What are common troubleshooting steps?",
+      "answer": "Troubleshooting involves checking logs, verifying configuration, and testing incrementally."
+    },
+    {
+      "question": "ConfigMap — What security considerations apply here?",
+      "answer": "Security considerations include access control, encryption of sensitive data, and audit logging."
+    },
+    {
+      "question": "ConfigMap — What best practices should be followed?",
+      "answer": "Best practices include version control, automation, monitoring, and thorough documentation."
+    },
+    {
+      "question": "ConfigMap — How does this affect team collaboration?",
+      "answer": "It supports collaboration through shared visibility, standardized processes, and clear workflows."
+    },
+    {
+      "question": "ConfigMap — What metrics indicate successful implementation?",
+      "answer": "Key metrics include adoption rate, error reduction, build times, and team satisfaction scores."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "NOT for ConfigMap?",
+      "options": [
+        "Config files",
+        "Env vars",
+        "Passwords",
+        "App settings"
+      ],
+      "answer": 2,
+      "explanation": "Sensitive data needs Secrets."
+    },
+    {
+      "question": "Create from key=value?",
+      "options": [
+        "--from-file",
+        "--from-literal",
+        "--from-env-file"
+      ],
+      "answer": 1,
+      "explanation": "--from-literal flag."
+    },
+    {
+      "question": "Env vars updated on ConfigMap change?",
+      "options": [
+        "Yes, immediately",
+        "No, only at Pod start",
+        "Yes, after sync"
+      ],
+      "answer": 1,
+      "explanation": "Env vars are not updated dynamically."
+    },
+    {
+      "question": "optional: true does what?",
+      "options": [
+        "Allows deletion",
+        "Allows missing keys without error",
+        "Skips validation"
+      ],
+      "answer": 1,
+      "explanation": "Allows Pod start with missing ConfigMap key."
+    },
+    {
+      "question": "ConfigMap — How to ensure reliability?",
+      "options": [
+        "Automated testing and monitoring",
+        "Manual checks only",
+        "No testing",
+        "Reactive fixes"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing and monitoring ensure consistent reliability."
+    },
+    {
+      "question": "ConfigMap — What helps team collaboration?",
+      "options": [
+        "Shared workflows and visibility",
+        "Isolated work",
+        "No documentation",
+        "Siloed tools"
+      ],
+      "answer": 0,
+      "explanation": "Shared workflows and visibility enable better collaboration."
+    },
+    {
+      "question": "ConfigMap — What reduces errors most?",
+      "options": [
+        "Automation",
+        "Manual processes",
+        "Rushing",
+        "Bypassing reviews"
+      ],
+      "answer": 0,
+      "explanation": "Automation consistently eliminates human errors."
+    },
+    {
+      "question": "ConfigMap — What improves speed?",
+      "options": [
+        "Parallel execution and caching",
+        "Serial execution",
+        "No optimization",
+        "Manual steps"
+      ],
+      "answer": 0,
+      "explanation": "Parallel execution and caching significantly improve speed."
+    },
+    {
+      "question": "ConfigMap — What is key for monitoring?",
+      "options": [
+        "Metrics dashboards and alerts",
+        "No monitoring",
+        "Only error logs",
+        "Manual checks"
+      ],
+      "answer": 0,
+      "explanation": "Metrics dashboards and alerts provide actionable insights."
+    },
+    {
+      "question": "ConfigMap — What ensures quality?",
+      "options": [
+        "Automated testing in pipeline",
+        "No testing",
+        "Only manual QA",
+        "Skipping code review"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing integrated into the pipeline ensures consistent quality."
+    }
+  ],
+  "codeExamples": [
+    {
+      "title": "Create ConfigMap",
+      "useCase": "Store config",
+      "code": "kubectl create configmap app-config --from-literal=LOG_LEVEL=info --from-literal=MAX_CONN=100",
+      "description": "Creates ConfigMap from literals."
+    },
+    {
+      "title": "Use as Env Vars",
+      "useCase": "Inject config",
+      "code": "kubectl set env deployment/web --from=configmap/app-config",
+      "description": "Injects ConfigMap as env vars."
+    },
+    {
+      "title": "Mount as Volume",
+      "useCase": "Config files in Pod",
+      "code": "kubectl set volume deployment/web --add --name=config --mount-path=/etc/config --configmap=app-config",
+      "description": "Mounts ConfigMap as volume."
+    },
+    {
+      "title": "Integration Pattern",
+      "useCase": "Tool integration",
+      "code": "# Integration with other tools\n# Shows how components connect",
+      "description": "Integration example with related tools."
+    }
+  ],
+  "laymanDefinition": "A ConfigMap stores non-confidential config as key-value pairs, decoupling configuration from container images. Change settings without rebuilding images. Consumed as env vars, command args, or mounted files. Volume mounts auto-update; env vars require Pod restart.",
+  "diagramSvg": "<svg viewBox=\"0 0 500 280\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"280\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">ConfigMap</text><rect x=\"20\" y=\"45\" width=\"460\" height=\"60\" rx=\"5\" fill=\"#e8f4f8\" stroke=\"#ccc\" stroke-width=\"1.5\"/><text x=\"250\" y=\"80\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">ConfigMap</text><text x=\"250\" y=\"155\" font-size=\"10\" fill=\"#555\" text-anchor=\"middle\">Decouples configuration from container images</text></svg>"
+};

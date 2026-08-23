@@ -1,0 +1,202 @@
+export const k8s_blue_green_deployment = {
+  "id": "k8s-blue-green-deployment",
+  "title": "Blue Green Deployment",
+  "difficulty": "advanced",
+  "estimatedMinutes": 20,
+  "file": "k8s-blue-green-deployment.json",
+  "interviewAnswer": "Blue-Green runs two identical environments (Blue=current, Green=new). Switches traffic instantly after Green is validated. Old Blue kept for instant rollback. Resource-intensive (double capacity during switch).",
+  "tldr": [
+    "Two full environments: Blue (current), Green (new)",
+    "Instant switch by updating Service selector",
+    "Blue retained for instant rollback",
+    "Resource-intensive: double capacity during switch"
+  ],
+  "deepDive": [
+    {
+      "heading": "Implementation",
+      "text": "Two Deployments (app-blue, app-green) with different labels. One Service points to active version via selector. Switch: update Service selector to new version. Blue Deployment retained (scale down or keep minimal). Full validation before switch."
+    },
+    {
+      "heading": "Pros and Cons",
+      "text": "Pros: instant switch, instant rollback, full validation before exposure. Cons: double resource cost during switch, database schema compatibility needed. Argo Rollouts automates this with analysis."
+    },
+    {
+      "heading": "Common Use Cases",
+      "text": "Blue Green Deployment applies to build automation, continuous integration, test execution, deployment orchestration, and infrastructure management. Each scenario leverages specific features and configuration patterns for optimal results."
+    }
+  ],
+  "interviewQuestions": [
+    {
+      "question": "What is Blue-Green?",
+      "answer": "Two environments, instant switch. Blue=current, Green=new."
+    },
+    {
+      "question": "How is switch performed?",
+      "answer": "Update Service selector from blue to green labels."
+    },
+    {
+      "question": "Blue Green vs Canary?",
+      "answer": "Blue Green = instant all-or-nothing. Canary = gradual."
+    },
+    {
+      "question": "Main disadvantage?",
+      "answer": "Double resource cost — both environments fully provisioned."
+    },
+    {
+      "question": "Blue Green Deployment — What tools integrate well with this?",
+      "answer": "Integration is possible through APIs, plugins, webhooks, and configuration files."
+    },
+    {
+      "question": "Blue Green Deployment — What are common troubleshooting steps?",
+      "answer": "Troubleshooting involves checking logs, verifying configuration, and testing incrementally."
+    },
+    {
+      "question": "Blue Green Deployment — What security considerations apply here?",
+      "answer": "Security considerations include access control, encryption of sensitive data, and audit logging."
+    },
+    {
+      "question": "Blue Green Deployment — What best practices should be followed?",
+      "answer": "Best practices include version control, automation, monitoring, and thorough documentation."
+    },
+    {
+      "question": "Blue Green Deployment — How does this affect team collaboration?",
+      "answer": "It supports collaboration through shared visibility, standardized processes, and clear workflows."
+    },
+    {
+      "question": "Blue Green Deployment — What metrics indicate successful implementation?",
+      "answer": "Key metrics include adoption rate, error reduction, build times, and team satisfaction scores."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "Blue-Green switch uses?",
+      "options": [
+        "Gradual traffic",
+        "Instant selector update",
+        "DNS change"
+      ],
+      "answer": 1
+    },
+    {
+      "question": "Blue-Green cost?",
+      "options": [
+        "Same as single",
+        "Double during switch",
+        "Triple"
+      ],
+      "answer": 1
+    },
+    {
+      "question": "Rollback in Blue-Green?",
+      "options": [
+        "Redeploy old",
+        "Switch Service back to blue",
+        "Rollback command"
+      ],
+      "answer": 1
+    },
+    {
+      "question": "Argo Rollouts provides?",
+      "options": [
+        "Only Canary",
+        "BlueGreen + Canary",
+        "Only Recreate"
+      ],
+      "answer": 1
+    },
+    {
+      "question": "Blue Green Deployment — How to ensure reliability?",
+      "options": [
+        "Automated testing and monitoring",
+        "Manual checks only",
+        "No testing",
+        "Reactive fixes"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing and monitoring ensure consistent reliability."
+    },
+    {
+      "question": "Blue Green Deployment — What helps team collaboration?",
+      "options": [
+        "Shared workflows and visibility",
+        "Isolated work",
+        "No documentation",
+        "Siloed tools"
+      ],
+      "answer": 0,
+      "explanation": "Shared workflows and visibility enable better collaboration."
+    },
+    {
+      "question": "Blue Green Deployment — What reduces errors most?",
+      "options": [
+        "Automation",
+        "Manual processes",
+        "Rushing",
+        "Bypassing reviews"
+      ],
+      "answer": 0,
+      "explanation": "Automation consistently eliminates human errors."
+    },
+    {
+      "question": "Blue Green Deployment — What improves speed?",
+      "options": [
+        "Parallel execution and caching",
+        "Serial execution",
+        "No optimization",
+        "Manual steps"
+      ],
+      "answer": 0,
+      "explanation": "Parallel execution and caching significantly improve speed."
+    },
+    {
+      "question": "Blue Green Deployment — What is key for monitoring?",
+      "options": [
+        "Metrics dashboards and alerts",
+        "No monitoring",
+        "Only error logs",
+        "Manual checks"
+      ],
+      "answer": 0,
+      "explanation": "Metrics dashboards and alerts provide actionable insights."
+    },
+    {
+      "question": "Blue Green Deployment — What ensures quality?",
+      "options": [
+        "Automated testing in pipeline",
+        "No testing",
+        "Only manual QA",
+        "Skipping code review"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing integrated into the pipeline ensures consistent quality."
+    }
+  ],
+  "codeExamples": [
+    {
+      "title": "Blue-Green Switch",
+      "useCase": "Switch to green",
+      "code": "kubectl patch service my-app -p '{\"spec\":{\"selector\":{\"version\":\"green\"}}}'",
+      "description": "Switches traffic to green."
+    },
+    {
+      "title": "Rollback Blue-Green",
+      "useCase": "Revert to blue",
+      "code": "kubectl patch service my-app -p '{\"spec\":{\"selector\":{\"version\":\"blue\"}}}'",
+      "description": "Instantly reverts to blue."
+    },
+    {
+      "title": "Clean Up Old",
+      "useCase": "Remove blue",
+      "code": "kubectl delete deployment app-blue",
+      "description": "Cleans up old deployment."
+    },
+    {
+      "title": "Integration Pattern",
+      "useCase": "Tool integration",
+      "code": "# Integration with other tools\n# Shows how components connect",
+      "description": "Integration example with related tools."
+    }
+  ],
+  "laymanDefinition": "Blue-Green runs two identical environments (Blue=current, Green=new). Switches traffic instantly after Green is validated. Old Blue kept for instant rollback. Resource-intensive (double capacity during switch).",
+  "diagramSvg": "<svg viewBox=\"0 0 500 280\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"280\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">Blue Green Deployment</text><rect x=\"20\" y=\"45\" width=\"460\" height=\"60\" rx=\"5\" fill=\"#e8f4f8\" stroke=\"#ccc\" stroke-width=\"1.5\"/><text x=\"250\" y=\"80\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Blue Green Deployment</text><text x=\"250\" y=\"155\" font-size=\"10\" fill=\"#555\" text-anchor=\"middle\">Two full environments: Blue (current), Green (new)</text></svg>"
+};

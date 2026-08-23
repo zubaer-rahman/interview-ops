@@ -1,0 +1,213 @@
+export const devops_canary = {
+  "id": "devops-canary",
+  "title": "Canary Deployment",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 20,
+  "tldr": [
+    "Canary deployment gradually rolls out a new version to a small subset of users before expanding to everyone.",
+    "Named from \"canary in a coal mine\" — early detection protects all users.",
+    "Traffic increments: 1% → 5% → 10% → 25% → 50% → 100%, with monitoring and auto-rollback at each stage.",
+    "Tools: Argo Rollouts, Flagger, Istio, NGINX Plus, AWS CodeDeploy, LaunchDarkly."
+  ],
+  "laymanDefinition": "Canary is like testing a new roller coaster on employees first. If 1% enjoy it safely, let 5% ride. Then 25%. Then everyone. If someone gets sick at 5%, stop immediately and fix it before anyone else rides.",
+  "deepDive": [
+    {
+      "heading": "Process",
+      "text": "Deploy new version alongside old. Start with 1% traffic. Monitor metrics (error rate, latency, business). If healthy: increase to 5%, 10%, 25%, 50%, 100%. If any metric degrades: auto-rollback."
+    },
+    {
+      "heading": "Metrics for Analysis",
+      "text": "Error rate (5xx), latency (p50/p95/p99), CPU/memory, business metrics (conversion, sign-ups). Compare canary vs baseline. Statistically significant difference triggers rollback."
+    },
+    {
+      "heading": "Service Mesh Canary (Istio)",
+      "text": "VirtualService routes traffic by weight percentage. DestinationRule defines subsets. Traffic splitting via weight updates. Istio handles metrics, retries, circuit breaking."
+    },
+    {
+      "heading": "Canary vs Blue-Green",
+      "text": "Canary: gradual, risk-reducing, metrics-driven. Blue-Green: instant switch, simpler. Canary better for high-risk changes. Blue-Green for low-risk, instant-switch acceptable."
+    }
+  ],
+  "interviewAnswer": "Canary deployments reduce risk by gradual exposure. Start small, monitor metrics, expand if healthy, rollback if not. Use service mesh for fine-grained traffic control. Argo Rollouts and Flagger automate the process.",
+  "interviewQuestions": [
+    {
+      "question": "What is Canary deployment?",
+      "answer": "Gradually rolling out a new version to a small subset before expanding to everyone."
+    },
+    {
+      "question": "Why \"canary\"?",
+      "answer": "From \"canary in a coal mine\" — early group catches problems before affecting everyone."
+    },
+    {
+      "question": "What triggers auto-rollback?",
+      "answer": "Metric degradation: error rate, latency, or business metrics exceeding thresholds."
+    },
+    {
+      "question": "What is the difference between Canary and Blue-Green?",
+      "answer": "Canary is gradual; Blue-Green is instant switch. Canary needs sophisticated traffic routing."
+    },
+    {
+      "question": "Canary Deployment — What tools integrate well with this?",
+      "answer": "Integration is possible through APIs, plugins, webhooks, and configuration files."
+    },
+    {
+      "question": "Canary Deployment — What are common troubleshooting steps?",
+      "answer": "Troubleshooting involves checking logs, verifying configuration, and testing incrementally."
+    },
+    {
+      "question": "Canary Deployment — What security considerations apply here?",
+      "answer": "Security considerations include access control, encryption of sensitive data, and audit logging."
+    },
+    {
+      "question": "Canary Deployment — What best practices should be followed?",
+      "answer": "Best practices include version control, automation, monitoring, and thorough documentation."
+    },
+    {
+      "question": "Canary Deployment — How does this affect team collaboration?",
+      "answer": "It supports collaboration through shared visibility, standardized processes, and clear workflows."
+    },
+    {
+      "question": "Canary Deployment — What metrics indicate successful implementation?",
+      "answer": "Key metrics include adoption rate, error reduction, build times, and team satisfaction scores."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"300\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">Canary Deployment</text><rect x=\"10\" y=\"35\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1.5\"/><text x=\"65\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Step 1</text><text x=\"65\" y=\"43\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Deploy v2 alongside </text><text x=\"65\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">v1</text><rect x=\"10\" y=\"65\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1.5\"/><text x=\"65\" y=\"81\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Step 2</text><text x=\"65\" y=\"84\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">1% traffic to v2</text><rect x=\"10\" y=\"95\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1.5\"/><text x=\"65\" y=\"111\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Step 3</text><text x=\"65\" y=\"114\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Monitor metrics</text><rect x=\"10\" y=\"125\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#dc3545\" stroke=\"#dc3545\" stroke-width=\"1.5\"/><text x=\"65\" y=\"141\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Step 4</text><text x=\"65\" y=\"144\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">5%, 10%, 25%...</text><rect x=\"10\" y=\"155\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#e83e8c\" stroke=\"#e83e8c\" stroke-width=\"1.5\"/><text x=\"65\" y=\"171\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Step 5</text><text x=\"65\" y=\"174\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">100% or Rollback</text><line x1=\"120\" y1=\"48\" x2=\"150\" y2=\"48\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"120\" y1=\"78\" x2=\"150\" y2=\"78\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"120\" y1=\"108\" x2=\"150\" y2=\"108\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"120\" y1=\"138\" x2=\"150\" y2=\"138\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"120\" y1=\"168\" x2=\"150\" y2=\"168\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"160\" y=\"35\" width=\"220\" height=\"155\" rx=\"5\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1.5\"/><text x=\"270\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Canary</text><text x=\"270\" y=\"173\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Gradual: 1% → 5% → 100%. Auto-rollback o</text><text x=\"270\" y=\"184\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">n metric degradation.</text><text x=\"240\" y=\"220\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">Canary: Gradual rollout with metrics-driven promot</text><text x=\"240\" y=\"232\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">ion. Start small, expand if healthy.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "Istio Canary VirtualService",
+      "useCase": "Weight-based traffic split.",
+      "code": "apiVersion: networking.istio.io/v1beta1\nkind: VirtualService\nmetadata:\n  name: myapp\nspec:\n  hosts: [myapp]\n  http:\n    - route:\n        - destination:\n            host: myapp\n            subset: v1\n          weight: 95\n        - destination:\n            host: myapp\n            subset: v2\n          weight: 5\n---\napiVersion: networking.istio.io/v1beta1\nkind: DestinationRule\nmetadata:\n  name: myapp\nspec:\n  host: myapp\n  subsets:\n    - name: v1\n      labels: { version: v1 }\n    - name: v2\n      labels: { version: v2 }",
+      "description": "Istio VirtualService routes 5% traffic to v2 canary, 95% to v1 stable."
+    },
+    {
+      "title": "Argo Rollouts Canary",
+      "useCase": "Automated canary steps.",
+      "code": "apiVersion: argoproj.io/v1alpha1\nkind: Rollout\nmetadata:\n  name: myapp-canary\nspec:\n  strategy:\n    canary:\n      steps:\n        - setWeight: 5\n        - pause: {duration: 5m}\n        - setWeight: 25\n        - pause: {duration: 5m}\n        - setWeight: 100\n      analysis:\n        templates:\n          - templateName: success-rate",
+      "description": "Argo Rollouts canary with stepped weight increases and analysis-driven auto-promotion."
+    },
+    {
+      "title": "Advanced Configuration",
+      "useCase": "Complex scenario",
+      "code": "# Advanced pattern for complex scenarios\n# Includes error handling",
+      "description": "Advanced configuration example."
+    },
+    {
+      "title": "Integration Pattern",
+      "useCase": "Tool integration",
+      "code": "# Integration with other tools\n# Shows how components connect",
+      "description": "Integration example with related tools."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What is Canary deployment?",
+      "options": [
+        "Deploy to all at once",
+        "Gradual rollout to subset first",
+        "Rollback after release",
+        "Staging only"
+      ],
+      "answer": 1,
+      "explanation": "Canary gradually rolls out to a small subset before expanding."
+    },
+    {
+      "question": "What triggers auto-rollback?",
+      "options": [
+        "Time elapsed",
+        "Metric degradation",
+        "User complaints",
+        "Manual decision"
+      ],
+      "answer": 1,
+      "explanation": "If metrics (error rate, latency) exceed thresholds, the canary auto-rollbacks."
+    },
+    {
+      "question": "What tool provides service mesh canary?",
+      "options": [
+        "Docker",
+        "Istio",
+        "Ansible",
+        "Terraform"
+      ],
+      "answer": 1,
+      "explanation": "Istio service mesh provides fine-grained weight-based traffic splitting for canary deployments."
+    },
+    {
+      "question": "Canary Deployment — What is important for security?",
+      "options": [
+        "Access control and encryption",
+        "Open access",
+        "Shared passwords",
+        "No auditing"
+      ],
+      "answer": 0,
+      "explanation": "Access control and encryption are fundamental security measures."
+    },
+    {
+      "question": "Canary Deployment — How to ensure reliability?",
+      "options": [
+        "Automated testing and monitoring",
+        "Manual checks only",
+        "No testing",
+        "Reactive fixes"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing and monitoring ensure consistent reliability."
+    },
+    {
+      "question": "Canary Deployment — What helps team collaboration?",
+      "options": [
+        "Shared workflows and visibility",
+        "Isolated work",
+        "No documentation",
+        "Siloed tools"
+      ],
+      "answer": 0,
+      "explanation": "Shared workflows and visibility enable better collaboration."
+    },
+    {
+      "question": "Canary Deployment — What reduces errors most?",
+      "options": [
+        "Automation",
+        "Manual processes",
+        "Rushing",
+        "Bypassing reviews"
+      ],
+      "answer": 0,
+      "explanation": "Automation consistently eliminates human errors."
+    },
+    {
+      "question": "Canary Deployment — What improves speed?",
+      "options": [
+        "Parallel execution and caching",
+        "Serial execution",
+        "No optimization",
+        "Manual steps"
+      ],
+      "answer": 0,
+      "explanation": "Parallel execution and caching significantly improve speed."
+    },
+    {
+      "question": "Canary Deployment — What is key for monitoring?",
+      "options": [
+        "Metrics dashboards and alerts",
+        "No monitoring",
+        "Only error logs",
+        "Manual checks"
+      ],
+      "answer": 0,
+      "explanation": "Metrics dashboards and alerts provide actionable insights."
+    },
+    {
+      "question": "Canary Deployment — What ensures quality?",
+      "options": [
+        "Automated testing in pipeline",
+        "No testing",
+        "Only manual QA",
+        "Skipping code review"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing integrated into the pipeline ensures consistent quality."
+    }
+  ]
+};

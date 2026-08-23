@@ -1,0 +1,202 @@
+export const k8s_traefik = {
+  "id": "k8s-traefik",
+  "title": "Traefik",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 15,
+  "file": "k8s-traefik.json",
+  "interviewAnswer": "Traefik is a modern HTTP reverse proxy with built-in service mesh features. Supports automatic Let's Encrypt, middleware for rate limiting, circuit breaking, and authentication. Uses custom CRDs (IngressRoute, Middleware) instead of annotations.",
+  "tldr": [
+    "Modern reverse proxy with automatic ACME/Let's Encrypt",
+    "Custom CRDs: IngressRoute, Middleware, TLSOption",
+    "Dashboard for monitoring routes and health",
+    "Built-in metrics (Prometheus, OpenTelemetry)"
+  ],
+  "deepDive": [
+    {
+      "heading": "Architecture",
+      "text": "Traefik runs as Deployment or DaemonSet. Discovers services via the Kubernetes API. IngressRoute CRD defines routing (host, path, middleware chain). Middleware CRD defines auth, rate limiting, headers, circuit breaking."
+    },
+    {
+      "heading": "Features",
+      "text": "Automatic Let's Encrypt provisioning and renewal. TCP/UDP routing. Weighted round-robin between services. Middleware chain: auth -> rate-limit -> headers -> circuit-breaker -> forward. Dashboard with real-time metrics."
+    },
+    {
+      "heading": "Common Use Cases",
+      "text": "Traefik applies to build automation, continuous integration, test execution, deployment orchestration, and infrastructure management. Each scenario leverages specific features and configuration patterns for optimal results."
+    }
+  ],
+  "interviewQuestions": [
+    {
+      "question": "What is Traefik?",
+      "answer": "Modern reverse proxy with built-in ACME, middleware, and CRD-based routing."
+    },
+    {
+      "question": "Routing CRD?",
+      "answer": "IngressRoute (host/path rules with middleware chain)."
+    },
+    {
+      "question": "Middleware?",
+      "answer": "CRD for auth, rate limiting, headers, circuit breaking."
+    },
+    {
+      "question": "Traefik vs NGINX?",
+      "answer": "Traefik: CRD-based, auto ACME, service mesh. NGINX: annotation-based, more plugins."
+    },
+    {
+      "question": "Traefik — What tools integrate well with this?",
+      "answer": "Integration is possible through APIs, plugins, webhooks, and configuration files."
+    },
+    {
+      "question": "Traefik — What are common troubleshooting steps?",
+      "answer": "Troubleshooting involves checking logs, verifying configuration, and testing incrementally."
+    },
+    {
+      "question": "Traefik — What security considerations apply here?",
+      "answer": "Security considerations include access control, encryption of sensitive data, and audit logging."
+    },
+    {
+      "question": "Traefik — What best practices should be followed?",
+      "answer": "Best practices include version control, automation, monitoring, and thorough documentation."
+    },
+    {
+      "question": "Traefik — How does this affect team collaboration?",
+      "answer": "It supports collaboration through shared visibility, standardized processes, and clear workflows."
+    },
+    {
+      "question": "Traefik — What metrics indicate successful implementation?",
+      "answer": "Key metrics include adoption rate, error reduction, build times, and team satisfaction scores."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "Traefik uses?",
+      "options": [
+        "Annotations only",
+        "CRDs (IngressRoute)",
+        "ConfigMaps"
+      ],
+      "answer": 1
+    },
+    {
+      "question": "Auto TLS via?",
+      "options": [
+        "cert-manager",
+        "Built-in ACME",
+        "Manual secrets"
+      ],
+      "answer": 1
+    },
+    {
+      "question": "Middleware is a?",
+      "options": [
+        "Annotation",
+        "CRD",
+        "ConfigMap entry"
+      ],
+      "answer": 1
+    },
+    {
+      "question": "Traefik dashboard?",
+      "options": [
+        "Built-in",
+        "Separate tool",
+        "Not available"
+      ],
+      "answer": 0
+    },
+    {
+      "question": "Traefik — How to ensure reliability?",
+      "options": [
+        "Automated testing and monitoring",
+        "Manual checks only",
+        "No testing",
+        "Reactive fixes"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing and monitoring ensure consistent reliability."
+    },
+    {
+      "question": "Traefik — What helps team collaboration?",
+      "options": [
+        "Shared workflows and visibility",
+        "Isolated work",
+        "No documentation",
+        "Siloed tools"
+      ],
+      "answer": 0,
+      "explanation": "Shared workflows and visibility enable better collaboration."
+    },
+    {
+      "question": "Traefik — What reduces errors most?",
+      "options": [
+        "Automation",
+        "Manual processes",
+        "Rushing",
+        "Bypassing reviews"
+      ],
+      "answer": 0,
+      "explanation": "Automation consistently eliminates human errors."
+    },
+    {
+      "question": "Traefik — What improves speed?",
+      "options": [
+        "Parallel execution and caching",
+        "Serial execution",
+        "No optimization",
+        "Manual steps"
+      ],
+      "answer": 0,
+      "explanation": "Parallel execution and caching significantly improve speed."
+    },
+    {
+      "question": "Traefik — What is key for monitoring?",
+      "options": [
+        "Metrics dashboards and alerts",
+        "No monitoring",
+        "Only error logs",
+        "Manual checks"
+      ],
+      "answer": 0,
+      "explanation": "Metrics dashboards and alerts provide actionable insights."
+    },
+    {
+      "question": "Traefik — What ensures quality?",
+      "options": [
+        "Automated testing in pipeline",
+        "No testing",
+        "Only manual QA",
+        "Skipping code review"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing integrated into the pipeline ensures consistent quality."
+    }
+  ],
+  "codeExamples": [
+    {
+      "title": "Install Traefik",
+      "useCase": "Deploy ingress controller",
+      "code": "helm repo add traefik https://helm.traefik.io/traefik;\nhelm install traefik traefik/traefik",
+      "description": "Installs Traefik via Helm."
+    },
+    {
+      "title": "Create IngressRoute",
+      "useCase": "Route traffic",
+      "code": "kubectl apply -f ingress-route.yaml",
+      "description": "Creates Traefik IngressRoute CRD."
+    },
+    {
+      "title": "Advanced Configuration",
+      "useCase": "Complex scenario",
+      "code": "# Advanced pattern for complex scenarios\n# Includes error handling",
+      "description": "Advanced configuration example."
+    },
+    {
+      "title": "Integration Pattern",
+      "useCase": "Tool integration",
+      "code": "# Integration with other tools\n# Shows how components connect",
+      "description": "Integration example with related tools."
+    }
+  ],
+  "laymanDefinition": "Traefik is a modern HTTP reverse proxy with built-in service mesh features. Supports automatic Let's Encrypt, middleware for rate limiting, circuit breaking, and authentication. Uses custom CRDs (IngressRoute, Middleware) instead of annotations.",
+  "diagramSvg": "<svg viewBox=\"0 0 500 280\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"280\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">Traefik</text><rect x=\"20\" y=\"45\" width=\"460\" height=\"60\" rx=\"5\" fill=\"#e8f4f8\" stroke=\"#ccc\" stroke-width=\"1.5\"/><text x=\"250\" y=\"80\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Traefik</text><text x=\"250\" y=\"155\" font-size=\"10\" fill=\"#555\" text-anchor=\"middle\">Modern reverse proxy with automatic ACME/Let's Enc</text><text x=\"250\" y=\"168\" font-size=\"10\" fill=\"#555\" text-anchor=\"middle\">rypt</text></svg>"
+};

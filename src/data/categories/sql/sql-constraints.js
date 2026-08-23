@@ -1,0 +1,179 @@
+export const sql_constraints = {
+  "id": "sql-constraints",
+  "title": "Constraints",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 25,
+  "tldr": [
+    "Constraints enforce rules on data in tables, ensuring data integrity and consistency.",
+    "Common constraints: PRIMARY KEY (unique ID), FOREIGN KEY (referential integrity), UNIQUE (no duplicates), CHECK (value conditions), DEFAULT (fallback value), NOT NULL (required field).",
+    "Constraints can be column-level (inline) or table-level (after columns). Table-level constraints can reference multiple columns.",
+    "PostgreSQL uses SERIAL/BIGSERIAL for auto-increment. MySQL uses AUTO_INCREMENT. PostgreSQL also supports GENERATED AS IDENTITY."
+  ],
+  "laymanDefinition": "Constraints are like the rules for filling out a form: some fields must be filled (NOT NULL), some must be unique (UNIQUE), some must match another form (FOREIGN KEY), and some have automatic values (DEFAULT).",
+  "deepDive": [
+    {
+      "heading": "PRIMARY KEY",
+      "text": "Uniquely identifies each row. Must be unique and NOT NULL. Can be single column (id INT PRIMARY KEY) or composite (PRIMARY KEY (order_id, product_id)). Automatically creates a unique index. Only one primary key per table."
+    },
+    {
+      "heading": "FOREIGN KEY",
+      "text": "Enforces referential integrity between tables. Ensures values in a column match values in the referenced table\\'s primary key. Options: ON DELETE CASCADE (delete child rows), ON DELETE SET NULL (set child FK to NULL), ON DELETE RESTRICT (prevent delete)."
+    },
+    {
+      "heading": "UNIQUE and NOT NULL",
+      "text": "UNIQUE ensures all values in a column are different. Multiple UNIQUE constraints per table. NULL values are allowed (one NULL in PostgreSQL, multiple in MySQL). NOT NULL ensures the column always has a value."
+    },
+    {
+      "heading": "CHECK and DEFAULT",
+      "text": "CHECK validates that values meet a condition: CHECK (salary > 0), CHECK (status IN (\\'active\\', \\'inactive\\')). DEFAULT provides a fallback value when no value is specified: DEFAULT CURRENT_DATE, DEFAULT 0."
+    },
+    {
+      "heading": "Auto-Increment (SERIAL vs AUTO_INCREMENT)",
+      "text": "PostgreSQL: SERIAL creates an auto-incrementing integer column. BIGSERIAL for bigint. Newer: GENERATED AS IDENTITY (standard SQL). MySQL: AUTO_INCREMENT starts at 1 by default, can be customized. SQL Server: IDENTITY(1,1)."
+    }
+  ],
+  "interviewAnswer": "Constraints are the backbone of data integrity in SQL databases. They prevent invalid data at the database level, which is more reliable than application-level validation alone.",
+  "interviewQuestions": [
+    {
+      "question": "What is a PRIMARY KEY constraint?",
+      "answer": "Uniquely identifies each row. Must be unique and NOT NULL. Only one per table. Can be single or composite."
+    },
+    {
+      "question": "What is a FOREIGN KEY constraint?",
+      "answer": "Enforces that values in a column match values in another table\\'s primary key. Maintains referential integrity."
+    },
+    {
+      "question": "What does ON DELETE CASCADE do?",
+      "answer": "When a parent row is deleted, all child rows referencing it are automatically deleted."
+    },
+    {
+      "question": "What is the difference between UNIQUE and PRIMARY KEY?",
+      "answer": "PRIMARY KEY is automatically NOT NULL. UNIQUE allows NULL values. One PK per table, multiple UNIQUE constraints allowed."
+    },
+    {
+      "question": "What does CHECK do?",
+      "answer": "Validates that column values satisfy a boolean expression. Example: CHECK (age >= 0 AND age <= 150)."
+    },
+    {
+      "question": "What does DEFAULT do?",
+      "answer": "Sets a default value for a column when no value is provided in INSERT."
+    },
+    {
+      "question": "What is SERIAL in PostgreSQL?",
+      "answer": "An auto-incrementing integer column. Creates a sequence behind the scenes. Equivalent to AUTO_INCREMENT in MySQL."
+    },
+    {
+      "question": "What is GENERATED AS IDENTITY?",
+      "answer": "A SQL standard syntax for auto-incrementing columns. Newer alternative to SERIAL in PostgreSQL."
+    },
+    {
+      "question": "Can a table have multiple FOREIGN KEYs?",
+      "answer": "Yes. Each foreign key references a primary key in another table (or the same table for self-referencing)."
+    },
+    {
+      "question": "What happens if you delete a parent row with RESTRICT?",
+      "answer": "The delete is prevented if child rows reference the parent. Use CASCADE or SET NULL to allow deletion."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"300\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">Constraints</text><rect x=\"10\" y=\"40\" width=\"110\" height=\"30\" rx=\"5\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1.5\"/><text x=\"65\" y=\"56\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">PRIMARY KEY</text><text x=\"65\" y=\"64\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Unique ID</text><rect x=\"10\" y=\"80\" width=\"110\" height=\"30\" rx=\"5\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1.5\"/><text x=\"65\" y=\"96\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">FOREIGN KEY</text><text x=\"65\" y=\"104\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Reference</text><rect x=\"10\" y=\"120\" width=\"110\" height=\"30\" rx=\"5\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1.5\"/><text x=\"65\" y=\"136\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">UNIQUE</text><text x=\"65\" y=\"144\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">No duplicates</text><rect x=\"10\" y=\"160\" width=\"110\" height=\"30\" rx=\"5\" fill=\"#dc3545\" stroke=\"#dc3545\" stroke-width=\"1.5\"/><text x=\"65\" y=\"176\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">NOT NULL</text><text x=\"65\" y=\"184\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Required</text><rect x=\"130\" y=\"40\" width=\"110\" height=\"30\" rx=\"5\" fill=\"#e83e8c\" stroke=\"#e83e8c\" stroke-width=\"1.5\"/><text x=\"185\" y=\"56\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">CHECK</text><text x=\"185\" y=\"64\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Condition</text><rect x=\"130\" y=\"80\" width=\"110\" height=\"30\" rx=\"5\" fill=\"#6610f2\" stroke=\"#6610f2\" stroke-width=\"1.5\"/><text x=\"185\" y=\"96\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">DEFAULT</text><text x=\"185\" y=\"104\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Fallback value</text><line x1=\"240\" y1=\"55\" x2=\"270\" y2=\"55\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"240\" y1=\"95\" x2=\"270\" y2=\"95\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"280\" y=\"40\" width=\"200\" height=\"100\" rx=\"5\" fill=\"#17a2b8\" stroke=\"#17a2b8\" stroke-width=\"1.5\"/><text x=\"380\" y=\"56\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Data Integrity</text><text x=\"380\" y=\"123\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Ensures valid, consistent, and relia</text><text x=\"380\" y=\"134\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">ble data in the database.</text><text x=\"240\" y=\"190\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">Constraints: Rules ensuring data integrity at the </text><text x=\"240\" y=\"202\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">database level.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "PRIMARY KEY Examples",
+      "useCase": "Single and composite PK.",
+      "code": "-- Single column primary key\nCREATE TABLE users (id SERIAL PRIMARY KEY, name VARCHAR(100));\n\n-- Composite primary key\nCREATE TABLE order_items (\n  order_id INT,\n  product_id INT,\n  quantity INT,\n  PRIMARY KEY (order_id, product_id)\n);",
+      "description": "Single and composite primary key definitions."
+    },
+    {
+      "title": "FOREIGN KEY with CASCADE",
+      "useCase": "Referential integrity.",
+      "code": "CREATE TABLE orders (\n  id SERIAL PRIMARY KEY,\n  user_id INT REFERENCES users(id) ON DELETE CASCADE,\n  total DECIMAL(10,2)\n);",
+      "description": "Foreign key with ON DELETE CASCADE — deleting a user deletes their orders."
+    },
+    {
+      "title": "CHECK and DEFAULT",
+      "useCase": "Value constraints.",
+      "code": "CREATE TABLE employees (\n  id SERIAL PRIMARY KEY,\n  name VARCHAR(100) NOT NULL,\n  salary DECIMAL(10,2) CHECK (salary > 0),\n  status VARCHAR(20) DEFAULT 'active' CHECK (status IN ('active', 'inactive')),\n  joined_at DATE DEFAULT CURRENT_DATE\n);",
+      "description": "CHECK validates salary > 0, status in list. DEFAULT sets fallback values."
+    },
+    {
+      "title": "Auto-Increment Comparison",
+      "useCase": "SERIAL vs IDENTITY vs AUTO_INCREMENT.",
+      "code": "-- PostgreSQL (old style)\nCREATE TABLE t (id SERIAL PRIMARY KEY);\n\n-- PostgreSQL (new standard)\nCREATE TABLE t (id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY);\n\n-- MySQL\nCREATE TABLE t (id INT AUTO_INCREMENT PRIMARY KEY);",
+      "description": "Auto-increment syntax across databases."
+    },
+    {
+      "title": "Multiple UNIQUE Constraints",
+      "useCase": "Unique on different columns.",
+      "code": "CREATE TABLE users (\n  id SERIAL PRIMARY KEY,\n  email VARCHAR(255) UNIQUE,\n  username VARCHAR(50) UNIQUE,\n  phone VARCHAR(20) UNIQUE\n);",
+      "description": "Multiple UNIQUE constraints enforce uniqueness on email, username, and phone."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "Which constraint ensures a column has no duplicates?",
+      "options": [
+        "PRIMARY KEY",
+        "UNIQUE",
+        "FOREIGN KEY",
+        "CHECK"
+      ],
+      "answer": 1,
+      "explanation": "UNIQUE ensures no duplicate values. PRIMARY KEY also ensures uniqueness."
+    },
+    {
+      "question": "What does ON DELETE CASCADE do?",
+      "options": [
+        "Prevents deletion",
+        "Deletes child rows automatically",
+        "Sets FK to NULL",
+        "Creates backup"
+      ],
+      "answer": 1,
+      "explanation": "CASCADE deletes child rows when parent is deleted."
+    },
+    {
+      "question": "Which constraint checks a boolean condition?",
+      "options": [
+        "CHECK",
+        "DEFAULT",
+        "UNIQUE",
+        "NOT NULL"
+      ],
+      "answer": 0,
+      "explanation": "CHECK evaluates a boolean condition for each row."
+    },
+    {
+      "question": "What is PostgreSQL equivalent of MySQL AUTO_INCREMENT?",
+      "options": [
+        "SEQUENCE",
+        "SERIAL",
+        "INCREMENT",
+        "AUTO"
+      ],
+      "answer": 1,
+      "explanation": "SERIAL creates an auto-incrementing column in PostgreSQL."
+    },
+    {
+      "question": "How many PRIMARY KEY constraints per table?",
+      "options": [
+        "One",
+        "Two",
+        "Unlimited",
+        "Depends on DB"
+      ],
+      "answer": 0,
+      "explanation": "Only one PRIMARY KEY per table (can be composite)."
+    },
+    {
+      "question": "What does RESTRICT do on DELETE?",
+      "options": [
+        "Deletes all",
+        "Prevents deletion if referenced",
+        "Sets to NULL",
+        "Cascades"
+      ],
+      "answer": 1,
+      "explanation": "RESTRICT prevents deletion if foreign key references exist."
+    }
+  ]
+};

@@ -1,0 +1,169 @@
+export const mon_alerting = {
+  "id": "mon-alerting",
+  "title": "Alerting",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 15,
+  "tldr": [
+    "Alerting automatically notifies on-call engineers when system metrics or events indicate a problem requiring human intervention.",
+    "Good alerts are: actionable (something to fix), urgent (needs attention now), and specific (clear what is wrong). Noisy alerts cause alert fatigue.",
+    "Alert lifecycle: firing (threshold breached) -> pending (not yet firing) -> resolved (back to normal) -> acknowledged/silenced.",
+    "Alert routing: page (critical, wake someone), notify (high, check within hours), ticket (medium, fix when possible), log (low, track it)."
+  ],
+  "laymanDefinition": "Alerting is like a smoke detector in your house. A good smoke detector only goes off when there is actual smoke or fire (actionable). A bad one goes off when you burn toast (noisy). You eventually stop responding to the bad one (alert fatigue), and then miss the real fire.",
+  "deepDive": [
+    {
+      "heading": "Alerting Best Practices",
+      "text": "Define clear thresholds with proper durations (for=5m prevents flapping). Use multiple severity levels (warning, critical). Include runbook URLs in alert annotations. Set up alert fatigue prevention (silencing, inhibition). Review alerts monthly — remove noisy ones."
+    },
+    {
+      "heading": "Alert Severity Levels",
+      "text": "P0/Critical: service down, data loss — page on-call within 5 minutes. P1/High: degraded performance, feature broken — notify within 30 minutes. P2/Medium: non-critical issue — fix within business hours. P3/Low: cosmetic issue — add to backlog. P4/Info: informational — no action needed."
+    },
+    {
+      "heading": "Alert Routing and Escalation",
+      "text": "Route alerts to the right team via labels (team=platform, service=payment). Escalation: if no response in N minutes, alert next tier. Schedule: follow-the-sun, primary+secondary on-call. Tools: PagerDuty, Opsgenie, Grafana OnCall."
+    },
+    {
+      "heading": "Common Alerting Mistakes",
+      "text": "Noisy alerts: too many false positives. Static thresholds that don\\'t adapt to traffic patterns. No runbook: alert says \"CPU high\" but no info on what to do. Paging for non-urgent issues. Duplicate alerts from multiple sources."
+    }
+  ],
+  "interviewAnswer": "Alert wisely. Every alert should be actionable, urgent, and include a runbook link. Use duration (for=5m) to avoid transient flapping. Route by team and severity. Review and prune alerts regularly — fewer, high-quality alerts beat many noisy ones. Implement escalation policies for incidents.",
+  "interviewQuestions": [
+    {
+      "question": "What is alerting?",
+      "answer": "Automatically notifying on-call engineers when system metrics indicate a problem requiring intervention."
+    },
+    {
+      "question": "What makes a good alert?",
+      "answer": "Actionable (fix something), Urgent (needs attention now), Specific (clear what is wrong), includes runbook."
+    },
+    {
+      "question": "What is alert fatigue?",
+      "answer": "When too many false-positive alerts cause engineers to ignore or miss real problems."
+    },
+    {
+      "question": "What is the for=5m parameter in Prometheus?",
+      "answer": "Duration an alert condition must persist before firing — prevents flapping from transient spikes."
+    },
+    {
+      "question": "What is alert routing?",
+      "answer": "Directing alerts to the right team or on-call schedule based on labels (team, service, severity)."
+    },
+    {
+      "question": "What is alert escalation?",
+      "answer": "If the primary on-call does not acknowledge within N minutes, alert the next tier."
+    },
+    {
+      "question": "What is a runbook?",
+      "answer": "Documentation describing the steps to diagnose and resolve a specific alert. Include in alert annotations."
+    },
+    {
+      "question": "What is the difference between firing and pending alerts?",
+      "answer": "Pending: condition met but not yet for=duration. Firing: condition persists past duration — notification sent."
+    },
+    {
+      "question": "What is P0 severity?",
+      "answer": "Critical — service down or data loss. Page on-call immediately, wake up if needed."
+    },
+    {
+      "question": "What is alert silencing?",
+      "answer": "Temporarily suppressing alerts during known maintenance or deployments to reduce noise."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"300\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">Alerting</text><rect x=\"10\" y=\"35\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1.5\"/><text x=\"65\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Metrics</text><text x=\"65\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">CPU > 80%</text><line x1=\"120\" y1=\"48\" x2=\"150\" y2=\"48\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"160\" y=\"35\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1.5\"/><text x=\"215\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Alert Rule</text><text x=\"215\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">for=5m</text><line x1=\"160\" y1=\"60\" x2=\"160\" y2=\"80\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"10\" y=\"70\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1.5\"/><text x=\"65\" y=\"86\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Firing</text><text x=\"65\" y=\"89\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Notification sent</text><rect x=\"10\" y=\"100\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#dc3545\" stroke=\"#dc3545\" stroke-width=\"1.5\"/><text x=\"65\" y=\"116\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Route</text><text x=\"65\" y=\"119\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Team: Platform</text><rect x=\"10\" y=\"130\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#e83e8c\" stroke=\"#e83e8c\" stroke-width=\"1.5\"/><text x=\"65\" y=\"146\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Escalate</text><text x=\"65\" y=\"149\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">15 min no response</text><rect x=\"10\" y=\"160\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#6610f2\" stroke=\"#6610f2\" stroke-width=\"1.5\"/><text x=\"65\" y=\"176\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Resolved</text><text x=\"65\" y=\"179\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Back to normal</text><rect x=\"290\" y=\"35\" width=\"190\" height=\"155\" rx=\"5\" fill=\"#17a2b8\" stroke=\"#17a2b8\" stroke-width=\"1.5\"/><text x=\"385\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Alerting Pipeline</text><text x=\"385\" y=\"162\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Metrics -> Alert Rule -> Firing -></text><text x=\"385\" y=\"173\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\"> Route -> Escalate. Include runboo</text><text x=\"385\" y=\"184\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">k in annotations.</text><text x=\"240\" y=\"220\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">Alerting: Actionable, urgent, specific notificatio</text><text x=\"240\" y=\"232\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">ns with runbooks. Avoid alert fatigue.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "Prometheus Alert Rule with Annotations",
+      "useCase": "Best practice alert rule.",
+      "code": "groups:\n  - name: service_alerts\n    rules:\n      - alert: HighErrorRate\n        expr: sum(rate(http_requests_total{status=~\"5..\"}[5m])) / sum(rate(http_requests_total[5m])) > 0.05\n        for: 10m\n        labels:\n          severity: critical\n          team: platform\n        annotations:\n          runbook: 'https://runbook.example.com/high-error-rate'",
+      "description": "Well-structured alert rule with labels and annotations."
+    },
+    {
+      "title": "Alertmanager Configuration",
+      "useCase": "Routing and notification.",
+      "code": "route:\n  receiver: 'default'\n  group_wait: 30s\n  group_interval: 5m\n  repeat_interval: 4h\n  routes:\n    - match:\n        severity: critical\n      receiver: page-oncall\nreceivers:\n  - name: page-oncall\n    pagerduty_configs:\n      - routing_key: '...'",
+      "description": "Alertmanager routes alerts by severity to PagerDuty."
+    },
+    {
+      "title": "Grafana Alert (Unified Alerting)",
+      "useCase": "Grafana alert rule.",
+      "code": "POST /api/v1/provisioning/alert-rules\n{\"title\":\"High request latency\",\"condition\":\"A\",\n\"data\":[{\"refId\":\"A\",\"relativeTimeRange\":{\"from\":300,\"to\":0},\n\"datasourceUid\":\"prometheus\",\n\"model\":{\"expr\":\"histogram_quantile(0.99,sum(rate(request_duration_seconds_bucket[5m])) by (le)) > 1.0\"}}],\n\"noDataState\":\"Alerting\",\"execErrState\":\"Alerting\",\n\"labels\":{\"severity\":\"warning\"},\n\"annotations\":{\"summary\":\"p99 latency > 1 second\"}}",
+      "description": "Grafana unified alerting rule with Prometheus query, no-data handling, and labels."
+    },
+    {
+      "title": "Runbook Template",
+      "useCase": "Standard incident response document.",
+      "code": "# Runbook: High CPU Usage (P1)\n## Initial Checks\n1. Check dashboard: https://grafana/d/cpu-dashboard\n2. Identify instance: kubectl top pods -n production\n## Resolution\n- Scale up: kubectl scale deployment app --replicas=5\n- Rollback: kubectl rollout undo deployment app",
+      "description": "Runbook template provides standard diagnosis and resolution steps for common alerts."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What makes a good alert?",
+      "options": [
+        "Noisy and frequent",
+        "Actionable, urgent, specific",
+        "Pages everyone",
+        "Vague description"
+      ],
+      "answer": 1,
+      "explanation": "Good alerts are actionable, urgent, specific, and include a runbook."
+    },
+    {
+      "question": "What does the for=5m parameter do?",
+      "options": [
+        "Fires immediately",
+        "Waits 5 minutes before firing",
+        "Repeats every 5 minutes",
+        "Silences for 5 minutes"
+      ],
+      "answer": 1,
+      "explanation": "for=5m requires the condition to persist for 5 minutes before firing — prevents flapping."
+    },
+    {
+      "question": "What is alert fatigue?",
+      "options": [
+        "Tired engineers",
+        "Ignoring alerts due to too many false positives",
+        "Alerts that never fire",
+        "Too few alerts"
+      ],
+      "answer": 1,
+      "explanation": "Alert fatigue occurs when too many noisy alerts cause engineers to miss real problems."
+    },
+    {
+      "question": "What is P0 severity?",
+      "options": [
+        "Low priority",
+        "Critical — wake on-call",
+        "Informational",
+        "Medium impact"
+      ],
+      "answer": 1,
+      "explanation": "P0/Critical means service down or data loss — page on-call immediately."
+    },
+    {
+      "question": "What is alert escalation?",
+      "options": [
+        "Making alerts louder",
+        "Notifying next tier if no response",
+        "Deleting old alerts",
+        "Aggregating alerts"
+      ],
+      "answer": 1,
+      "explanation": "Escalation alerts the next on-call tier if the primary does not acknowledge within the timeout."
+    },
+    {
+      "question": "What is a runbook?",
+      "options": [
+        "Scheduling tool",
+        "Documentation for incident response",
+        "Monitoring tool",
+        "Alert configuration"
+      ],
+      "answer": 1,
+      "explanation": "A runbook documents the steps to diagnose and resolve a specific alert."
+    }
+  ]
+};

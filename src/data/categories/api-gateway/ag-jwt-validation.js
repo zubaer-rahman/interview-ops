@@ -1,0 +1,168 @@
+export const ag_jwt_validation = {
+  "id": "ag-jwt-validation",
+  "title": "JWT Validation",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 18,
+  "tldr": [
+    "JWT (JSON Web Token) is a compact, self-contained token format for transmitting claims between parties, commonly used for API authentication.",
+    "Three parts: Header (alg, typ), Payload (claims), Signature (HMAC or RSA/ECDSA). Base64url encoded, dot-separated.",
+    "Gateway validates: signature (trusted public key), expiration (exp), not before (nbf), issuer (iss), audience (aud).",
+    "Best practices: short expiry (15-60min), use RS256/ES256 over HS256, rotate signing keys, blacklist for immediate revocation."
+  ],
+  "laymanDefinition": "JWT is like a concert wristband. Has your VIP status, expiry time, and venue. Wristband is signed � can check but not forge. Sold separately with hologram (real one).",
+  "deepDive": [
+    {
+      "heading": "JWT Structure",
+      "text": "Header: {\"alg\":\"RS256\",\"typ\":\"JWT\"}. Payload: {\"sub\":\"user123\",\"role\":\"admin\",\"exp\":1748567890}. Signature: RSA-SHA256(base64urlEncode(header)+\".\"+base64urlEncode(payload), privateKey)."
+    },
+    {
+      "heading": "Signature Verification at Gateway",
+      "text": "Fetch JWKS (JSON Web Key Set) from auth server. Cache keys with kid (key ID) matching. Verify: decode using jwks-rsa+jsonwebtoken. Check: signature, exp, nbf, iss, aud. Reject expired."
+    },
+    {
+      "heading": "Token Revolution Strategies",
+      "text": "JWT cannot be revoked by expiry alone. Solutions: short TTL (15min), token blacklist (Redis), token version DB, refresh tokens. Do not validate remote on every call."
+    },
+    {
+      "heading": "JWKS (JSON Web Key Set)",
+      "text": "Standard endpoint: /.well-known/jwks.json. Contains public keys (modulus n, exponent e for RSA). Gateway caches, rotates automatically. Allows key rotation without downtime."
+    }
+  ],
+  "interviewAnswer": "JWT validation at gateway is critical: verify signature with JWKS, check claims (exp, nbf, iss, aud), handle revocation (blacklist/short TTL). Prefer RS256 for asymmetric signing. Rotate keys via JWKS. Reject on first failure.",
+  "interviewQuestions": [
+    {
+      "question": "What does JWT stand for?",
+      "answer": "JSON Web Token."
+    },
+    {
+      "question": "JWT parts?",
+      "answer": "Header.Payload.Signature � three base64url-encoded segments."
+    },
+    {
+      "question": "What is the exp claim?",
+      "answer": "Expiration time (Unix timestamp). Must be in the future."
+    },
+    {
+      "question": "HS256 vs RS256?",
+      "answer": "HS256: symmetric (shared secret). RS256: asymmetric (RSA private/public). RS256 preferred."
+    },
+    {
+      "question": "What is JWKS?",
+      "answer": "JSON Web Key Set � endpoint with public keys for verification."
+    },
+    {
+      "question": "How to revoke JWT?",
+      "answer": "Short TTL + token blacklist (Redis). Refresh tokens for long sessions."
+    },
+    {
+      "question": "What is kid?",
+      "answer": "Key ID in JWT header � matches JWKS key for rotation."
+    },
+    {
+      "question": "Should JWT be blacklisted immediately on logout?",
+      "answer": "Yes � blacklist with TTL matching token expiry."
+    },
+    {
+      "question": "What claims to validate?",
+      "answer": "Signature, exp, nbf, iss, aud, optionally sub."
+    },
+    {
+      "question": "What is refresh token?",
+      "answer": "Long-lived token to get new access tokens. Stored securely."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"300\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">JWT Validation</text><rect x=\"10\" y=\"35\" width=\"100\" height=\"25\" rx=\"5\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1.5\"/><text x=\"60\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Client</text><text x=\"60\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Request+JWT</text><line x1=\"110\" y1=\"48\" x2=\"140\" y2=\"48\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"150\" y=\"35\" width=\"100\" height=\"25\" rx=\"5\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1.5\"/><text x=\"200\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">API Gateway</text><text x=\"200\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Validate JWT</text><line x1=\"150\" y1=\"60\" x2=\"150\" y2=\"80\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"250\" y1=\"48\" x2=\"280\" y2=\"48\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"10\" y=\"70\" width=\"100\" height=\"25\" rx=\"5\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1.5\"/><text x=\"60\" y=\"86\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">JWKS</text><text x=\"60\" y=\"89\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Cache keys</text><rect x=\"10\" y=\"105\" width=\"100\" height=\"25\" rx=\"5\" fill=\"#dc3545\" stroke=\"#dc3545\" stroke-width=\"1.5\"/><text x=\"60\" y=\"121\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Signature</text><text x=\"60\" y=\"124\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Verify RSA</text><rect x=\"10\" y=\"140\" width=\"100\" height=\"25\" rx=\"5\" fill=\"#e83e8c\" stroke=\"#e83e8c\" stroke-width=\"1.5\"/><text x=\"60\" y=\"156\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Claims</text><text x=\"60\" y=\"159\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">exp/iss/aud</text><rect x=\"160\" y=\"70\" width=\"100\" height=\"25\" rx=\"5\" fill=\"#6610f2\" stroke=\"#6610f2\" stroke-width=\"1.5\"/><text x=\"210\" y=\"86\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Blacklist</text><text x=\"210\" y=\"89\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Redis check</text><rect x=\"160\" y=\"105\" width=\"100\" height=\"25\" rx=\"5\" fill=\"#17a2b8\" stroke=\"#17a2b8\" stroke-width=\"1.5\"/><text x=\"210\" y=\"121\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Backend</text><text x=\"210\" y=\"124\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">User context</text><rect x=\"290\" y=\"35\" width=\"190\" height=\"155\" rx=\"5\" fill=\"#17a2b8\" stroke=\"#17a2b8\" stroke-width=\"1.5\"/><text x=\"385\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">JWT</text><text x=\"385\" y=\"162\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Self-contained token. RS256. JWKS.</text><text x=\"385\" y=\"173\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\"> Short TTL. Blacklist for revocati</text><text x=\"385\" y=\"184\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">on.</text></svg>",
+  "codeExamples": "<text x=\"240\" y=\"220\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">JWT: Self-contained auth tokens with signature, ex</text><text x=\"240\" y=\"232\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">piry, claims. Validate signature and claims at gat</text><text x=\"240\" y=\"244\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">eway.</text>",
+  "mcqQuestions": [
+    {
+      "title": "JWT Verification with JWKS",
+      "useCase": "Verify using public keys.",
+      "code": "const jwt=require(\"jsonwebtoken\");\nconst jwksClient=require(\"jwks-rsa\");\nconst client=jwksClient({jwksUri:\"https://auth.example.com/.well-known/jwks.json\"});\nfunction getKey(header,callback){\n  client.getSigningKey(header.kid,(err,key)=>{\n    if(err) return callback(err);\n    const signingKey=key.getPublicKey();\n    callback(null,signingKey);\n  });\n}\nasync function validateJwt(req,res,next){\n  const token=req.headers.authorization?.replace(\"Bearer \",\"\");\n  if(!token) return res.status(401).json({error:\"Token required\"});\n  jwt.verify(token,getKey,{algorithms:[\"RS256\"],issuer:\"https://auth.example.com\",audience:\"https://api.example.com\"},err=>{\n    if(err) return res.status(401).json({error:\"Invalid token\",details:err.message});\n    const decoded=jwt.decode(token);\n    req.user=decoded;next();\n  });\n}",
+      "description": "JWT verification with JWKS-fetched public keys and claim validation."
+    },
+    {
+      "title": "Token Blacklist",
+      "useCase": "Revoke tokens before expiry.",
+      "code": "async function blacklistToken(jti,exp){\n  const ttl=Math.max(0,exp-Math.floor(Date.now()/1000));\n  await redis.set(\"blacklist:\"+jti,\"true\",\"EX\",ttl);\n}\nasync function checkBlacklist(token){\n  const decoded=jwt.decode(token);\n  if(!decoded) return true;\n  const blocked=await redis.exists(\"blacklist:\"+decoded.jti);\n  return blocked===1;\n}\nasync function validateWithBlacklist(req,res,next){\n  const token=req.headers.authorization?.replace(\"Bearer \",\"\");\n  const blacklisted=await checkBlacklist(token);\n  if(blacklisted) return res.status(401).json({error:\"Token revoked\"});next();\n}",
+      "description": "Token blacklist using JTI (JWT ID) with TTL matching expiry."
+    },
+    {
+      "title": "Refresh Token Flow",
+      "useCase": "Access + refresh tokens.",
+      "code": "// Login returns both\nasync function login(req,res){\n  const accessToken=jwt.sign({sub:user.id,role:user.role},privateKey,\n    {algorithm:\"RS256\",expiresIn:\"15m\",issuer:\"https://auth.example.com\",audience:\"https://api.example.com\"});\n  const refreshToken=crypto.randomBytes(64).toString(\"hex\");\n  await db.query(\"INSERT INTO refresh_tokens (user_id,token_hash,expires_at) VALUES (,SHA256(),NOW()+INTERVAL '7 days')\",[user.id,refreshToken]);\n  res.json({access_token:accessToken,refresh_token:refreshToken,expires_in:900});\n}",
+      "description": "Refresh token flow: short-lived access token + long-lived refresh token."
+    },
+    {
+      "title": "HS256 vs RS256",
+      "useCase": "Symmetric vs asymmetric.",
+      "code": "// HS256: Shared secret (symmetric)\nconst token=jwt.sign({sub:\"123\"},HS256_SECRET,{algorithm:\"HS256\",expiresIn:\"15m\"});\nconst decoded=jwt.verify(token,HS256_SECRET); // Same secret on all services\n// RS256: Private/public key pair (asymmetric)\nconst token=jwt.sign({sub:\"123\"},privateKey,{algorithm:\"RS256\"});\nconst decoded=jwt.verify(token,publicKey); // Only auth server has private key",
+      "description": "HS256 shared secret vs RS256 asymmetric. RS256 preferred for microservices."
+    },
+    {
+      "question": "JWT Validation — How to ensure reliability?",
+      "options": [
+        "Automated testing and monitoring",
+        "Manual checks only",
+        "No testing",
+        "Reactive fixes"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing and monitoring ensure consistent reliability."
+    },
+    {
+      "question": "JWT Validation — What helps team collaboration?",
+      "options": [
+        "Shared workflows and visibility",
+        "Isolated work",
+        "No documentation",
+        "Siloed tools"
+      ],
+      "answer": 0,
+      "explanation": "Shared workflows and visibility enable better collaboration."
+    },
+    {
+      "question": "JWT Validation — What reduces errors most?",
+      "options": [
+        "Automation",
+        "Manual processes",
+        "Rushing",
+        "Bypassing reviews"
+      ],
+      "answer": 0,
+      "explanation": "Automation consistently eliminates human errors."
+    },
+    {
+      "question": "JWT Validation — What improves speed?",
+      "options": [
+        "Parallel execution and caching",
+        "Serial execution",
+        "No optimization",
+        "Manual steps"
+      ],
+      "answer": 0,
+      "explanation": "Parallel execution and caching significantly improve speed."
+    },
+    {
+      "question": "JWT Validation — What is key for monitoring?",
+      "options": [
+        "Metrics dashboards and alerts",
+        "No monitoring",
+        "Only error logs",
+        "Manual checks"
+      ],
+      "answer": 0,
+      "explanation": "Metrics dashboards and alerts provide actionable insights."
+    },
+    {
+      "question": "JWT Validation — What ensures quality?",
+      "options": [
+        "Automated testing in pipeline",
+        "No testing",
+        "Only manual QA",
+        "Skipping code review"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing integrated into the pipeline ensures consistent quality."
+    }
+  ]
+};

@@ -1,0 +1,217 @@
+export const k8s_etcd = {
+  "id": "k8s-etcd",
+  "title": "etcd",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 15,
+  "file": "k8s-etcd.json",
+  "interviewAnswer": "etcd is the cluster's source of truth — it stores everything about your cluster in a reliable, distributed key-value store. Every Kubernetes object (Pods, ConfigMaps, Secrets, Deployments, etc.) is serialized and stored in etcd. It uses the Raft consensus algorithm to ensure data consistency across multiple replicas. If you think of the cluster as a living organism, etcd is its memory — without it, the cluster cannot remember anything or make informed decisions.",
+  "tldr": [
+    "etcd is a distributed, consistent key-value store that serves as Kubernetes' single source of truth for all cluster state",
+    "It uses the Raft consensus algorithm to maintain consistency across a cluster of etcd nodes, tolerating minority failures",
+    "Only the API Server communicates directly with etcd — all other components interact through the API Server",
+    "etcd supports watch semantics, enabling event-driven architecture where clients receive real-time change notifications",
+    "Regular etcd backups are critical for disaster recovery — a corrupted etcd can render the entire cluster inoperable"
+  ],
+  "deepDive": [
+    {
+      "heading": "etcd Architecture and Raft Consensus",
+      "text": "etcd organizes a cluster of nodes where one is the leader and the rest are followers. The leader handles all client requests (writes go through the leader). Raft ensures consensus: the leader logs each write and replicates it to a majority (quorum) of followers before committing. For a 3-node cluster, write requires 2/3 nodes to acknowledge. The leader is elected automatically; if it fails, followers hold an election and a new leader takes over within milliseconds."
+    },
+    {
+      "heading": "etcd Data Model and Storage",
+      "text": "etcd stores data as a hierarchical key-value store (like a filesystem). Kubernetes stores objects as JSON-serialized values under keys like /registry/pods/default/nginx-pod, /registry/deployments/default/web, /registry/services/endpoints/default/kubernetes. Each key has a revision (monotonically increasing integer) used for watch ordering and optimistic concurrency. etcd supports multi-version concurrency control (MVCC) — older revisions are retained for a configurable window to support watches and history."
+    },
+    {
+      "heading": "etcd Performance, Backup, and Recovery",
+      "text": "etcd performance depends on disk speed (SSD required) and network latency between cluster members. Key operations are limited to 1.5 MB per request (default). Production etcd should run on dedicated SSDs. Backup: etcdctl snapshot save captures a consistent snapshot. For recovery: stop API Server, restore snapshot to a new data directory, start etcd with restored data, verify cluster health, start API Server. Regular backups (every 2 hours, retain 10+ days) are essential."
+    }
+  ],
+  "interviewQuestions": [
+    {
+      "question": "What is etcd in Kubernetes?",
+      "answer": "etcd is a distributed, consistent key-value store that stores all Kubernetes cluster data. It is the single source of truth for cluster state."
+    },
+    {
+      "question": "Why does Kubernetes use etcd instead of a traditional database?",
+      "answer": "etcd provides strong consistency (linearizable reads), watch support (real-time notifications on changes), high availability (Raft consensus), and is designed for the operational patterns Kubernetes needs — storing configuration, not large data."
+    },
+    {
+      "question": "How does etcd handle failures?",
+      "answer": "etcd uses Raft consensus. A cluster of 3 etcd nodes can tolerate 1 failure. With 5 nodes, 2 failures are tolerated. The cluster continues operating as long as a majority is available."
+    },
+    {
+      "question": "What is a quorum in etcd?",
+      "answer": "Quorum is the minimum number of nodes that must agree on a write for it to be committed. For N nodes, quorum = floor(N/2) + 1. For 3 nodes, quorum is 2. For 5 nodes, quorum is 3."
+    },
+    {
+      "question": "How do you backup etcd?",
+      "answer": "Use etcdctl snapshot save to create a snapshot file. For automated backups, tools like Velero or etcdadm can be used. Backups should be stored off-cluster and tested periodically."
+    },
+    {
+      "question": "What happens if etcd data is corrupted?",
+      "answer": "The cluster becomes unstable or inoperable. The API Server may crash or return errors. Recovery requires restoring from a backup snapshot and restarting etcd."
+    },
+    {
+      "question": "How does the API Server interact with etcd?",
+      "answer": "The API Server sends watch, get, create, update, and delete requests to etcd via its gRPC API. Objects are serialized to JSON (or Protobuf) and stored with their resource version as the etcd revision."
+    },
+    {
+      "question": "What is the recommended disk for etcd?",
+      "answer": "NVMe SSDs are recommended. etcd is sensitive to write latency — a slow disk can cause leader election failures and cluster instability. The fsync latency should be under 10ms (ideally under 2ms)."
+    },
+    {
+      "question": "How large should an etcd cluster be?",
+      "answer": "3 nodes for most production clusters, 5 nodes for large-scale deployments. Etcd clusters should not exceed 7 nodes, as the Raft overhead increases with more nodes."
+    },
+    {
+      "question": "What is the maximum request size in etcd?",
+      "answer": "The default maximum request size is 1.5 MB. This limits the size of Kubernetes objects — any object larger than this cannot be stored in etcd."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "Which consensus algorithm does etcd use?",
+      "options": [
+        "Paxos",
+        "Raft",
+        "Zab",
+        "Gossip"
+      ],
+      "answer": 1,
+      "explanation": "etcd uses the Raft consensus algorithm for leader election and log replication."
+    },
+    {
+      "question": "What is quorum for a 5-node etcd cluster?",
+      "options": [
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "answer": 1,
+      "explanation": "Quorum = floor(N/2)+1 = floor(5/2)+1 = 2+1 = 3 nodes for a 5-node cluster."
+    },
+    {
+      "question": "Which component communicates directly with etcd?",
+      "options": [
+        "kube-scheduler",
+        "kube-apiserver",
+        "kube-controller-manager",
+        "kubelet"
+      ],
+      "answer": 1,
+      "explanation": "Only the API Server directly reads and writes to etcd. All other components go through the API Server."
+    },
+    {
+      "question": "What storage type is recommended for etcd?",
+      "options": [
+        "HDD",
+        "SSD or NVMe",
+        "Network storage",
+        "RAM disk"
+      ],
+      "answer": 1,
+      "explanation": "etcd requires low-latency storage. SSDs (ideally NVMe) are strongly recommended for reliable performance."
+    },
+    {
+      "question": "What is the default maximum request size in etcd?",
+      "options": [
+        "512 KB",
+        "1 MB",
+        "1.5 MB",
+        "10 MB"
+      ],
+      "answer": 2,
+      "explanation": "The default maximum request size is 1.5 MB, limiting the maximum Kubernetes object size."
+    },
+    {
+      "question": "How many node failures can a 3-node etcd cluster tolerate?",
+      "options": [
+        "0",
+        "1",
+        "2",
+        "3"
+      ],
+      "answer": 1,
+      "explanation": "A 3-node cluster needs a majority (2 nodes) for quorum, so it tolerates 1 node failure."
+    },
+    {
+      "question": "What tool creates etcd snapshots?",
+      "options": [
+        "kubectl",
+        "etcdctl",
+        "kubeadm",
+        "helm"
+      ],
+      "answer": 1,
+      "explanation": "etcdctl snapshot save creates a consistent snapshot of etcd data."
+    },
+    {
+      "question": "What happens when etcd leader fails?",
+      "options": [
+        "Cluster stops",
+        "New leader is elected automatically",
+        "API Server takes over",
+        "Data is lost"
+      ],
+      "answer": 1,
+      "explanation": "etcd automatically holds a Raft election and a new leader is elected, typically within milliseconds."
+    },
+    {
+      "question": "What MVCC property does etcd support?",
+      "options": [
+        "Versioned keys",
+        "Multi-version concurrency control",
+        "Parallel writes",
+        "Snapshot isolation"
+      ],
+      "answer": 1,
+      "explanation": "etcd supports MVCC by retaining multiple revisions of keys for watch and history support."
+    },
+    {
+      "question": "Where does Kubernetes store Pod data in etcd?",
+      "options": [
+        "/pods/default/",
+        "/registry/pods/",
+        "/kubernetes/pods/",
+        "/data/pods/"
+      ],
+      "answer": 1,
+      "explanation": "Kubernetes stores all registry data under /registry/, with Pods under /registry/pods/<namespace>/<name>."
+    }
+  ],
+  "codeExamples": [
+    {
+      "title": "Check etcd Cluster Health",
+      "useCase": "Verify etcd quorum and member health",
+      "code": "kubectl exec -n kube-system etcd-<node> -- etcdctl endpoint health --cluster --cacert /etc/kubernetes/pki/etcd/ca.crt --cert /etc/kubernetes/pki/etcd/healthcheck-client.crt --key /etc/kubernetes/pki/etcd/healthcheck-client.key",
+      "description": "Checks health of all etcd cluster members."
+    },
+    {
+      "title": "List etcd Members",
+      "useCase": "View etcd cluster membership",
+      "code": "kubectl exec -n kube-system etcd-<node> -- etcdctl member list --cacert /etc/kubernetes/pki/etcd/ca.crt --cert /etc/kubernetes/pki/etcd/healthcheck-client.crt --key /etc/kubernetes/pki/etcd/healthcheck-client.key",
+      "description": "Lists all etcd cluster members with their roles and endpoints."
+    },
+    {
+      "title": "Backup etcd Data",
+      "useCase": "Create a snapshot for disaster recovery",
+      "code": "kubectl exec -n kube-system etcd-<node> -- etcdctl snapshot save /var/lib/etcd/snapshot.db --cacert /etc/kubernetes/pki/etcd/ca.crt --cert /etc/kubernetes/pki/etcd/healthcheck-client.crt --key /etc/kubernetes/pki/etcd/healthcheck-client.key\nkubectl cp kube-system/etcd-<node>:/var/lib/etcd/snapshot.db ./snapshot.db",
+      "description": "Creates an etcd snapshot and copies it locally."
+    },
+    {
+      "title": "Restore etcd from Snapshot",
+      "useCase": "Recover cluster after data corruption",
+      "code": "etcdctl snapshot restore snapshot.db --data-dir /var/lib/etcd-restore --cacert /etc/kubernetes/pki/etcd/ca.crt --cert /etc/kubernetes/pki/etcd/healthcheck-client.crt --key /etc/kubernetes/pki/etcd/healthcheck-client.key\nmv /var/lib/etcd /var/lib/etcd-backup\nmv /var/lib/etcd-restore /var/lib/etcd",
+      "description": "Restores etcd data from a snapshot file to a new data directory."
+    },
+    {
+      "title": "Check etcd Metrics",
+      "useCase": "Monitor etcd performance and latency",
+      "code": "kubectl get --raw /api/v1/namespaces/kube-system/pods/etcd-<node>:2379/proxy/metrics | findstr etcd_disk_wal_fsync_duration_seconds",
+      "description": "Views etcd fsync duration metrics to identify disk I/O issues."
+    }
+  ],
+  "laymanDefinition": "etcd is the cluster's source of truth — it stores everything about your cluster in a reliable, distributed key-value store. Every Kubernetes object (Pods, ConfigMaps, Secrets, Deployments, etc.) is serialized and stored in etcd. It uses the Raft consensus algorithm to ensure data consistency across multiple replicas. If you think of the cluster as a living organism, etcd is its memory — without it, the cluster cannot remember anything or make informed decisions.",
+  "diagramSvg": "<svg viewBox=\"0 0 500 280\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"280\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">etcd</text><rect x=\"20\" y=\"45\" width=\"460\" height=\"60\" rx=\"5\" fill=\"#e8f4f8\" stroke=\"#ccc\" stroke-width=\"1.5\"/><text x=\"250\" y=\"80\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">etcd</text><text x=\"250\" y=\"155\" font-size=\"10\" fill=\"#555\" text-anchor=\"middle\">etcd is a distributed, consistent key-value store </text><text x=\"250\" y=\"168\" font-size=\"10\" fill=\"#555\" text-anchor=\"middle\">that serves as Kubernetes' single source of truth </text><text x=\"250\" y=\"181\" font-size=\"10\" fill=\"#555\" text-anchor=\"middle\">for all cluster state</text></svg>"
+};

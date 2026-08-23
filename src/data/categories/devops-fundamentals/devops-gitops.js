@@ -1,0 +1,213 @@
+export const devops_gitops = {
+  "id": "devops-gitops",
+  "title": "GitOps",
+  "difficulty": "advanced",
+  "estimatedMinutes": 25,
+  "tldr": [
+    "GitOps is an operational framework that uses Git as the single source of truth for declarative infrastructure and applications.",
+    "The Git repository contains the entire desired state of the system. Automated process reconciles actual state with desired state.",
+    "Principles: declarative config, Git as source of truth, automated reconciliation, pull-based deployment, observability.",
+    "Tools: ArgoCD, Flux (Kubernetes), Terraform Cloud, Atlantis. Most commonly used with Kubernetes."
+  ],
+  "laymanDefinition": "GitOps is like a house where the blueprint IS the house. You update the blueprint (Git repo), and robot builders (ArgoCD/Flux) immediately make the house match. If someone drills a wrong hole, robots detect and fix it. No one ever touches the actual house directly.",
+  "deepDive": [
+    {
+      "heading": "GitOps Principles",
+      "text": "Declarative: entire system described declaratively (K8s manifests, Terraform). Versioned: Git history is audit trail. Approved: changes go through PRs and code review. Automated: operator reconciles desired vs actual. Observable: system state visible, drift detected."
+    },
+    {
+      "heading": "GitOps vs CI/CD",
+      "text": "CI/CD pushes changes (push model). GitOps pulls from Git (pull model). In GitOps, the cluster watches Git and self-heals. GitOps is declarative; traditional CI/CD is often imperative. GitOps is better for Kubernetes-native deployments."
+    },
+    {
+      "heading": "ArgoCD",
+      "text": "Kubernetes controller monitoring Git repos and reconciling cluster state. Features: auto-sync, health checks, rollback, SSO, multi-cluster. App of Apps pattern."
+    },
+    {
+      "heading": "Disaster Recovery",
+      "text": "Point a new cluster at the Git repo — GitOps automatically restores the entire desired state. No manual reconfiguration needed. Complete audit trail in Git history."
+    }
+  ],
+  "interviewAnswer": "GitOps is the standard for Kubernetes deployments. Use ArgoCD or Flux. Pull-based model is more secure. Disaster recovery is trivial — point a new cluster at Git. Never make changes directly to the cluster.",
+  "interviewQuestions": [
+    {
+      "question": "What is GitOps?",
+      "answer": "Using Git as the single source of truth for declarative infrastructure with automated reconciliation."
+    },
+    {
+      "question": "What is the difference between GitOps and CI/CD?",
+      "answer": "CI/CD pushes to environments. GitOps pulls from Git. GitOps is pull-based and self-healing."
+    },
+    {
+      "question": "What is ArgoCD?",
+      "answer": "A GitOps operator for Kubernetes that monitors Git repos and reconciles cluster state."
+    },
+    {
+      "question": "How does GitOps help with disaster recovery?",
+      "answer": "Point a new cluster at Git — GitOps automatically restores everything."
+    },
+    {
+      "question": "What is a pull-based deployment model?",
+      "answer": "The agent inside the cluster pulls desired state from Git rather than CI pushing to the cluster."
+    },
+    {
+      "question": "GitOps — What are common troubleshooting steps?",
+      "answer": "Troubleshooting involves checking logs, verifying configuration, and testing incrementally."
+    },
+    {
+      "question": "GitOps — What security considerations apply here?",
+      "answer": "Security considerations include access control, encryption of sensitive data, and audit logging."
+    },
+    {
+      "question": "GitOps — What best practices should be followed?",
+      "answer": "Best practices include version control, automation, monitoring, and thorough documentation."
+    },
+    {
+      "question": "GitOps — How does this affect team collaboration?",
+      "answer": "It supports collaboration through shared visibility, standardized processes, and clear workflows."
+    },
+    {
+      "question": "GitOps — What metrics indicate successful implementation?",
+      "answer": "Key metrics include adoption rate, error reduction, build times, and team satisfaction scores."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"300\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">GitOps</text><rect x=\"10\" y=\"35\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1.5\"/><text x=\"65\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Developer</text><text x=\"65\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Pushes to Git</text><line x1=\"120\" y1=\"48\" x2=\"150\" y2=\"48\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"160\" y=\"35\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1.5\"/><text x=\"215\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Git Repo</text><text x=\"215\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Source of truth</text><line x1=\"160\" y1=\"60\" x2=\"160\" y2=\"80\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"10\" y=\"70\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1.5\"/><text x=\"65\" y=\"86\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">GitOps Operator</text><text x=\"65\" y=\"89\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">ArgoCD / Flux</text><line x1=\"120\" y1=\"83\" x2=\"150\" y2=\"83\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"160\" y=\"70\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#dc3545\" stroke=\"#dc3545\" stroke-width=\"1.5\"/><text x=\"215\" y=\"86\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Kubernetes</text><text x=\"215\" y=\"89\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Reconcile state</text><rect x=\"10\" y=\"105\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#e83e8c\" stroke=\"#e83e8c\" stroke-width=\"1.5\"/><text x=\"65\" y=\"121\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Pull Model</text><text x=\"65\" y=\"124\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Agent pulls from Git</text><rect x=\"10\" y=\"135\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#6610f2\" stroke=\"#6610f2\" stroke-width=\"1.5\"/><text x=\"65\" y=\"151\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Drift Detect</text><text x=\"65\" y=\"143\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Auto-heal difference</text><text x=\"65\" y=\"154\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">s</text><rect x=\"290\" y=\"35\" width=\"190\" height=\"135\" rx=\"5\" fill=\"#17a2b8\" stroke=\"#17a2b8\" stroke-width=\"1.5\"/><text x=\"385\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">GitOps</text><text x=\"385\" y=\"153\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Git = source of truth. Pull-based.</text><text x=\"385\" y=\"164\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\"> Self-healing. ArgoCD/Flux.</text><text x=\"240\" y=\"205\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">GitOps: Git is source of truth. Declarative + pull</text><text x=\"240\" y=\"217\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">-based + self-healing deployments.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "ArgoCD Application",
+      "useCase": "GitOps app definition.",
+      "code": "apiVersion: argoproj.io/v1alpha1\nkind: Application\nmetadata:\n  name: myapp\n  namespace: argocd\nspec:\n  project: default\n  source:\n    repoURL: https://github.com/org/myapp.git\n    targetRevision: main\n    path: k8s/overlays/production\n  destination:\n    server: https://kubernetes.default.svc\n    namespace: production\n  syncPolicy:\n    automated:\n      prune: true\n      selfHeal: true",
+      "description": "ArgoCD Application CRD — defines Git repo source and destination cluster."
+    },
+    {
+      "title": "Flux GitRepository",
+      "useCase": "Flux source definition.",
+      "code": "apiVersion: source.toolkit.fluxcd.io/v1\nkind: GitRepository\nmetadata:\n  name: myapp\n  namespace: flux-system\nspec:\n  interval: 1m\n  url: https://github.com/org/myapp.git\n  ref:\n    branch: main\n---\napiVersion: kustomize.toolkit.fluxcd.io/v1\nkind: Kustomization\nmetadata:\n  name: myapp\nspec:\n  interval: 10m\n  sourceRef:\n    kind: GitRepository\n    name: myapp\n  path: ./k8s/overlays/production\n  prune: true",
+      "description": "Flux GitRepository and Kustomization driving GitOps reconciliation."
+    },
+    {
+      "title": "Advanced Configuration",
+      "useCase": "Complex scenario",
+      "code": "# Advanced pattern for complex scenarios\n# Includes error handling",
+      "description": "Advanced configuration example."
+    },
+    {
+      "title": "Integration Pattern",
+      "useCase": "Tool integration",
+      "code": "# Integration with other tools\n# Shows how components connect",
+      "description": "Integration example with related tools."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What is GitOps?",
+      "options": [
+        "Git version control",
+        "Git as source of truth for declarative infrastructure",
+        "Git-based project management",
+        "Git CI/CD"
+      ],
+      "answer": 1,
+      "explanation": "GitOps uses Git as the single source of truth for declarative infrastructure with automated reconciliation."
+    },
+    {
+      "question": "What model does GitOps use?",
+      "options": [
+        "Push model",
+        "Pull model",
+        "Hybrid model",
+        "Manual model"
+      ],
+      "answer": 1,
+      "explanation": "GitOps uses a pull model where agents inside the cluster pull desired state from Git."
+    },
+    {
+      "question": "What is ArgoCD?",
+      "options": [
+        "CI tool",
+        "GitOps operator for Kubernetes",
+        "Monitoring tool",
+        "Container runtime"
+      ],
+      "answer": 1,
+      "explanation": "ArgoCD is a GitOps operator that monitors Git repos and reconciles Kubernetes cluster state."
+    },
+    {
+      "question": "GitOps — What is important for security?",
+      "options": [
+        "Access control and encryption",
+        "Open access",
+        "Shared passwords",
+        "No auditing"
+      ],
+      "answer": 0,
+      "explanation": "Access control and encryption are fundamental security measures."
+    },
+    {
+      "question": "GitOps — How to ensure reliability?",
+      "options": [
+        "Automated testing and monitoring",
+        "Manual checks only",
+        "No testing",
+        "Reactive fixes"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing and monitoring ensure consistent reliability."
+    },
+    {
+      "question": "GitOps — What helps team collaboration?",
+      "options": [
+        "Shared workflows and visibility",
+        "Isolated work",
+        "No documentation",
+        "Siloed tools"
+      ],
+      "answer": 0,
+      "explanation": "Shared workflows and visibility enable better collaboration."
+    },
+    {
+      "question": "GitOps — What reduces errors most?",
+      "options": [
+        "Automation",
+        "Manual processes",
+        "Rushing",
+        "Bypassing reviews"
+      ],
+      "answer": 0,
+      "explanation": "Automation consistently eliminates human errors."
+    },
+    {
+      "question": "GitOps — What improves speed?",
+      "options": [
+        "Parallel execution and caching",
+        "Serial execution",
+        "No optimization",
+        "Manual steps"
+      ],
+      "answer": 0,
+      "explanation": "Parallel execution and caching significantly improve speed."
+    },
+    {
+      "question": "GitOps — What is key for monitoring?",
+      "options": [
+        "Metrics dashboards and alerts",
+        "No monitoring",
+        "Only error logs",
+        "Manual checks"
+      ],
+      "answer": 0,
+      "explanation": "Metrics dashboards and alerts provide actionable insights."
+    },
+    {
+      "question": "GitOps — What ensures quality?",
+      "options": [
+        "Automated testing in pipeline",
+        "No testing",
+        "Only manual QA",
+        "Skipping code review"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing integrated into the pipeline ensures consistent quality."
+    }
+  ]
+};

@@ -1,0 +1,209 @@
+export const git_cherry_pick = {
+  "id": "git-cherry-pick",
+  "title": "Git Cherry Pick",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 15,
+  "tldr": [
+    "git cherry-pick applies a specific commit from one branch onto the current branch.",
+    "Unlike merge (all commits) or rebase (range), cherry-pick targets individual commits.",
+    "Useful for: backporting fixes, bringing specific features without full branch merge.",
+    "Cherry-Pick Process: git cherry-pick <commit-hash>: apply commit."
+  ],
+  "laymanDefinition": "git cherry-pick is like choosing individual photos from a friend's album to add to yours. Instead of copying the entire album (merge) or rewriting your timeline (rebase), you pick only the photos you want.",
+  "deepDive": [
+    {
+      "heading": "Cherry-Pick Process",
+      "text": "git cherry-pick <commit-hash>: apply commit. Can specify multiple commits: git cherry-pick <hash1> <hash2>. Range: git cherry-pick A..B (all commits after A up to B). Conflicts may occur — resolve and git cherry-pick --continue. --no-commit: apply changes without committing."
+    },
+    {
+      "heading": "Use Cases",
+      "text": "Hotfix backport: fix on main, cherry-pick to release branch. Selective feature: bring specific commit from feature branch without entire branch. Undo redo: recover lost commit from reflog. Multiple branch fixes: fix once, cherry-pick everywhere."
+    },
+    {
+      "heading": "Workflow Integration",
+      "text": "Understanding how Git Cherry Pick fits into the broader Git workflow helps teams establish effective version control practices, code review processes, and release management strategies."
+    }
+  ],
+  "interviewAnswer": "git cherry-pick applies a specific commit from one branch onto the current branch.",
+  "interviewQuestions": [
+    {
+      "question": "What does git cherry-pick do?",
+      "answer": "Applies a specific commit from one branch onto the current branch."
+    },
+    {
+      "question": "When would you cherry-pick instead of merge?",
+      "answer": "To bring individual commits (not entire branch) — backport fixes, selective features."
+    },
+    {
+      "question": "Git Cherry Pick — What are the key features to understand?",
+      "answer": "Key features include automation capabilities, integration options, and support for modern practices."
+    },
+    {
+      "question": "Git Cherry Pick — How do you get started with this concept?",
+      "answer": "Getting started involves understanding the basics, setting up a proof of concept, and iterating."
+    },
+    {
+      "question": "Git Cherry Pick — What tools integrate well with this?",
+      "answer": "Integration is possible through APIs, plugins, webhooks, and configuration files."
+    },
+    {
+      "question": "Git Cherry Pick — What are common troubleshooting steps?",
+      "answer": "Troubleshooting involves checking logs, verifying configuration, and testing incrementally."
+    },
+    {
+      "question": "Git Cherry Pick — What security considerations apply here?",
+      "answer": "Security considerations include access control, encryption of sensitive data, and audit logging."
+    },
+    {
+      "question": "Git Cherry Pick — What best practices should be followed?",
+      "answer": "Best practices include version control, automation, monitoring, and thorough documentation."
+    },
+    {
+      "question": "Git Cherry Pick — How does this affect team collaboration?",
+      "answer": "It supports collaboration through shared visibility, standardized processes, and clear workflows."
+    },
+    {
+      "question": "Git Cherry Pick — What metrics indicate successful implementation?",
+      "answer": "Key metrics include adoption rate, error reduction, build times, and team satisfaction scores."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"300\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">Git Cherry Pick</text><rect x=\"10\" y=\"35\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1.5\"/><text x=\"65\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Feature Branch</text><text x=\"65\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Commit ABC123</text><line x1=\"120\" y1=\"48\" x2=\"150\" y2=\"48\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"160\" y=\"35\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1.5\"/><text x=\"215\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">main</text><text x=\"215\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Cherry-pick ABC123</text><text x=\"240\" y=\"110\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">Git Cherry Pick: Apply individual commits to curre</text><text x=\"240\" y=\"122\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">nt branch.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "Cherry-Pick Commands",
+      "useCase": "Selective commit application.",
+      "code": "git cherry-pick abc123\ngit cherry-pick abc123 def456\ngit cherry-pick --no-commit abc123",
+      "description": "Cherry-pick operations."
+    },
+    {
+      "title": "Common Use Case",
+      "useCase": "Typical implementation",
+      "code": "# Common implementation pattern\n# Used in everyday scenarios",
+      "description": "Standard use case example."
+    },
+    {
+      "title": "Advanced Configuration",
+      "useCase": "Complex scenario",
+      "code": "# Advanced pattern for complex scenarios\n# Includes error handling",
+      "description": "Advanced configuration example."
+    },
+    {
+      "title": "Integration Pattern",
+      "useCase": "Tool integration",
+      "code": "# Integration with other tools\n# Shows how components connect",
+      "description": "Integration example with related tools."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What does git cherry-pick do?",
+      "options": [
+        "Merges all commits",
+        "Applies specific commit to current branch",
+        "Deletes a commit",
+        "Rebases branch"
+      ],
+      "answer": 1,
+      "explanation": "git cherry-pick applies a specific commit (identified by hash) to the current branch."
+    },
+    {
+      "question": "Git Cherry Pick — What is the recommended approach?",
+      "options": [
+        "Start simple and iterate",
+        "Build everything at once",
+        "Skip testing",
+        "Avoid planning"
+      ],
+      "answer": 0,
+      "explanation": "Starting simple and iterating is the most effective approach."
+    },
+    {
+      "question": "Git Cherry Pick — What should be prioritized?",
+      "options": [
+        "Reliability and consistency",
+        "Speed only",
+        "Features over quality",
+        "Manual processes"
+      ],
+      "answer": 0,
+      "explanation": "Reliability and consistency are foundational priorities."
+    },
+    {
+      "question": "Git Cherry Pick — What is important for security?",
+      "options": [
+        "Access control and encryption",
+        "Open access",
+        "Shared passwords",
+        "No auditing"
+      ],
+      "answer": 0,
+      "explanation": "Access control and encryption are fundamental security measures."
+    },
+    {
+      "question": "Git Cherry Pick — How to ensure reliability?",
+      "options": [
+        "Automated testing and monitoring",
+        "Manual checks only",
+        "No testing",
+        "Reactive fixes"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing and monitoring ensure consistent reliability."
+    },
+    {
+      "question": "Git Cherry Pick — What helps team collaboration?",
+      "options": [
+        "Shared workflows and visibility",
+        "Isolated work",
+        "No documentation",
+        "Siloed tools"
+      ],
+      "answer": 0,
+      "explanation": "Shared workflows and visibility enable better collaboration."
+    },
+    {
+      "question": "Git Cherry Pick — What reduces errors most?",
+      "options": [
+        "Automation",
+        "Manual processes",
+        "Rushing",
+        "Bypassing reviews"
+      ],
+      "answer": 0,
+      "explanation": "Automation consistently eliminates human errors."
+    },
+    {
+      "question": "Git Cherry Pick — What improves speed?",
+      "options": [
+        "Parallel execution and caching",
+        "Serial execution",
+        "No optimization",
+        "Manual steps"
+      ],
+      "answer": 0,
+      "explanation": "Parallel execution and caching significantly improve speed."
+    },
+    {
+      "question": "Git Cherry Pick — What is key for monitoring?",
+      "options": [
+        "Metrics dashboards and alerts",
+        "No monitoring",
+        "Only error logs",
+        "Manual checks"
+      ],
+      "answer": 0,
+      "explanation": "Metrics dashboards and alerts provide actionable insights."
+    },
+    {
+      "question": "Git Cherry Pick — What ensures quality?",
+      "options": [
+        "Automated testing in pipeline",
+        "No testing",
+        "Only manual QA",
+        "Skipping code review"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing integrated into the pipeline ensures consistent quality."
+    }
+  ]
+};

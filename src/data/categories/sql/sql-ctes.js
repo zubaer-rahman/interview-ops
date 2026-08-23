@@ -1,0 +1,179 @@
+export const sql_ctes = {
+  "id": "sql-ctes",
+  "title": "CTEs (Common Table Expressions)",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 25,
+  "tldr": [
+    "A CTE is a temporary named result set that exists only within the scope of a single SQL statement.",
+    "CTEs improve readability by breaking complex queries into named, reusable blocks defined with the WITH clause.",
+    "Unlike subqueries, CTEs can be referenced multiple times in the same query and can reference each other.",
+    "CTEs are not materialized by default — the database optimizes them inline like subqueries."
+  ],
+  "laymanDefinition": "A CTE is like writing down a temporary calculation on a sticky note before using it in your final answer. You define it once (WITH), then use it by name in your main query. It makes complex SQL look cleaner and more organized.",
+  "deepDive": [
+    {
+      "heading": "CTE Syntax",
+      "text": "WITH cte_name AS (SELECT ...) SELECT * FROM cte_name. Multiple CTEs: WITH cte1 AS (...), cte2 AS (...) SELECT ... FROM cte1 JOIN cte2. CTEs can reference previously defined CTEs in the same WITH clause."
+    },
+    {
+      "heading": "CTE vs Subquery",
+      "text": "CTEs are more readable for complex queries. CTEs can be referenced multiple times (subqueries would be duplicated). CTEs support recursion. Performance: CTEs are typically optimized the same as subqueries (not materialized)."
+    },
+    {
+      "heading": "Multiple CTEs",
+      "text": "WITH sales_data AS (...), avg_sales AS (SELECT AVG(total) FROM sales_data) SELECT * FROM avg_sales. Each CTE can access previous CTEs. Order matters — can only reference CTEs defined above."
+    },
+    {
+      "heading": "CTE Use Cases",
+      "text": "Breaking down ETL pipelines step by step. Reusable subqueries. Recursive queries (tree structures). Pagination with complex filters. Data cleaning transformations before final query."
+    },
+    {
+      "heading": "Materialized CTEs (PostgreSQL)",
+      "text": "PostgreSQL extension: WITH cte AS MATERIALIZED (...) forces materialization — CTE result is computed once and stored. WITH cte AS NOT MATERIALIZED (...) forces inlining. Useful for optimization tuning."
+    }
+  ],
+  "interviewAnswer": "CTEs are the preferred way to write complex queries in modern SQL. They improve readability, support recursion, and allow referencing the same result set multiple times without duplication.",
+  "interviewQuestions": [
+    {
+      "question": "What does CTE stand for?",
+      "answer": "Common Table Expression — a temporary named result set within a query."
+    },
+    {
+      "question": "How do you define a CTE?",
+      "answer": "WITH cte_name AS (SELECT query) SELECT * FROM cte_name."
+    },
+    {
+      "question": "What is the advantage of CTEs over subqueries?",
+      "answer": "CTEs can be referenced multiple times in the same query. They improve readability for complex queries. They support recursion."
+    },
+    {
+      "question": "Can you define multiple CTEs?",
+      "answer": "Yes. Separate with commas: WITH cte1 AS (...), cte2 AS (...). Each can reference previous ones."
+    },
+    {
+      "question": "Are CTEs materialized?",
+      "answer": "Not by default. The database optimizer treats them like inline subqueries. PostgreSQL supports MATERIALIZED and NOT MATERIALIZED hints."
+    },
+    {
+      "question": "What is a recursive CTE?",
+      "answer": "A CTE that references itself, used for hierarchical or graph data. Defined with WITH RECURSIVE."
+    },
+    {
+      "question": "When should you use a CTE instead of a subquery?",
+      "answer": "When the same subquery is needed multiple times, for recursive queries, or for complex multi-step transformations."
+    },
+    {
+      "question": "Can CTEs be used in UPDATE and DELETE?",
+      "answer": "Yes. WITH cte AS (...) UPDATE table SET ... FROM cte WHERE ...;"
+    },
+    {
+      "question": "Can a CTE be nested inside another CTE?",
+      "answer": "Yes. CTEs can reference previously defined CTEs in the same WITH clause."
+    },
+    {
+      "question": "What is the performance impact of CTEs?",
+      "answer": "Generally same as subqueries. PostgreSQL MATERIALIZED hint can prevent repeated computation. PostgreSQL optimizes inlining automatically in most cases."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"300\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">CTEs (Common Table Expressions)</text><rect x=\"10\" y=\"35\" width=\"130\" height=\"25\" rx=\"5\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1.5\"/><text x=\"75\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">WITH cte AS</text><text x=\"75\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Define</text><rect x=\"10\" y=\"65\" width=\"130\" height=\"25\" rx=\"5\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1.5\"/><text x=\"75\" y=\"81\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">SELECT cte</text><text x=\"75\" y=\"84\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Use</text><rect x=\"10\" y=\"95\" width=\"130\" height=\"25\" rx=\"5\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1.5\"/><text x=\"75\" y=\"111\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Multiple CTEs</text><text x=\"75\" y=\"114\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Chain</text><rect x=\"10\" y=\"125\" width=\"130\" height=\"25\" rx=\"5\" fill=\"#dc3545\" stroke=\"#dc3545\" stroke-width=\"1.5\"/><text x=\"75\" y=\"141\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Recursive</text><text x=\"75\" y=\"144\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Self-reference</text><line x1=\"140\" y1=\"48\" x2=\"170\" y2=\"48\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"140\" y1=\"78\" x2=\"170\" y2=\"78\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"140\" y1=\"108\" x2=\"170\" y2=\"108\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"180\" y=\"35\" width=\"200\" height=\"120\" rx=\"5\" fill=\"#17a2b8\" stroke=\"#17a2b8\" stroke-width=\"1.5\"/><text x=\"280\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Common Table Expressions</text><text x=\"280\" y=\"138\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Temporary named result sets for clea</text><text x=\"280\" y=\"149\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">ner, modular SQL queries.</text><text x=\"240\" y=\"195\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">CTEs: Named temporary result sets for readable, mo</text><text x=\"240\" y=\"207\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">dular, and reusable SQL queries.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "Basic CTE",
+      "useCase": "Simple named query.",
+      "code": "WITH high_earners AS (\n  SELECT name, salary, dept_id\n  FROM employees WHERE salary > 80000\n)\nSELECT h.name, h.salary, d.department_name\nFROM high_earners h\nJOIN departments d ON h.dept_id = d.id\nORDER BY h.salary DESC;",
+      "description": "Defines high earners CTE, then joins with departments."
+    },
+    {
+      "title": "Multiple CTEs",
+      "useCase": "Step-by-step data pipeline.",
+      "code": "WITH\n  dept_stats AS (\n    SELECT dept_id, AVG(salary) AS avg_sal\n    FROM employees GROUP BY dept_id\n  ),\n  dept_ranking AS (\n    SELECT d.department_name, ds.avg_sal,\n      RANK() OVER (ORDER BY ds.avg_sal DESC) AS rnk\n    FROM dept_stats ds\n    JOIN departments d ON ds.dept_id = d.id\n  )\nSELECT * FROM dept_ranking WHERE rnk <= 3;",
+      "description": "Two CTEs chained together for department salary ranking."
+    },
+    {
+      "title": "CTE in INSERT/UPDATE",
+      "useCase": "CTE with data modification.",
+      "code": "WITH avg_salary AS (\n  SELECT dept_id, AVG(salary) AS avg_sal\n  FROM employees GROUP BY dept_id\n)\nUPDATE employees e\nSET bonus = e.salary * 0.1\nFROM avg_salary a\nWHERE e.dept_id = a.dept_id\n  AND e.salary < a.avg_sal;",
+      "description": "Gives bonus to employees below department average salary."
+    },
+    {
+      "title": "PostgreSQL MATERIALIZED CTE",
+      "useCase": "Force or prevent materialization.",
+      "code": "WITH\n  heavy_cte AS MATERIALIZED (\n    SELECT * FROM large_table\n    WHERE complex_condition\n  )\nSELECT * FROM heavy_cte h1\nJOIN heavy_cte h2 ON h1.id = h2.related_id\nWHERE h1.status = 'active';",
+      "description": "MATERIALIZED forces the CTE to be computed once."
+    },
+    {
+      "title": "CTE with Window Functions",
+      "useCase": "Powerful combination.",
+      "code": "WITH ranked AS (\n  SELECT\n    name, salary, dept_id,\n    DENSE_RANK() OVER (\n      PARTITION BY dept_id ORDER BY salary DESC\n    ) AS rnk\n  FROM employees\n)\nSELECT * FROM ranked WHERE rnk <= 3\nORDER BY dept_id, rnk;",
+      "description": "CTE combined with window functions for top-N per group."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What does CTE stand for?",
+      "options": [
+        "Common Table Expression",
+        "Common Temporary Expression",
+        "Computed Table Element",
+        "Central Table Engine"
+      ],
+      "answer": 0,
+      "explanation": "CTE stands for Common Table Expression."
+    },
+    {
+      "question": "Which keyword defines a CTE?",
+      "options": [
+        "WITH",
+        "CTE",
+        "DEFINE",
+        "TEMP"
+      ],
+      "answer": 0,
+      "explanation": "The WITH keyword is used to define CTEs."
+    },
+    {
+      "question": "Can a CTE be referenced multiple times?",
+      "options": [
+        "Yes",
+        "No",
+        "Once only",
+        "Depends on database"
+      ],
+      "answer": 0,
+      "explanation": "CTEs can be referenced multiple times in the same query."
+    },
+    {
+      "question": "Are CTEs materialized by default?",
+      "options": [
+        "Yes",
+        "No",
+        "Only in PostgreSQL",
+        "Only in recursive CTEs"
+      ],
+      "answer": 1,
+      "explanation": "CTEs are typically not materialized — they are inlined like subqueries."
+    },
+    {
+      "question": "What keyword enables recursive CTEs?",
+      "options": [
+        "RECURSIVE",
+        "ITERATE",
+        "REPEAT",
+        "LOOP"
+      ],
+      "answer": 0,
+      "explanation": "WITH RECURSIVE enables recursive CTEs."
+    },
+    {
+      "question": "Which is more readable for complex queries?",
+      "options": [
+        "Subqueries",
+        "CTEs",
+        "JOINs",
+        "Temporary tables"
+      ],
+      "answer": 1,
+      "explanation": "CTEs improve readability for complex multi-step queries."
+    }
+  ]
+};

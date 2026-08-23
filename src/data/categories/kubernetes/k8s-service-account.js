@@ -1,0 +1,202 @@
+export const k8s_service_account = {
+  "id": "k8s-service-account",
+  "title": "Service Account",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 10,
+  "file": "k8s-service-account.json",
+  "interviewAnswer": "A Service Account provides identity for Pods to authenticate with the Kubernetes API. Each namespace has a default SA. Tokens mounted as volumes. Used with RBAC for fine-grained permissions.",
+  "tldr": [
+    "Identity for Pods to authenticate with Kubernetes API",
+    "Each namespace has a default Service Account",
+    "Token mounted at /var/run/secrets/kubernetes.io/serviceaccount",
+    "Used with RBAC (Role, RoleBinding, ClusterRole, ClusterRoleBinding)"
+  ],
+  "deepDive": [
+    {
+      "heading": "Token Management",
+      "text": "Original: SA creates Secret with long-lived JWT. TokenRequest API: time-bound, audience-scoped tokens. Projected volumes: automated distribution (default 1 hour expiry). automountServiceAccountToken: false disables auto-mounting."
+    },
+    {
+      "heading": "RBAC Integration",
+      "text": "Role/ClusterRole grants permissions. RoleBinding links SA to Role in namespace. ClusterRoleBinding for cluster-scoped. serviceAccountName in Pod spec assigns SA."
+    },
+    {
+      "heading": "Common Use Cases",
+      "text": "Service Account applies to build automation, continuous integration, test execution, deployment orchestration, and infrastructure management. Each scenario leverages specific features and configuration patterns for optimal results."
+    }
+  ],
+  "interviewQuestions": [
+    {
+      "question": "What is a Service Account?",
+      "answer": "Identity for Pod authentication to Kubernetes API."
+    },
+    {
+      "question": "Mount path?",
+      "answer": "/var/run/secrets/kubernetes.io/serviceaccount"
+    },
+    {
+      "question": "Default SA name?",
+      "answer": "\"default\" in each namespace."
+    },
+    {
+      "question": "Assign to Pod?",
+      "answer": "serviceAccountName field in Pod spec."
+    },
+    {
+      "question": "Service Account — What tools integrate well with this?",
+      "answer": "Integration is possible through APIs, plugins, webhooks, and configuration files."
+    },
+    {
+      "question": "Service Account — What are common troubleshooting steps?",
+      "answer": "Troubleshooting involves checking logs, verifying configuration, and testing incrementally."
+    },
+    {
+      "question": "Service Account — What security considerations apply here?",
+      "answer": "Security considerations include access control, encryption of sensitive data, and audit logging."
+    },
+    {
+      "question": "Service Account — What best practices should be followed?",
+      "answer": "Best practices include version control, automation, monitoring, and thorough documentation."
+    },
+    {
+      "question": "Service Account — How does this affect team collaboration?",
+      "answer": "It supports collaboration through shared visibility, standardized processes, and clear workflows."
+    },
+    {
+      "question": "Service Account — What metrics indicate successful implementation?",
+      "answer": "Key metrics include adoption rate, error reduction, build times, and team satisfaction scores."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "SA token path?",
+      "options": [
+        "/etc/kubernetes",
+        "/var/run/secrets/kubernetes.io/serviceaccount",
+        "/secrets"
+      ],
+      "answer": 1
+    },
+    {
+      "question": "Default SA?",
+      "options": [
+        "default",
+        "kubernetes",
+        "admin"
+      ],
+      "answer": 0
+    },
+    {
+      "question": "SA scope?",
+      "options": [
+        "Cluster",
+        "Namespace",
+        "Node"
+      ],
+      "answer": 1
+    },
+    {
+      "question": "Pod field?",
+      "options": [
+        "serviceAccount",
+        "serviceAccountName",
+        "accountName"
+      ],
+      "answer": 1
+    },
+    {
+      "question": "Service Account — How to ensure reliability?",
+      "options": [
+        "Automated testing and monitoring",
+        "Manual checks only",
+        "No testing",
+        "Reactive fixes"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing and monitoring ensure consistent reliability."
+    },
+    {
+      "question": "Service Account — What helps team collaboration?",
+      "options": [
+        "Shared workflows and visibility",
+        "Isolated work",
+        "No documentation",
+        "Siloed tools"
+      ],
+      "answer": 0,
+      "explanation": "Shared workflows and visibility enable better collaboration."
+    },
+    {
+      "question": "Service Account — What reduces errors most?",
+      "options": [
+        "Automation",
+        "Manual processes",
+        "Rushing",
+        "Bypassing reviews"
+      ],
+      "answer": 0,
+      "explanation": "Automation consistently eliminates human errors."
+    },
+    {
+      "question": "Service Account — What improves speed?",
+      "options": [
+        "Parallel execution and caching",
+        "Serial execution",
+        "No optimization",
+        "Manual steps"
+      ],
+      "answer": 0,
+      "explanation": "Parallel execution and caching significantly improve speed."
+    },
+    {
+      "question": "Service Account — What is key for monitoring?",
+      "options": [
+        "Metrics dashboards and alerts",
+        "No monitoring",
+        "Only error logs",
+        "Manual checks"
+      ],
+      "answer": 0,
+      "explanation": "Metrics dashboards and alerts provide actionable insights."
+    },
+    {
+      "question": "Service Account — What ensures quality?",
+      "options": [
+        "Automated testing in pipeline",
+        "No testing",
+        "Only manual QA",
+        "Skipping code review"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing integrated into the pipeline ensures consistent quality."
+    }
+  ],
+  "codeExamples": [
+    {
+      "title": "Create SA",
+      "useCase": "Create Pod identity",
+      "code": "kubectl create serviceaccount my-sa",
+      "description": "Creates SA with token Secret."
+    },
+    {
+      "title": "Assign to Pod",
+      "useCase": "Use custom identity",
+      "code": "kubectl run pod --image=nginx --serviceaccount=my-sa",
+      "description": "Assigns SA to Pod."
+    },
+    {
+      "title": "View SA",
+      "useCase": "List SAs",
+      "code": "kubectl get serviceaccounts",
+      "description": "Lists all ServiceAccounts."
+    },
+    {
+      "title": "Integration Pattern",
+      "useCase": "Tool integration",
+      "code": "# Integration with other tools\n# Shows how components connect",
+      "description": "Integration example with related tools."
+    }
+  ],
+  "laymanDefinition": "A Service Account provides identity for Pods to authenticate with the Kubernetes API. Each namespace has a default SA. Tokens mounted as volumes. Used with RBAC for fine-grained permissions.",
+  "diagramSvg": "<svg viewBox=\"0 0 500 280\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"280\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">Service Account</text><rect x=\"20\" y=\"45\" width=\"460\" height=\"60\" rx=\"5\" fill=\"#e8f4f8\" stroke=\"#ccc\" stroke-width=\"1.5\"/><text x=\"250\" y=\"80\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Service Account</text><text x=\"250\" y=\"155\" font-size=\"10\" fill=\"#555\" text-anchor=\"middle\">Identity for Pods to authenticate with Kubernetes </text><text x=\"250\" y=\"168\" font-size=\"10\" fill=\"#555\" text-anchor=\"middle\">API</text></svg>"
+};

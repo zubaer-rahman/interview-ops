@@ -1,0 +1,179 @@
+export const mongodb_aggregation_group = {
+  "id": "mongodb-aggregation-group",
+  "title": "$group",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 20,
+  "tldr": [
+    "$group groups documents by a specified key expression and computes aggregate values using accumulator operators.",
+    "The _id field in $group specifies the grouping key; use null to aggregate all documents into a single group.",
+    "Accumulators: $sum, $avg, $min, $max, $first, $last, $push, $addToSet, $stdDevPop, $stdDevSamp.",
+    "$group is often preceded by $match to filter input documents and followed by $sort to order results."
+  ],
+  "laymanDefinition": "$group is like sorting LEGO bricks by color and then counting how many you have of each color.",
+  "deepDive": [
+    {
+      "heading": "Grouping Key (_id)",
+      "text": "The _id field defines how documents are grouped. Use a field path: { _id: \"$category\" }. Use null for all docs: { _id: null }. Use compound key: { _id: { cat: \"$category\", status: \"$status\" } }. Use expressions: { _id: { $month: \"$date\" } }."
+    },
+    {
+      "heading": "Accumulator Operators",
+      "text": "$sum: total (1 for count). $avg: average. $min/$max: min/max value. $first/$last: first/last doc value (requires sort). $push: array of all values. $addToSet: unique values array. $stdDevPop/$stdDevSamp: standard deviation."
+    },
+    {
+      "heading": "Document Order in $group",
+      "text": "$group does not guarantee document order. Use $sort after $group for ordering. $first and $last accumulators require preceding $sort to be meaningful."
+    },
+    {
+      "heading": "Memory",
+      "text": "$group is memory-intensive. All grouped data must fit within the 100MB memory limit (use allowDiskUse: true for larger datasets). Group by fields with low cardinality for better performance."
+    },
+    {
+      "heading": "Post-Group Operations",
+      "text": "Common stages after $group: $sort to order groups, $limit to cap results, $project to reshape, $match to filter groups (use $match after $group, not $group\\'s _id for filtering)."
+    }
+  ],
+  "interviewAnswer": "$group is the core aggregating stage. Understanding grouping keys and accumulators unlocks powerful data summarization capabilities.",
+  "interviewQuestions": [
+    {
+      "question": "What does $group do?",
+      "answer": "Groups documents by a key expression and computes aggregate values using accumulators like $sum, $avg, $min, $max."
+    },
+    {
+      "question": "How do you group all documents together?",
+      "answer": "Set _id: null in $group. This places all documents into a single group for overall aggregates."
+    },
+    {
+      "question": "What accumulators does $group support?",
+      "answer": "$sum, $avg, $min, $max, $first, $last, $push, $addToSet, $stdDevPop, $stdDevSamp."
+    },
+    {
+      "question": "How do you create a compound group key?",
+      "answer": "Use an object: { _id: { category: \"$cat\", status: \"$status\" } }. The result _id becomes the compound object."
+    },
+    {
+      "question": "What is the memory limit for $group?",
+      "answer": "100MB by default. Use allowDiskUse: true for larger than 100MB datasets."
+    },
+    {
+      "question": "How do $first and $last work?",
+      "answer": "They return the value from the first/last document in each group. Requires preceding $sort to be meaningful."
+    },
+    {
+      "question": "What does $push do?",
+      "answer": "Creates an array of all values of a field across documents in the group. Can create large output arrays."
+    },
+    {
+      "question": "What does $addToSet do?",
+      "answer": "Creates an array of unique values of a field across documents in the group. Removes duplicates."
+    },
+    {
+      "question": "Can you group on computed values?",
+      "answer": "Yes. Use expressions: { _id: { $month: \"$date\" } } groups by month. { _id: { $toUpper: \"$name\" } } groups by uppercase name."
+    },
+    {
+      "question": "Can you have multiple $group stages?",
+      "answer": "Yes. Multiple $group stages allow hierarchical aggregation: group by category, then group results by some other key."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"300\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">$group</text><rect x=\"10\" y=\"40\" width=\"140\" height=\"30\" rx=\"5\" fill=\"#47A248\" stroke=\"#47A248\" stroke-width=\"1.5\"/><text x=\"80\" y=\"56\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Input Docs</text><text x=\"80\" y=\"64\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Raw Documents</text><line x1=\"150\" y1=\"55\" x2=\"180\" y2=\"55\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"190\" y=\"40\" width=\"140\" height=\"35\" rx=\"5\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1.5\"/><text x=\"260\" y=\"56\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">$group</text><text x=\"260\" y=\"69\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">_id: \"$category\"</text><line x1=\"190\" y1=\"75\" x2=\"190\" y2=\"95\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"190\" y=\"95\" width=\"140\" height=\"30\" rx=\"5\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1.5\"/><text x=\"260\" y=\"111\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Accumulators</text><text x=\"260\" y=\"119\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">$sum, $avg, $push</text><line x1=\"330\" y1=\"78\" x2=\"360\" y2=\"78\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"370\" y=\"65\" width=\"110\" height=\"30\" rx=\"5\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1.5\"/><text x=\"425\" y=\"81\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Result</text><text x=\"425\" y=\"89\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Grouped Docs</text><text x=\"240\" y=\"160\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">$group: Group by key, compute aggregates with accu</text><text x=\"240\" y=\"172\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">mulators.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "Count by Field",
+      "useCase": "Orders by status.",
+      "code": "await db.collection('orders').aggregate([\n  { $group: { _id: \"$status\", count: { $sum: 1 }, totalAmount: { $sum: \"$amount\" } } }\n]).toArray();",
+      "description": "Groups orders by status, counts and sums per group."
+    },
+    {
+      "title": "Overall Aggregate",
+      "useCase": "Using _id: null.",
+      "code": "await db.collection('products').aggregate([\n  { $group: { _id: null, avgPrice: { $avg: \"$price\" }, maxPrice: { $max: \"$price\" }, count: { $sum: 1 } } }\n]).toArray();",
+      "description": "Computes avg price, max price, and total count across all products."
+    },
+    {
+      "title": "Compound Group Key",
+      "useCase": "Multiple grouping fields.",
+      "code": "await db.collection('sales').aggregate([\n  { $group: { _id: { year: { $year: \"$date\" }, month: { $month: \"$date\" } }, total: { $sum: \"$amount\" } } }\n]).toArray();",
+      "description": "Groups sales by year and month, summing amounts."
+    },
+    {
+      "title": "Push to Array",
+      "useCase": "Collect values.",
+      "code": "await db.collection('orders').aggregate([\n  { $group: { _id: \"$customerId\", items: { $push: \"$item\" }, totalSpent: { $sum: \"$amount\" } } }\n]).toArray();",
+      "description": "Groups by customer, collects item names into array."
+    },
+    {
+      "title": "First and Last",
+      "useCase": "Earliest and latest.",
+      "code": "await db.collection('sensor').aggregate([\n  { $sort: { timestamp: 1 } },\n  { $group: { _id: \"$sensorId\", firstReading: { $first: \"$value\" }, lastReading: { $last: \"$value\" } } }\n]).toArray();",
+      "description": "Gets first and last sensor readings per sensor (requires sort)."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What does _id: null in $group do?",
+      "options": [
+        "Error",
+        "Groups all docs into one group",
+        "Creates null key",
+        "Skips grouping"
+      ],
+      "answer": 1,
+      "explanation": "_id: null groups all documents into one."
+    },
+    {
+      "question": "Which accumulator creates an array of values?",
+      "options": [
+        "$sum",
+        "$push",
+        "$avg",
+        "$min"
+      ],
+      "answer": 1,
+      "explanation": "$push collects values into an array."
+    },
+    {
+      "question": "What is the default memory limit for $group?",
+      "options": [
+        "50MB",
+        "100MB",
+        "200MB",
+        "Unlimited"
+      ],
+      "answer": 1,
+      "explanation": "Default memory limit is 100MB."
+    },
+    {
+      "question": "How do you get unique values in $group?",
+      "options": [
+        "$push",
+        "$addToSet",
+        "$unique",
+        "$distinct"
+      ],
+      "answer": 1,
+      "explanation": "$addToSet creates unique values array."
+    },
+    {
+      "question": "What must precede $group for meaningful $first?",
+      "options": [
+        "$match",
+        "$sort",
+        "$limit",
+        "$project"
+      ],
+      "answer": 1,
+      "explanation": "$sort before $group gives meaningful $first."
+    },
+    {
+      "question": "Can you group on computed expressions?",
+      "options": [
+        "No",
+        "Yes, any expression",
+        "Only dates",
+        "Only strings"
+      ],
+      "answer": 1,
+      "explanation": "Group on any expression: { $month: \"$date\" }."
+    }
+  ]
+};

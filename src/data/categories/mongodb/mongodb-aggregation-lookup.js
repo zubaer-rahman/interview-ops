@@ -1,0 +1,179 @@
+export const mongodb_aggregation_lookup = {
+  "id": "mongodb-aggregation-lookup",
+  "title": "$lookup",
+  "difficulty": "advanced",
+  "estimatedMinutes": 30,
+  "tldr": [
+    "$lookup performs a left outer join between the current collection and another collection in the same database.",
+    "It adds a new array field to each document containing matching documents from the foreign collection.",
+    "Basic syntax: { $lookup: { from: \"foreignCollection\", localField: \"key\", foreignField: \"_id\", as: \"results\" } }.",
+    "MongoDB 3.6+ supports pipeline and let variables for correlated subqueries."
+  ],
+  "laymanDefinition": "$lookup is like having two phone books and looking up matching entries between them. You take entries from one book, find corresponding entries in the other, and combine the information.",
+  "deepDive": [
+    {
+      "heading": "Basic $lookup",
+      "text": "Four required fields: from (target collection), localField (field in current docs), foreignField (field in target docs), as (output array field name). Result is an array of matching documents added to each source document."
+    },
+    {
+      "heading": "Pipeline $lookup",
+      "text": "MongoDB 3.6+ supports pipeline syntax: { $lookup: { from: \"orders\", let: { userId: \"$_id\" }, pipeline: [{ $match: { $expr: { $eq: [\"$userId\", \"$$userId\"] } } }, { $limit: 5 }], as: \"recentOrders\" } }. Enables subqueries with filtering, sorting, limiting."
+    },
+    {
+      "heading": "Unwinding $lookup Results",
+      "text": "After $lookup, joined docs are in an array. Use $unwind immediately after: { $unwind: \"$results\" }. For left outer behavior, use $unwind with preserveNullAndEmptyArrays: true."
+    },
+    {
+      "heading": "Indexing for $lookup",
+      "text": "Create indexes on foreignField in the foreign collection. Without indexes, $lookup performs a collection scan. Compound indexes also help."
+    },
+    {
+      "heading": "Performance Considerations",
+      "text": "$lookup can be slow on large collections without indexes. Consider denormalization (embedding) for frequently accessed related data."
+    }
+  ],
+  "interviewAnswer": "$lookup enables relational-style joins in MongoDB. While powerful, use judiciously — embedding is often more performant.",
+  "interviewQuestions": [
+    {
+      "question": "What does $lookup do?",
+      "answer": "Left outer join with another collection. Adds array of matching foreign documents to each source document."
+    },
+    {
+      "question": "What are required fields?",
+      "answer": "from (foreign collection), localField (source field), foreignField (target field), as (output array field)."
+    },
+    {
+      "question": "How do you flatten results?",
+      "answer": "Use $unwind after $lookup. Use preserveNullAndEmptyArrays: true for left join behavior."
+    },
+    {
+      "question": "What is pipeline $lookup?",
+      "answer": "Extended syntax allowing subqueries with pipeline and let variables for correlated subqueries."
+    },
+    {
+      "question": "How to optimize $lookup?",
+      "answer": "Create indexes on foreignField. Use pipeline $lookup with $match to reduce joined data."
+    },
+    {
+      "question": "What happens if no match?",
+      "answer": "Output array is empty []. Use $unwind with preserveNullAndEmptyArrays: true to keep source docs."
+    },
+    {
+      "question": "Can $lookup join more than 2 collections?",
+      "answer": "Chain multiple $lookup stages. Each joins one additional collection."
+    },
+    {
+      "question": "What is the difference between $lookup and embedding?",
+      "answer": "$lookup joins at query time (flexible). Embedding stores data in the source doc (faster reads)."
+    },
+    {
+      "question": "Can $lookup use indexes?",
+      "answer": "Yes, indexes on foreignField in foreign collection significantly improve performance."
+    },
+    {
+      "question": "What does the \"as\" field specify?",
+      "answer": "The output array field name added to each source document containing matching documents."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"300\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">$lookup</text><rect x=\"10\" y=\"40\" width=\"140\" height=\"35\" rx=\"5\" fill=\"#47A248\" stroke=\"#47A248\" stroke-width=\"1.5\"/><text x=\"80\" y=\"56\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Orders</text><text x=\"80\" y=\"69\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">{ userId: 1, item: \"A\" }</text><line x1=\"150\" y1=\"58\" x2=\"180\" y2=\"58\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"190\" y=\"40\" width=\"140\" height=\"35\" rx=\"5\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1.5\"/><text x=\"260\" y=\"56\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">$lookup</text><text x=\"260\" y=\"69\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">from: \"users\"</text><line x1=\"330\" y1=\"58\" x2=\"370\" y2=\"58\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"380\" y=\"40\" width=\"100\" height=\"35\" rx=\"5\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1.5\"/><text x=\"430\" y=\"56\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Users</text><text x=\"430\" y=\"58\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">{ _id: 1, name: \"A</text><text x=\"430\" y=\"69\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">\" }</text><line x1=\"190\" y1=\"75\" x2=\"190\" y2=\"103\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"190\" y=\"105\" width=\"140\" height=\"35\" rx=\"5\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1.5\"/><text x=\"260\" y=\"121\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Result Array</text><text x=\"260\" y=\"134\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">{ ..., user: [{...}] }</text><text x=\"240\" y=\"180\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">$lookup: Left outer join with another collection.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "Basic $lookup",
+      "useCase": "Join orders with users.",
+      "code": "await db.collection('orders').aggregate([\n  { $lookup: { from: \"users\", localField: \"userId\", foreignField: \"_id\", as: \"user\" } },\n  { $unwind: \"$user\" }\n]).toArray();",
+      "description": "Joins orders with users on userId, flattens."
+    },
+    {
+      "title": "Pipeline $lookup",
+      "useCase": "With let and pipeline.",
+      "code": "await db.collection('users').aggregate([\n  { $lookup: { from: \"orders\", let: { uid: \"$_id\" }, pipeline: [\n    { $match: { $expr: { $eq: [\"$userId\", \"$$uid\"] } } },\n    { $sort: { createdAt: -1 } },\n    { $limit: 3 }\n  ], as: \"recentOrders\" } }\n]).toArray();",
+      "description": "Finds each user\\'s 3 most recent orders."
+    },
+    {
+      "title": "Left Outer Join",
+      "useCase": "Keep users with no orders.",
+      "code": "await db.collection('users').aggregate([\n  { $lookup: { from: \"orders\", localField: \"_id\", foreignField: \"userId\", as: \"orders\" } },\n  { $unwind: { path: \"$orders\", preserveNullAndEmptyArrays: true } }\n]).toArray();",
+      "description": "Keeps users even without orders."
+    },
+    {
+      "title": "Multiple $lookup",
+      "useCase": "Join users, orders, reviews.",
+      "code": "await db.collection('users').aggregate([\n  { $lookup: { from: \"orders\", localField: \"_id\", foreignField: \"userId\", as: \"orders\" } },\n  { $lookup: { from: \"reviews\", localField: \"_id\", foreignField: \"userId\", as: \"reviews\" } }\n]).toArray();",
+      "description": "Joins users with both orders and reviews."
+    },
+    {
+      "title": "Post-Join Filter",
+      "useCase": "Filter after $lookup.",
+      "code": "await db.collection('orders').aggregate([\n  { $lookup: { from: \"users\", localField: \"userId\", foreignField: \"_id\", as: \"user\" } },\n  { $unwind: \"$user\" },\n  { $match: { \"user.isActive\": true } }\n]).toArray();",
+      "description": "Joins then filters to only active users."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What does $lookup do?",
+      "options": [
+        "Groups docs",
+        "Joins collections",
+        "Filters arrays",
+        "Sorts results"
+      ],
+      "answer": 1,
+      "explanation": "$lookup joins two collections."
+    },
+    {
+      "question": "What does the \"as\" field specify?",
+      "options": [
+        "Source field",
+        "Output array field",
+        "Foreign collection",
+        "Join type"
+      ],
+      "answer": 1,
+      "explanation": "\"as\" names the output array field."
+    },
+    {
+      "question": "Which stage flattens $lookup arrays?",
+      "options": [
+        "$match",
+        "$unwind",
+        "$group",
+        "$project"
+      ],
+      "answer": 1,
+      "explanation": "$unwind deconstructs the result array."
+    },
+    {
+      "question": "What option keeps docs with no match?",
+      "options": [
+        "preserveNullAndEmptyArrays: true",
+        "keepEmpty: true",
+        "nullAsEmpty: true",
+        "allowEmpty: true"
+      ],
+      "answer": 0,
+      "explanation": "preserveNullAndEmptyArrays keeps unmatched docs."
+    },
+    {
+      "question": "How to optimize $lookup performance?",
+      "options": [
+        "Indexes on foreignField",
+        "Use allowDiskUse",
+        "Limit input docs",
+        "All of the above"
+      ],
+      "answer": 3,
+      "explanation": "Indexes, allowDiskUse, and limiting input all help."
+    },
+    {
+      "question": "What is the result type of $lookup?",
+      "options": [
+        "Document",
+        "Array",
+        "Cursor",
+        "Boolean"
+      ],
+      "answer": 1,
+      "explanation": "Result is an array of matching documents."
+    }
+  ]
+};

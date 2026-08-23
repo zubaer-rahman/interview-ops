@@ -1,0 +1,213 @@
+export const devops_config_mgmt = {
+  "id": "devops-config-mgmt",
+  "title": "Configuration Management",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 20,
+  "tldr": [
+    "Configuration Management is the practice of maintaining systems in a desired, consistent state through automated tools and processes.",
+    "It ensures all servers, applications, and services are configured consistently across environments.",
+    "Tools: Ansible, Puppet, Chef, SaltStack. Each uses a different model (push vs pull, agent vs agentless).",
+    "Key concept: desired state configuration — define what the system should look like; the tool makes it so."
+  ],
+  "laymanDefinition": "Configuration management is like having a building superintendent who follows a detailed checklist every day. Instead of checking each room manually, they have an automated system that ensures every room has the right temperature, lights, and locks. If something is wrong, the system fixes it automatically.",
+  "deepDive": [
+    {
+      "heading": "Push vs Pull Model",
+      "text": "Push (Ansible, Salt SSH): control node pushes config to managed nodes. No agent required on managed nodes. Simpler setup. Better for smaller environments. Pull (Puppet, Chef, Salt Minion): agents on managed nodes periodically pull config from master. Scales better for large environments. Agents report status back."
+    },
+    {
+      "heading": "Idempotency in Configuration Management",
+      "text": "Running the same config multiple times produces the same result. Only changes what needs changing. If a package is already installed, skip. If a service is already running, do nothing. This is the core principle of configuration management tools. Makes automation safe to run repeatedly."
+    },
+    {
+      "heading": "Configuration Drift Prevention",
+      "text": "Drift: servers in a fleet become different over time due to manual changes, failed updates, or partial deployments. Prevention: run config management periodically (cron, pull interval). Automatically remediate drift. Alert on unreconcilable differences. Use immutable infrastructure where possible."
+    },
+    {
+      "heading": "Ansible (Most Popular)",
+      "text": "Agentless: uses SSH/WinRM. Push model. YAML playbooks. Large module library. No central server overhead. Good for: configuration management, application deployment, ad-hoc tasks. Simple learning curve. Idempotent by design. Popular for cloud automation."
+    }
+  ],
+  "interviewAnswer": "Configuration management keeps your infrastructure consistent and compliant. Ansible is the most accessible tool (agentless, YAML). Use idempotent configurations. Run CM regularly to prevent drift. Combine with IaC: Terraform provisions, CM configures.",
+  "interviewQuestions": [
+    {
+      "question": "What is Configuration Management?",
+      "answer": "Maintaining systems in a desired, consistent state through automated tools. Ensuring all servers are configured the same."
+    },
+    {
+      "question": "What is the difference between push and pull CM models?",
+      "answer": "Push (Ansible): control node pushes config to servers. Pull (Puppet): agents pull config from master."
+    },
+    {
+      "question": "What does idempotent mean in configuration management?",
+      "answer": "Running the same config multiple times produces the same result — only changes what needs changing."
+    },
+    {
+      "question": "What is configuration drift?",
+      "answer": "Servers becoming different over time due to manual changes or partial updates. CM prevents and remediates drift."
+    },
+    {
+      "question": "What is the most popular configuration management tool?",
+      "answer": "Ansible — agentless, push-based, YAML playbooks, large ecosystem."
+    },
+    {
+      "question": "What is the difference between IaC and CM?",
+      "answer": "IaC provisions infrastructure (servers, networks). CM configures software on that infrastructure. Both are needed."
+    },
+    {
+      "question": "Configuration Management — What security considerations apply here?",
+      "answer": "Security considerations include access control, encryption of sensitive data, and audit logging."
+    },
+    {
+      "question": "Configuration Management — What best practices should be followed?",
+      "answer": "Best practices include version control, automation, monitoring, and thorough documentation."
+    },
+    {
+      "question": "Configuration Management — How does this affect team collaboration?",
+      "answer": "It supports collaboration through shared visibility, standardized processes, and clear workflows."
+    },
+    {
+      "question": "Configuration Management — What metrics indicate successful implementation?",
+      "answer": "Key metrics include adoption rate, error reduction, build times, and team satisfaction scores."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"300\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">Configuration Management</text><rect x=\"10\" y=\"35\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1.5\"/><text x=\"65\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Define</text><text x=\"65\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Desired state YAML</text><line x1=\"120\" y1=\"48\" x2=\"150\" y2=\"48\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"160\" y=\"35\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1.5\"/><text x=\"215\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Push (Ansible)</text><text x=\"215\" y=\"43\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Control → nodes via </text><text x=\"215\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">SSH</text><line x1=\"160\" y1=\"60\" x2=\"160\" y2=\"80\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"10\" y=\"70\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1.5\"/><text x=\"65\" y=\"86\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Pull (Puppet)</text><text x=\"65\" y=\"89\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Agents → master</text><rect x=\"10\" y=\"100\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#dc3545\" stroke=\"#dc3545\" stroke-width=\"1.5\"/><text x=\"65\" y=\"116\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Idempotent</text><text x=\"65\" y=\"119\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Safe to repeat</text><rect x=\"10\" y=\"130\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#e83e8c\" stroke=\"#e83e8c\" stroke-width=\"1.5\"/><text x=\"65\" y=\"146\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Drift Remediation</text><text x=\"65\" y=\"149\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Auto-fix differences</text><rect x=\"290\" y=\"35\" width=\"190\" height=\"130\" rx=\"5\" fill=\"#17a2b8\" stroke=\"#17a2b8\" stroke-width=\"1.5\"/><text x=\"385\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Config Management</text><text x=\"385\" y=\"137\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Consistent, automated server confi</text><text x=\"385\" y=\"148\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">guration. Ansible, Puppet, Chef. I</text><text x=\"385\" y=\"159\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">dempotent, drift-free.</text><text x=\"240\" y=\"200\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">Configuration Management: Maintain consistent serv</text><text x=\"240\" y=\"212\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">er configurations with automated, idempotent tools</text><text x=\"240\" y=\"224\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\"> like Ansible.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "Ansible Playbook: Web Server Setup",
+      "useCase": "Idempotent configuration.",
+      "code": "---\n- name: Configure web servers\n  hosts: all\n  vars:\n    app_port: 3000\n    log_level: info\n\n  tasks:\n    - name: Ensure nginx is installed\n      apt:\n        name: nginx\n        state: present\n\n    - name: Ensure nginx is running\n      service:\n        name: nginx\n        state: started\n        enabled: yes\n\n    - name: Deploy app config\n      template:\n        src: app.conf.j2\n        dest: /etc/myapp/config.json\n      notify: restart myapp\n\n  handlers:\n    - name: restart myapp\n      systemd:\n        name: myapp\n        state: restarted",
+      "description": "Ansible playbook for idempotent web server configuration with templates and handlers."
+    },
+    {
+      "title": "Ansible Ad-hoc Commands",
+      "useCase": "Quick configuration tasks.",
+      "code": "# Check all servers are reachable\nansible all -i inventory.ini -m ping\n\n# Check disk space on all servers\nansible all -i inventory.ini -m shell -a \"df -h\"\n\n# Ensure a package is installed everywhere\nansible all -i inventory.ini -m apt -a \"name=htop state=present\" -b\n\n# Copy a file to all servers\nansible all -i inventory.ini -m copy -a \"src=/local/file dest=/remote/file\"\n\n# Check nginx status on web servers\nansible webservers -i inventory.ini -m service -a \"name=nginx state=started\"",
+      "description": "Ansible ad-hoc commands for quick configuration tasks across server fleets."
+    },
+    {
+      "title": "Advanced Configuration",
+      "useCase": "Complex scenario",
+      "code": "# Advanced pattern for complex scenarios\n# Includes error handling",
+      "description": "Advanced configuration example."
+    },
+    {
+      "title": "Integration Pattern",
+      "useCase": "Tool integration",
+      "code": "# Integration with other tools\n# Shows how components connect",
+      "description": "Integration example with related tools."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What does idempotent mean?",
+      "options": [
+        "Fast execution",
+        "Same result regardless of how many times you run it",
+        "Requires root access",
+        "Only runs once"
+      ],
+      "answer": 1,
+      "explanation": "Idempotent means running the same configuration multiple times produces the same result."
+    },
+    {
+      "question": "What is the difference between push and pull CM?",
+      "options": [
+        "Push is slower",
+        "Push sends config from server; pull agents fetch from master",
+        "No difference",
+        "Push requires agents"
+      ],
+      "answer": 1,
+      "explanation": "Push model (Ansible) sends config from control node. Pull model (Puppet) has agents fetch from master."
+    },
+    {
+      "question": "Which is the most popular CM tool?",
+      "options": [
+        "Chef",
+        "Puppet",
+        "Ansible",
+        "SaltStack"
+      ],
+      "answer": 2,
+      "explanation": "Ansible is the most popular configuration management tool, known for being agentless and easy to learn."
+    },
+    {
+      "question": "Configuration Management — What is important for security?",
+      "options": [
+        "Access control and encryption",
+        "Open access",
+        "Shared passwords",
+        "No auditing"
+      ],
+      "answer": 0,
+      "explanation": "Access control and encryption are fundamental security measures."
+    },
+    {
+      "question": "Configuration Management — How to ensure reliability?",
+      "options": [
+        "Automated testing and monitoring",
+        "Manual checks only",
+        "No testing",
+        "Reactive fixes"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing and monitoring ensure consistent reliability."
+    },
+    {
+      "question": "Configuration Management — What helps team collaboration?",
+      "options": [
+        "Shared workflows and visibility",
+        "Isolated work",
+        "No documentation",
+        "Siloed tools"
+      ],
+      "answer": 0,
+      "explanation": "Shared workflows and visibility enable better collaboration."
+    },
+    {
+      "question": "Configuration Management — What reduces errors most?",
+      "options": [
+        "Automation",
+        "Manual processes",
+        "Rushing",
+        "Bypassing reviews"
+      ],
+      "answer": 0,
+      "explanation": "Automation consistently eliminates human errors."
+    },
+    {
+      "question": "Configuration Management — What improves speed?",
+      "options": [
+        "Parallel execution and caching",
+        "Serial execution",
+        "No optimization",
+        "Manual steps"
+      ],
+      "answer": 0,
+      "explanation": "Parallel execution and caching significantly improve speed."
+    },
+    {
+      "question": "Configuration Management — What is key for monitoring?",
+      "options": [
+        "Metrics dashboards and alerts",
+        "No monitoring",
+        "Only error logs",
+        "Manual checks"
+      ],
+      "answer": 0,
+      "explanation": "Metrics dashboards and alerts provide actionable insights."
+    },
+    {
+      "question": "Configuration Management — What ensures quality?",
+      "options": [
+        "Automated testing in pipeline",
+        "No testing",
+        "Only manual QA",
+        "Skipping code review"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing integrated into the pipeline ensures consistent quality."
+    }
+  ]
+};

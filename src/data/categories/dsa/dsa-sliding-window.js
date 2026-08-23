@@ -1,0 +1,175 @@
+export const dsa_sliding_window = {
+  "id": "dsa-sliding-window",
+  "title": "Sliding Window",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 15,
+  "tldr": [
+    "Sliding Window is a technique for processing arrays/lists by maintaining a window (subarray) that slides across the data.",
+    "Fixed window: window size is constant. Variable window: window expands/shrinks based on conditions.",
+    "Sliding window reduces O(n^2) brute force to O(n) time and often O(1) or O(k) space.",
+    "Key applications: maximum subarray sum, longest substring without repeating characters, minimum window substring."
+  ],
+  "laymanDefinition": "Sliding Window is like looking through a moving frame at a landscape painting. Instead of looking at every possible rectangle (O(n^2)), you slide the frame across and update only what changes at the edges. This is much faster.",
+  "deepDive": [
+    {
+      "heading": "Fixed Window",
+      "text": "Window size k is predetermined. Slide one step at a time. Compute: add new element (right), remove old element (left). Classic: maximum sum of subarray of size k, max sliding window, average of subarrays."
+    },
+    {
+      "heading": "Variable (Dynamic) Window",
+      "text": "Window expands (right++) until condition is met, then contracts (left++) to maintain condition. Classic: longest substring without repeating, minimum window substring, smallest subarray with sum >= target."
+    },
+    {
+      "heading": "Sliding Window vs Two Pointers",
+      "text": "Sliding window usually involves a window/subarray. Two pointers often focus on two positions/elements. Sliding window maintains a contiguous range. Both use two indices but have different problem domains."
+    },
+    {
+      "heading": "Applications",
+      "text": "Maximum sum subarray (fixed k). Longest substring without repeating chars. Minimum window substring. Maximum average subarray. String anagrams/substring search. Fruit basket problem."
+    }
+  ],
+  "interviewAnswer": "Sliding Window is one of the most powerful O(n) patterns. Fixed window: maintain sum/count, slide right, remove left. Variable window: expand right until condition breaks, then contract left. Always track window state to avoid recomputation.",
+  "interviewQuestions": [
+    {
+      "question": "What is Sliding Window?",
+      "answer": "A technique maintaining a window (subarray) that slides across data for O(n) processing."
+    },
+    {
+      "question": "What are the two types?",
+      "answer": "Fixed window (constant size) and variable window (expands/shrinks)."
+    },
+    {
+      "question": "What does sliding window reduce?",
+      "answer": "O(n^2) brute force to O(n)."
+    },
+    {
+      "question": "How does fixed window work?",
+      "answer": "Slide right by 1, add new element, remove left element. O(n)."
+    },
+    {
+      "question": "How does variable window work?",
+      "answer": "Expand right until condition violated, then contract left until condition satisfied."
+    },
+    {
+      "question": "What is a classic variable window problem?",
+      "answer": "Longest substring without repeating characters."
+    },
+    {
+      "question": "What data structure is often used?",
+      "answer": "Map/set to track window contents or character counts."
+    },
+    {
+      "question": "What problem finds smallest subarray with sum >= target?",
+      "answer": "Variable sliding window (minimum size subarray sum)."
+    },
+    {
+      "question": "What is the time complexity of sliding window?",
+      "answer": "O(n) — each element added and removed at most once."
+    },
+    {
+      "question": "What is the space complexity?",
+      "answer": "O(1) or O(k) where k is the character set size / window size."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"300\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">Sliding Window</text><rect x=\"10\" y=\"35\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1.5\"/><text x=\"65\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Left</text><text x=\"65\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Window start</text><rect x=\"200\" y=\"35\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1.5\"/><text x=\"255\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Right</text><text x=\"255\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Window end</text><rect x=\"10\" y=\"65\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1.5\"/><text x=\"65\" y=\"81\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Window</text><text x=\"65\" y=\"84\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Subarray content</text><line x1=\"120\" y1=\"48\" x2=\"200\" y2=\"48\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"130\" y=\"65\" width=\"70\" height=\"25\" rx=\"5\" fill=\"#dc3545\" stroke=\"#dc3545\" stroke-width=\"1.5\"/><text x=\"165\" y=\"81\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">[...]</text><text x=\"165\" y=\"84\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Ongoing</text><rect x=\"10\" y=\"100\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#e83e8c\" stroke=\"#e83e8c\" stroke-width=\"1.5\"/><text x=\"65\" y=\"116\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Slide</text><text x=\"65\" y=\"119\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Right++</text><rect x=\"10\" y=\"130\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#6610f2\" stroke=\"#6610f2\" stroke-width=\"1.5\"/><text x=\"65\" y=\"146\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Adjust</text><text x=\"65\" y=\"149\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Left++ if needed</text><rect x=\"10\" y=\"160\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#17a2b8\" stroke=\"#17a2b8\" stroke-width=\"1.5\"/><text x=\"65\" y=\"176\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Result</text><text x=\"65\" y=\"179\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Track max/min</text><rect x=\"340\" y=\"35\" width=\"145\" height=\"150\" rx=\"5\" fill=\"#17a2b8\" stroke=\"#17a2b8\" stroke-width=\"1.5\"/><text x=\"412.5\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Sliding Window</text><text x=\"412.5\" y=\"157\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Fixed or variable. O(n) ti</text><text x=\"412.5\" y=\"168\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">me. Add right, remove left</text><text x=\"412.5\" y=\"179\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">. Track window state.</text><text x=\"240\" y=\"220\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">Sliding Window: O(n) time. Fixed window (size k) o</text><text x=\"240\" y=\"232\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">r variable (condition-based).</text></svg>",
+  "codeExamples": [
+    {
+      "title": "Maximum Sum Subarray (Fixed K)",
+      "useCase": "Fixed window of size k.",
+      "code": "function maxSumSubarray(arr, k) {\n  let sum = 0, max = -Infinity;\n  for (let i = 0; i < arr.length; i++) {\n    sum += arr[i];\n    if (i >= k - 1) { max = Math.max(max, sum); sum -= arr[i - k + 1]; }\n  }\n  return max;\n}",
+      "description": "Fixed window O(n)."
+    },
+    {
+      "title": "Longest Substring Without Repeating",
+      "useCase": "Variable window.",
+      "code": "function lengthOfLongestSubstring(s) {\n  const set = new Set();\n  let left = 0, maxLen = 0;\n  for (let right = 0; right < s.length; right++) {\n    while (set.has(s[right])) set.delete(s[left++]);\n    set.add(s[right]);\n    maxLen = Math.max(maxLen, right - left + 1);\n  }\n  return maxLen;\n}",
+      "description": "Longest substring O(n)."
+    },
+    {
+      "title": "Minimum Window Substring",
+      "useCase": "Variable window with map.",
+      "code": "function minWindow(s, t) {\n  const need = {}; for (const c of t) need[c] = (need[c] || 0) + 1;\n  let have = 0, left = 0, minLen = Infinity, start = 0, needLen = Object.keys(need).length;\n  const window = {};\n  for (let right = 0; right < s.length; right++) {\n    const c = s[right]; window[c] = (window[c] || 0) + 1;\n    if (window[c] === need[c]) have++;\n    while (have === needLen) {\n      if (right - left + 1 < minLen) { minLen = right - left + 1; start = left; }\n      const leftC = s[left]; window[leftC]--;\n      if (window[leftC] < need[leftC]) have--;\n      left++;\n    }\n  }\n  return minLen === Infinity ? \"\" : s.substring(start, start + minLen);\n}",
+      "description": "Min window substring O(n)."
+    },
+    {
+      "title": "Longest Repeating Character Replacement",
+      "useCase": "Variable window with char count.",
+      "code": "function characterReplacement(s, k) {\n  const count = {}; let maxFreq = 0, left = 0, maxLen = 0;\n  for (let right = 0; right < s.length; right++) {\n    const c = s[right]; count[c] = (count[c] || 0) + 1;\n    maxFreq = Math.max(maxFreq, count[c]);\n    while ((right - left + 1) - maxFreq > k) { count[s[left]]--; left++; }\n    maxLen = Math.max(maxLen, right - left + 1);\n  }\n  return maxLen;\n}",
+      "description": "Longest repeating char replacement O(n)."
+    },
+    {
+      "title": "Max Sliding Window (Deque)",
+      "useCase": "Monotonic deque for max in window.",
+      "code": "function maxSlidingWindow(nums, k) {\n  const result = [], deque = [];\n  for (let i = 0; i < nums.length; i++) {\n    while (deque.length && nums[deque[deque.length-1]] < nums[i]) deque.pop();\n    deque.push(i);\n    if (deque[0] <= i - k) deque.shift();\n    if (i >= k - 1) result.push(nums[deque[0]]);\n  }\n  return result;\n}",
+      "description": "Maximum in sliding window O(n) using deque."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What does sliding window reduce?",
+      "options": [
+        "O(1) to O(log n)",
+        "O(n^2) to O(n)",
+        "O(n) to O(log n)",
+        "O(n log n) to O(n)"
+      ],
+      "answer": 1,
+      "explanation": "O(n^2) to O(n)."
+    },
+    {
+      "question": "What are the two types?",
+      "options": [
+        "Fixed and variable",
+        "Fast and slow",
+        "Left and right",
+        "Top and bottom"
+      ],
+      "answer": 0,
+      "explanation": "Fixed window (constant size) and variable window."
+    },
+    {
+      "question": "Time complexity of sliding window?",
+      "options": [
+        "O(n^2)",
+        "O(n)",
+        "O(log n)",
+        "O(n log n)"
+      ],
+      "answer": 1,
+      "explanation": "O(n) — each element processed twice max."
+    },
+    {
+      "question": "What tracks window contents?",
+      "options": [
+        "Map/Set",
+        "Stack",
+        "Tree",
+        "Queue"
+      ],
+      "answer": 0,
+      "explanation": "Map/Set for frequency tracking."
+    },
+    {
+      "question": "What problem finds longest substring without repeats?",
+      "options": [
+        "Fixed window",
+        "Variable window",
+        "Two pointers opposite",
+        "Binary search"
+      ],
+      "answer": 1,
+      "explanation": "Variable window expanding with set."
+    },
+    {
+      "question": "Deque used for?",
+      "options": [
+        "Max in sliding window",
+        "Variable window",
+        "Fixed sum",
+        "Pair finding"
+      ],
+      "answer": 0,
+      "explanation": "Monotonic deque for max/min in window."
+    }
+  ]
+};

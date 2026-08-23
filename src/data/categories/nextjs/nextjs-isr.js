@@ -1,0 +1,179 @@
+export const nextjs_isr = {
+  "id": "nextjs-isr",
+  "title": "Incremental Static Regeneration",
+  "difficulty": "advanced",
+  "estimatedMinutes": 30,
+  "tldr": [
+    "ISR allows static pages to be updated after build time without rebuilding the entire site, combining the performance of SSG with the freshness of SSR.",
+    "Implement ISR by setting the revalidate property in getStaticProps (Pages Router) or using next.revalidate in fetch() options (App Router).",
+    "ISR serves cached pages while regenerating updated HTML in the background, ensuring zero downtime during updates.",
+    "On-Demand ISR (revalidatePath / revalidateTag) provides instant invalidation triggered by CMS webhooks or admin actions."
+  ],
+  "laymanDefinition": "ISR is like a library that keeps popular books ready on the shelf (cached) while occasionally checking if new editions exist and swapping them in without closing the library.",
+  "deepDive": [
+    {
+      "heading": "How ISR Works",
+      "text": "When a page is first built, HTML is generated and cached. On subsequent requests within the revalidate window, the cached page is served instantly. When the revalidate window expires, the cached page is still served, but Next.js triggers a background regeneration. Once the new HTML is ready, it replaces the cached version atomically."
+    },
+    {
+      "heading": "ISR in the Pages Router",
+      "text": "Set revalidate in the return object of getStaticProps. The value is the maximum number of seconds between regenerations. For example, revalidate: 60 means the page regenerates at most once per 60 seconds. Dynamic routes also need getStaticPaths with the appropriate fallback strategy."
+    },
+    {
+      "heading": "ISR in the App Router",
+      "text": "Use the next.revalidate option in fetch() to set the cache duration for a specific data fetch. Alternatively, use the cache() function with next: { revalidate } options. On-Demand ISR is achieved via revalidatePath() and revalidateTag() imported from next/cache."
+    },
+    {
+      "heading": "On-Demand ISR",
+      "text": "On-Demand ISR uses revalidatePath(\"/path\") to invalidate a specific route or revalidateTag(\"tag\") to invalidate all routes using a specific fetch tag. These are typically called from API routes triggered by CMS webhooks. This eliminates the need to wait for time-based revalidation."
+    },
+    {
+      "heading": "ISR Performance and Caching Strategies",
+      "text": "ISR strikes a balance between build-time generation and dynamic rendering. Use short revalidate times (10-60s) for news sites, longer times (3600+) for marketing pages, and On-Demand ISR for CMS-driven content. ISR works well with CDN caching and stale-while-revalidate headers."
+    }
+  ],
+  "interviewAnswer": "ISR represents a paradigm shift in web rendering, offering the best of both SSG and SSR. For content-driven sites, ISR with On-Demand invalidation provides static-level performance with dynamic-level freshness. The key is choosing the right revalidation strategy based on content update frequency.",
+  "interviewQuestions": [
+    {
+      "question": "What is Incremental Static Regeneration?",
+      "answer": "ISR enables static pages to be updated after deployment without rebuilding the entire site. Pages are served from cache while fresh HTML is generated in the background. When regeneration completes, the new version replaces the cached one atomically, ensuring zero downtime."
+    },
+    {
+      "question": "How do you implement ISR in the Pages Router?",
+      "answer": "Add a revalidate property to the object returned by getStaticProps. The value is the number of seconds between potential regenerations. For example, return { props: { data }, revalidate: 60 } regenerates at most once per minute."
+    },
+    {
+      "question": "How do you implement ISR in the App Router?",
+      "answer": "In the App Router, use the next.revalidate option in fetch(): fetch(url, { next: { revalidate: 60 } }). For On-Demand ISR, use revalidatePath() to invalidate a path or revalidateTag() to invalidate by tag, imported from next/cache."
+    },
+    {
+      "question": "What is On-Demand ISR?",
+      "answer": "On-Demand ISR allows instant invalidation of cached pages without waiting for time-based revalidation. It uses revalidatePath(\"/path\") or revalidateTag(\"tag\") functions, typically called from API routes triggered by CMS webhooks, admin actions, or content updates."
+    },
+    {
+      "question": "What happens during the revalidation window?",
+      "answer": "During the revalidation window, cached HTML is served immediately. After the window expires, the first request triggers a background regeneration while still serving the stale cached page. The new HTML replaces the cached version once regeneration completes."
+    },
+    {
+      "question": "How does ISR handle high traffic?",
+      "answer": "ISR handles high traffic well because most requests are served from cache. During regeneration, only one process (per page) performs the regeneration while all other requests receive the cached version. This prevents thundering herd problems."
+    },
+    {
+      "question": "What are the downsides of ISR?",
+      "answer": "Pages can serve stale content within the revalidation window. Build complexity increases compared to pure SSG. Not suitable for real-time data or highly personalized content. The first request after revalidation expiry may be slow (generation in background)."
+    },
+    {
+      "question": "How do you debug ISR issues?",
+      "answer": "Check the server logs for regeneration errors. Verify that data sources are accessible during regeneration. Monitor the revalidate time and ensure it matches expectations. Use the Next.js build output to confirm which pages are using ISR. Add console.log in getStaticProps during regeneration."
+    },
+    {
+      "question": "Can ISR work with dynamic routes?",
+      "answer": "Yes, ISR works with dynamic routes. Use getStaticPaths with fallback: true or \"blocking\" combined with revalidate in getStaticProps. The fallback strategy determines how non-prebuilt paths are handled on first request."
+    },
+    {
+      "question": "What is the difference between revalidate and On-Demand ISR?",
+      "answer": "Time-based revalidate regenerates at fixed intervals (e.g., every 60 seconds). On-Demand ISR regenerates instantly when triggered (e.g., via CMS webhook). On-Demand ISR is more efficient for content that updates unpredictably, while time-based is simpler for predictable schedules."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 200\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><rect x=\"0\" y=\"0\" width=\"500\" height=\"200\" rx=\"8\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"24\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">Incremental Static Regeneration</text><rect x=\"10\" y=\"40\" width=\"100\" height=\"35\" rx=\"4\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1\"/><text x=\"60\" y=\"56\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Build: SSG</text><text x=\"60\" y=\"68\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Static HTML</text><line x1=\"110\" y1=\"58\" x2=\"130\" y2=\"58\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"140\" y=\"40\" width=\"100\" height=\"35\" rx=\"4\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1\"/><text x=\"190\" y=\"56\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">revalidate:60</text><text x=\"190\" y=\"68\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Cache Window</text><line x1=\"240\" y1=\"58\" x2=\"260\" y2=\"58\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"270\" y=\"40\" width=\"100\" height=\"35\" rx=\"4\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1\"/><text x=\"320\" y=\"56\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Expired</text><text x=\"320\" y=\"68\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Stale Served</text><line x1=\"270\" y1=\"75\" x2=\"270\" y2=\"95\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"230\" y=\"105\" width=\"100\" height=\"35\" rx=\"4\" fill=\"#17a2b8\" stroke=\"#17a2b8\" stroke-width=\"1\"/><text x=\"280\" y=\"121\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Background</text><text x=\"280\" y=\"133\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Regenerate</text><line x1=\"330\" y1=\"58\" x2=\"350\" y2=\"58\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"360\" y=\"40\" width=\"100\" height=\"35\" rx=\"4\" fill=\"#6610f2\" stroke=\"#6610f2\" stroke-width=\"1\"/><text x=\"410\" y=\"56\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Fresh HTML</text><text x=\"410\" y=\"68\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Replaces Cache</text><text x=\"250\" y=\"170\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">ISR: Serve cached static pages, regenerate in background when stale.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "ISR with Time-Based Revalidation",
+      "useCase": "When a blog post page should refresh content hourly.",
+      "code": "export async function getStaticProps() {\n  const data = await fetch(\"https://cms.example.com/posts/latest\");\n  const posts = await data.json();\n  return { props: { posts }, revalidate: 3600 };\n}",
+      "description": "Regenerates the page at most once per hour while serving cached content between regenerations."
+    },
+    {
+      "title": "ISR in App Router with fetch",
+      "useCase": "When using ISR with the App Router\\'s built-in fetch caching.",
+      "code": "export default async function Page() {\n  const data = await fetch(\"https://api.example.com/data\", {\n    next: { revalidate: 60 }\n  });\n  const json = await data.json();\n  return <div>{json.title}</div>\n}",
+      "description": "The fetch call is cached for 60 seconds. After that, the next request triggers background revalidation."
+    },
+    {
+      "title": "On-Demand ISR with revalidatePath",
+      "useCase": "When a CMS webhook needs to instantly update the homepage.",
+      "code": "// app/api/revalidate/route.js\nimport { revalidatePath } from \"next/cache\";\n\nexport async function POST(request) {\n  const body = await request.json();\n  if (body.secret !== process.env.REVALIDATION_SECRET) {\n    return Response.json({ message: \"Invalid secret\" }, { status: 401 });\n  }\n  revalidatePath(\"/\");\n  return Response.json({ revalidated: true });\n}",
+      "description": "Calling this API route instantly invalidates the homepage cache, triggering a fresh regeneration."
+    },
+    {
+      "title": "On-Demand ISR with revalidateTag",
+      "useCase": "When multiple pages share the same data and need collective invalidation.",
+      "code": "// Data fetching with tag\nexport default async function Page() {\n  const data = await fetch(\"https://api.example.com/posts\", {\n    next: { tags: [\"posts\"] }\n  });\n  const posts = await data.json();\n  return <div>{posts.length} posts</div>\n}\n\n// Webhook handler to invalidate all tagged pages\nimport { revalidateTag } from \"next/cache\";\nexport async function POST(request) {\n  revalidateTag(\"posts\");\n  return Response.json({ revalidated: true });\n}",
+      "description": "Invalidates all pages that fetch data tagged with \"posts\" in one call."
+    },
+    {
+      "title": "ISR with Dynamic Routes and Fallback",
+      "useCase": "When a dynamic blog has thousands of posts, not all built upfront.",
+      "code": "export async function getStaticPaths() {\n  const posts = await fetch(\"https://cms.example.com/posts?limit=100\");\n  const data = await posts.json();\n  return { paths: data.map(p => ({ params: { slug: p.slug } })), fallback: \"blocking\" };\n}\n\nexport async function getStaticProps({ params }) {\n  const post = await fetch(`https://cms.example.com/posts/${params.slug}`);\n  const data = await post.json();\n  return { props: { post: data }, revalidate: 3600 };\n}",
+      "description": "Pre-builds top 100 posts, generates others on first request (blocking), and revalidates hourly."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What property enables ISR in getStaticProps?",
+      "options": [
+        "refresh",
+        "revalidate",
+        "regenerate",
+        "update"
+      ],
+      "answer": 1,
+      "explanation": "The revalidate property (in seconds) enables ISR by setting the cache invalidation interval."
+    },
+    {
+      "question": "How does ISR serve content during revalidation?",
+      "options": [
+        "Returns 503 error",
+        "Serves stale cached page",
+        "Blocks the request",
+        "Returns empty page"
+      ],
+      "answer": 1,
+      "explanation": "ISR serves the stale cached page while regenerating fresh content in the background."
+    },
+    {
+      "question": "Which functions enable On-Demand ISR in the App Router?",
+      "options": [
+        "refreshPath and refreshTag",
+        "revalidatePath and revalidateTag",
+        "invalidatePath and invalidateTag",
+        "clearCachePath and clearCacheTag"
+      ],
+      "answer": 1,
+      "explanation": "On-Demand ISR uses revalidatePath() and revalidateTag() from next/cache."
+    },
+    {
+      "question": "What is the main advantage of On-Demand ISR over time-based ISR?",
+      "options": [
+        "Simpler to implement",
+        "Lower server costs",
+        "Instant invalidation on content update",
+        "Better SEO"
+      ],
+      "answer": 2,
+      "explanation": "On-Demand ISR provides instant invalidation triggered by webhooks, eliminating wait times."
+    },
+    {
+      "question": "What happens to traffic during ISR regeneration?",
+      "options": [
+        "All requests block until regeneration",
+        "All requests get 503",
+        "Requests get stale cached page",
+        "Requests get empty page"
+      ],
+      "answer": 2,
+      "explanation": "All incoming requests during regeneration receive the stale cached page without blocking."
+    },
+    {
+      "question": "Which fallback strategy works best with ISR for dynamic routes?",
+      "options": [
+        "fallback: false",
+        "fallback: true or \"blocking\"",
+        "No fallback needed",
+        "fallback: \"lazy\""
+      ],
+      "answer": 1,
+      "explanation": "fallback: true or \"blocking\" enables ISR to generate pages on first request for dynamic routes."
+    }
+  ]
+};

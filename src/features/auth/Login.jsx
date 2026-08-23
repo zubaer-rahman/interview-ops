@@ -1,5 +1,5 @@
 import { Terminal, ArrowRight } from "lucide-react";
-import { CATEGORIES } from "../../data/categories.js";
+import { CATEGORIES } from "../../data/categories";
 
 const TOTAL_TOPICS = CATEGORIES.reduce((sum, c) => sum + c.topics.length, 0);
 

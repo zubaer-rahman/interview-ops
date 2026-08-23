@@ -1,0 +1,179 @@
+export const express_rate_limiting = {
+  "id": "express-rate-limiting",
+  "title": "Rate Limiting",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 20,
+  "tldr": [
+    "Rate limiting controls the number of requests a client can make within a time window, protecting APIs from abuse, brute force attacks, and ensuring fair resource usage.",
+    "Express rate limiting is commonly implemented with express-rate-limit (memory store) or express-rate-limit with Redis for distributed applications.",
+    "Key strategies: fixed window (simple, burst at edges), sliding window (smoother), token bucket (granular control). Configuration includes windowMs, max requests, keyGenerator, and handler.",
+    "Apply globally for general protection, stricter on auth endpoints (login, register), and use different limits for authenticated vs anonymous users."
+  ],
+  "laymanDefinition": "Rate limiting is like a nightclub bouncer who only lets a certain number of people in per hour. If too many try to enter at once, the rest must wait outside until the next hour starts.",
+  "deepDive": [
+    {
+      "heading": "Fixed Window Counter",
+      "text": "Simplest algorithm: divide time into fixed windows. Count requests per window. When window resets, counter resets. Problem: burst traffic at window boundaries (e.g., 100 requests at end of window + 100 at start of next = 200 in 2 seconds). Good for basic protection, easy to implement."
+    },
+    {
+      "heading": "Sliding Window Log",
+      "text": "Records timestamp of each request. To check limit, count requests within the sliding window from now. More accurate, no boundary bursts, but stores all timestamps (memory intensive). Sliding window counter is a hybrid approximation using fixed windows with weighted counts."
+    },
+    {
+      "heading": "Token Bucket Algorithm",
+      "text": "Each client has a bucket with tokens. Requests consume tokens. Tokens refill at a fixed rate. If bucket empty, request rejected. Allows bursts up to bucket size while maintaining average rate. More complex but provides smooth rate limiting."
+    },
+    {
+      "heading": "express-rate-limit Configuration",
+      "text": "Options: windowMs (window duration), max (max requests), message (response), standardHeaders (RateLimit-* headers), legacyHeaders (X-RateLimit-*), keyGenerator (identifies client, default: IP), skip (condition to bypass), handler (custom response function). Use Redis store for multi-instance deployments."
+    },
+    {
+      "heading": "Strategic Rate Limiting",
+      "text": "Apply globally: app.use(rateLimiter) for general API protection. Stricter on auth: login = 5/min, register = 3/hour. Higher limits for authenticated users (by user ID). Skip for health checks, static assets. Use different stores for distributed systems. Monitor and adjust based on traffic patterns."
+    }
+  ],
+  "interviewAnswer": "Rate limiting is essential for production APIs. Start with express-rate-limit for simplicity. Use Redis for distributed deployments. Tailor limits: strict on auth endpoints, generous on read-only endpoints. Monitor rate limit hits to detect abuse or adjust limits.",
+  "interviewQuestions": [
+    {
+      "question": "What is rate limiting?",
+      "answer": "Rate limiting restricts the number of requests a client can make within a time window. It prevents abuse, brute force attacks, and ensures fair resource allocation. Commonly implemented per IP, user ID, or API key."
+    },
+    {
+      "question": "What are the main rate limiting algorithms?",
+      "answer": "Fixed window (simple, boundary bursts), sliding window log (accurate, memory heavy), sliding window counter (hybrid), token bucket (smooth, burst allowance). Each has trade-offs between accuracy, memory, and implementation complexity."
+    },
+    {
+      "question": "How do you configure express-rate-limit?",
+      "answer": "const rateLimit = require(\"express-rate-limit\"); const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100, message: \"Too many requests\" }); app.use(limiter); Creates a 100 req/15min limit per IP."
+    },
+    {
+      "question": "What headers does rate limiting add?",
+      "answer": "RateLimit-Limit (max requests), RateLimit-Remaining (remaining in window), RateLimit-Reset (seconds until reset). Also legacy: X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset. Enabled with standardHeaders/legacyHeaders options."
+    },
+    {
+      "question": "How do you implement different limits for authenticated users?",
+      "answer": "Use keyGenerator to identify by user ID instead of IP: keyGenerator: (req) => req.user?.id || req.ip. Or create separate limiters: strictLimiter for anonymous, generousLimiter for authenticated. Apply conditionally with skip option."
+    },
+    {
+      "question": "What is the token bucket algorithm?",
+      "answer": "Each client has a bucket with tokens. Each request consumes a token. Tokens refill at a fixed rate. If bucket empty, request rejected. Allows controlled bursts up to bucket size while maintaining average rate limit."
+    },
+    {
+      "question": "How do you skip rate limiting for certain routes?",
+      "answer": "Use skip option: skip: (req, res) => req.path.startsWith(\"/health\") || req.path.startsWith(\"/static\"). Or apply limiter only to specific routes: app.use(\"/api/\", apiLimiter). Health checks and static assets typically skipped."
+    },
+    {
+      "question": "How do you use Redis for distributed rate limiting?",
+      "answer": "Install rate-limit-redis: const RedisStore = require(\"rate-limit-redis\"); const limiter = rateLimit({ store: new RedisStore({ client: redisClient }), ... }). All instances share the same Redis counters."
+    },
+    {
+      "question": "What status code should rate limiting return?",
+      "answer": "429 Too Many Requests. Include Retry-After header with seconds until reset. Body should explain the limit and when to retry. Custom handler can format this response."
+    },
+    {
+      "question": "How do you handle rate limiting for authenticated users?",
+      "answer": "Identify by user ID instead of IP. Higher limits for authenticated (trusted) users. Apply stricter limits on sensitive endpoints (password reset, payments). Use separate limiters for auth vs general API."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 200\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><rect x=\"0\" y=\"0\" width=\"500\" height=\"200\" rx=\"8\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"24\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">Rate Limiting</text><rect x=\"10\" y=\"40\" width=\"140\" height=\"35\" rx=\"4\" fill=\"#68a063\" stroke=\"#68a063\" stroke-width=\"1\"/><text x=\"80\" y=\"56\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Client</text><text x=\"80\" y=\"68\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Request</text><line x1=\"150\" y1=\"58\" x2=\"180\" y2=\"58\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"190\" y=\"40\" width=\"140\" height=\"35\" rx=\"4\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1\"/><text x=\"260\" y=\"56\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Fixed Window</text><text x=\"260\" y=\"68\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Counter</text><rect x=\"190\" y=\"90\" width=\"140\" height=\"35\" rx=\"4\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1\"/><text x=\"260\" y=\"106\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Sliding Window</text><text x=\"260\" y=\"118\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Log</text><rect x=\"190\" y=\"140\" width=\"140\" height=\"35\" rx=\"4\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1\"/><text x=\"260\" y=\"156\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Token Bucket</text><text x=\"260\" y=\"168\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Smooth</text><line x1=\"330\" y1=\"58\" x2=\"360\" y2=\"58\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"330\" y1=\"108\" x2=\"360\" y2=\"108\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"330\" y1=\"158\" x2=\"360\" y2=\"158\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"370\" y=\"40\" width=\"100\" height=\"160\" rx=\"4\" fill=\"#e83e8c\" stroke=\"#e83e8c\" stroke-width=\"1\"/><text x=\"420\" y=\"56\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Rate Limiter</text><text x=\"420\" y=\"68\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">429 if Exceeded</text><text x=\"240\" y=\"230\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">Rate Limiting: Control request frequency with fixed/sliding windows or token bucket.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "Basic Rate Limiter",
+      "useCase": "Global API protection.",
+      "code": "const rateLimit = require('express-rate-limit');\n\nconst limiter = rateLimit({\n  windowMs: 15 * 60 * 1000, // 15 minutes\n  max: 100, // limit each IP to 100 requests per window\n  message: 'Too many requests, please try again later',\n  standardHeaders: true,\n  legacyHeaders: true\n});\napp.use(limiter);",
+      "description": "Global rate limiter: 100 requests per 15 minutes per IP with standard rate limit headers."
+    },
+    {
+      "title": "Strict Auth Limiter",
+      "useCase": "Protect login endpoint from brute force.",
+      "code": "const loginLimiter = rateLimit({\n  windowMs: 15 * 60 * 1000, // 15 minutes\n  max: 5, // 5 attempts per window\n  message: 'Too many login attempts, please try again in 15 minutes',\n  skipSuccessfulRequests: true // Don't count successful logins\n});\napp.post('/login', loginLimiter, loginHandler);",
+      "description": "Strict limiter on login: 5 attempts per 15 min, skip counting successful logins."
+    },
+    {
+      "title": "Per-User Rate Limiting",
+      "useCase": "Higher limits for authenticated users.",
+      "code": "const userLimiter = rateLimit({\n  windowMs: 60 * 60 * 1000, // 1 hour\n  max: 1000, // 1000 requests/hour for authenticated users\n  keyGenerator: (req) => req.user?.id || req.ip,\n  skip: (req) => !req.user // Skip for unauthenticated\n});\napp.use('/api', userLimiter);",
+      "description": "Uses user ID as key for authenticated users, falls back to IP for anonymous. Higher limits for known users."
+    },
+    {
+      "title": "Redis Store for Distributed",
+      "useCase": "Shared rate limit across instances.",
+      "code": "const RedisStore = require('rate-limit-redis');\nconst { createClient } = require('redis');\n\nconst redisClient = createClient({ url: process.env.REDIS_URL });\nawait redisClient.connect();\n\nconst limiter = rateLimit({\n  store: new RedisStore({\n    sendCommand: (...args) => redisClient.sendCommand(args)\n  }),\n  windowMs: 15 * 60 * 1000,\n  max: 100\n});",
+      "description": "Redis store shares rate limit state across multiple server instances."
+    },
+    {
+      "title": "Custom Handler",
+      "useCase": "Custom 429 response format.",
+      "code": "const limiter = rateLimit({\n  windowMs: 15 * 60 * 1000,\n  max: 100,\n  handler: (req, res) => {\n    res.status(429).json({\n      error: 'Rate limit exceeded',\n      retryAfter: Math.ceil(res.get('Retry-After') || 900)\n    });\n  }\n});",
+      "description": "Custom handler returns structured JSON error with retry-after information."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What is the default key generator in express-rate-limit?",
+      "options": [
+        "User ID",
+        "API Key",
+        "IP Address",
+        "Session ID"
+      ],
+      "answer": 2,
+      "explanation": "Default keyGenerator uses req.ip (client IP address)."
+    },
+    {
+      "question": "What algorithm does express-rate-limit use by default?",
+      "options": [
+        "Token bucket",
+        "Fixed window",
+        "Sliding window",
+        "Leaky bucket"
+      ],
+      "answer": 1,
+      "explanation": "express-rate-limit uses fixed window counter by default."
+    },
+    {
+      "question": "What HTTP status code indicates rate limited?",
+      "options": [
+        "400",
+        "401",
+        "403",
+        "429"
+      ],
+      "answer": 3,
+      "explanation": "429 Too Many Requests is the standard status code for rate limiting."
+    },
+    {
+      "question": "How do you apply different limits to different routes?",
+      "options": [
+        "Create separate limiters",
+        "Use max option",
+        "Use windowMs",
+        "Use message"
+      ],
+      "answer": 0,
+      "explanation": "Create separate rateLimit instances with different configs and apply to specific routes."
+    },
+    {
+      "question": "What does skipSuccessfulRequests do?",
+      "options": [
+        "Skips all requests",
+        "Does not count successful responses",
+        "Skips failed requests",
+        "Skips unauthenticated"
+      ],
+      "answer": 1,
+      "explanation": "When true, successful requests (2xx) do not count toward the rate limit."
+    },
+    {
+      "question": "How do you use Redis with express-rate-limit?",
+      "options": [
+        "rate-limit-redis package",
+        "Built-in Redis support",
+        "Custom store only",
+        "Not possible"
+      ],
+      "answer": 0,
+      "explanation": "Use rate-limit-redis package with RedisStore for distributed rate limiting."
+    }
+  ]
+};

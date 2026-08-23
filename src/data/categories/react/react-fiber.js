@@ -1,0 +1,153 @@
+export const react_fiber = {
+  "id": "react-fiber",
+  "title": "React Fiber",
+  "difficulty": "advanced",
+  "estimatedMinutes": 30,
+  "tldr": [
+    "React Fiber is a complete rewrite of React's reconciliation engine, first released in React 16.",
+    "It enables incremental rendering - splitting rendering work into chunks spread over multiple frames.",
+    "Fiber introduces a tree of 'fiber nodes' representing units of work, with linked lists for traversal.",
+    "Features enabled: concurrent mode, Suspense, error boundaries, and prioritized updates."
+  ],
+  "laymanDefinition": "Imagine assembling a huge Lego castle but you must finish in one go - that was the old Stack reconciler. Now imagine you can pause, answer a phone call (higher priority), then resume exactly where you left off - that's Fiber.",
+  "deepDive": [
+    {
+      "heading": "The Problem with Stack Reconciler",
+      "text": "The old Stack reconciler used recursive synchronous traversal. Once started, it blocked the main thread until completion, causing jank in animations and poor UX."
+    },
+    {
+      "heading": "Fiber Node Architecture",
+      "text": "A Fiber is a JS object representing a unit of work. Key properties: tag, type, key, child, sibling, return (parent), pendingProps, memoizedProps, memoizedState, effectTag, alternate. Fibers form a linked list tree."
+    },
+    {
+      "heading": "Work Loop and Scheduling",
+      "text": "Fiber uses cooperative scheduling. The work loop processes one fiber unit at a time, checking shouldYield() after each unit. If higher-priority work exists, it yields to the browser."
+    },
+    {
+      "heading": "Priority Levels",
+      "text": "Immediate (mouse events), UserBlocking (keyboard, scroll), Normal (network, state), Low (prefetching), Idle (analytics). Higher-priority interrupts lower-priority work."
+    },
+    {
+      "heading": "Effects from Fiber",
+      "text": "Enables Suspense (pause rendering for data), Concurrent Mode (interruptible rendering), Error Boundaries (catch render errors), and Automatic Batching."
+    }
+  ],
+  "interviewAnswer": "React Fiber replaces the recursive Stack reconciler with an interruptible, priority-driven architecture. Each component is a fiber node with child/sibling/return pointers forming a linked list. The work loop processes fibers one at a time, yielding for high-priority work. This enables incremental rendering, Suspense, error boundaries, and concurrent mode.",
+  "interviewQuestions": [
+    {
+      "question": "What problem does Fiber solve?",
+      "answer": "The Stack reconciler was recursive and synchronous, blocking the main thread. Fiber makes rendering interruptible, chunkable, and prioritizable."
+    },
+    {
+      "question": "What is a fiber node?",
+      "answer": "A JS object representing a unit of work. Properties: tag, type, key, child, sibling, return, pendingProps, memoizedProps, memoizedState, effectTag, alternate."
+    },
+    {
+      "question": "How does the work loop enable interruption?",
+      "answer": "Processes one fiber at a time, then checks shouldYield(). Yields to browser if higher-priority work is pending."
+    },
+    {
+      "question": "What is the 'alternate' property?",
+      "answer": "Links a fiber to its counterpart from the previous render. Enables double buffering between current and work-in-progress trees."
+    },
+    {
+      "question": "How do priority levels work?",
+      "answer": "Lanes: Immediate (click), UserBlocking (scroll), Normal (fetch), Low (prefetch), Idle (analytics). Highest lane processed first."
+    },
+    {
+      "question": "How does Fiber enable Suspense?",
+      "answer": "When a component throws a Promise, Fiber catches it, shows fallback, and retries when the promise resolves."
+    },
+    {
+      "question": "Render phase vs commit phase in Fiber?",
+      "answer": "Render: builds effect list (interruptible). Commit: applies effects synchronously (not interruptible)."
+    },
+    {
+      "question": "How does Fiber improve error handling?",
+      "answer": "Error boundaries catch fiber-level errors during render phase. Prevents full app crashes."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 700 480\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:700px;\"><defs><marker id=\"arrF\" markerWidth=\"10\" markerHeight=\"7\" refX=\"10\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,10 3.5,0 7\" fill=\"#6c9fff\"/></marker><marker id=\"arrR\" markerWidth=\"10\" markerHeight=\"7\" refX=\"10\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,10 3.5,0 7\" fill=\"#f87171\"/></marker></defs><rect x=\"10\" y=\"10\" width=\"680\" height=\"460\" rx=\"10\" fill=\"var(--bg-card)\" stroke=\"var(--border)\" stroke-width=\"1\"/><text x=\"350\" y=\"38\" text-anchor=\"middle\" fill=\"#e8eaed\" font-size=\"14\" font-weight=\"bold\">React Fiber Architecture</text><rect x=\"40\" y=\"55\" width=\"620\" height=\"170\" rx=\"8\" fill=\"#1a1d28\" stroke=\"var(--border)\"/><text x=\"350\" y=\"78\" text-anchor=\"middle\" fill=\"#e5c07b\" font-size=\"12\" font-weight=\"bold\">Fiber Tree (Linked List)</text><rect x=\"60\" y=\"90\" width=\"130\" height=\"40\" rx=\"4\" fill=\"#2a2f45\" stroke=\"#6c9fff\" stroke-width=\"1\"/><text x=\"125\" y=\"110\" text-anchor=\"middle\" fill=\"#6c9fff\" font-size=\"11\" font-weight=\"bold\">Fiber: App</text><line x1=\"190\" y1=\"110\" x2=\"240\" y2=\"110\" stroke=\"#9aa0b0\" stroke-width=\"1\"/><rect x=\"240\" y=\"90\" width=\"140\" height=\"40\" rx=\"4\" fill=\"#2a2f45\" stroke=\"#fbbf24\" stroke-width=\"1\"/><text x=\"310\" y=\"110\" text-anchor=\"middle\" fill=\"#fbbf24\" font-size=\"11\" font-weight=\"bold\">Fiber: Header</text><line x1=\"380\" y1=\"110\" x2=\"430\" y2=\"110\" stroke=\"#9aa0b0\" stroke-width=\"1\"/><rect x=\"430\" y=\"90\" width=\"140\" height=\"40\" rx=\"4\" fill=\"#2a2f45\" stroke=\"#34d399\" stroke-width=\"1\"/><text x=\"500\" y=\"110\" text-anchor=\"middle\" fill=\"#34d399\" font-size=\"11\" font-weight=\"bold\">Fiber: Main</text><rect x=\"40\" y=\"240\" width=\"620\" height=\"200\" rx=\"8\" fill=\"#1a1d28\" stroke=\"var(--border)\"/><text x=\"350\" y=\"263\" text-anchor=\"middle\" fill=\"#e5c07b\" font-size=\"12\" font-weight=\"bold\">Fiber Work Loop (Cooperative Scheduling)</text><rect x=\"60\" y=\"275\" width=\"180\" height=\"36\" rx=\"4\" fill=\"#2a2f45\" stroke=\"#6c9fff\" stroke-width=\"1\"/><text x=\"150\" y=\"292\" text-anchor=\"middle\" fill=\"#6c9fff\" font-size=\"10\">Process one fiber node</text><rect x=\"260\" y=\"275\" width=\"180\" height=\"36\" rx=\"4\" fill=\"#2a2f45\" stroke=\"#fbbf24\" stroke-width=\"1\"/><text x=\"350\" y=\"292\" text-anchor=\"middle\" fill=\"#fbbf24\" font-size=\"10\">Check shouldYield()</text><rect x=\"460\" y=\"275\" width=\"180\" height=\"36\" rx=\"4\" fill=\"#2a2f45\" stroke=\"#34d399\" stroke-width=\"1\"/><text x=\"550\" y=\"292\" text-anchor=\"middle\" fill=\"#34d399\" font-size=\"10\">Yield to browser</text></svg>",
+  "codeExamples": [
+    {
+      "title": "useTransition for Deferred Updates",
+      "useCase": "Priority-based rendering",
+      "code": "function SearchPage() {\n  const [query, setQuery] = useState('');\n  const [results, setResults] = useState([]);\n  const [isPending, startTransition] = useTransition();\n  function handleChange(e) {\n    setQuery(e.target.value);\n    startTransition(() => setResults(filterData(e.target.value)));\n  }\n  return <div>\n    <input value={query} onChange={handleChange} />\n    {isPending ? <Spinner /> : <ResultsList data={results} />}\n  </div>;\n}",
+      "description": "setQuery is high-priority (input stays responsive). setResults is deferred via startTransition."
+    },
+    {
+      "title": "Suspense with Fiber",
+      "useCase": "Interruptible data loading",
+      "code": "function User({ id }) {\n  const [user, setUser] = useState(null);\n  if (user === null) throw fetchUser(id).then(setUser);\n  return <div>{user.name}</div>;\n}\nfunction App() {\n  return (<Suspense fallback={<div>Loading...</div>}>\n    <User id={1} />\n  </Suspense>);\n}",
+      "description": "Fiber catches the thrown Promise, shows fallback, retries when resolved."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "Main limitation of Stack reconciler?",
+      "options": [
+        "No JSX support",
+        "Recursive and synchronous, blocking main thread",
+        "No list handling",
+        "Required jQuery"
+      ],
+      "answer": 1,
+      "explanation": "Stack reconciler blocked main thread until completion."
+    },
+    {
+      "question": "How does a fiber link to its parent?",
+      "options": [
+        "child pointer",
+        "sibling pointer",
+        "return pointer",
+        "alternate pointer"
+      ],
+      "answer": 2,
+      "explanation": "Return pointer links to parent fiber."
+    },
+    {
+      "question": "What does 'alternate' represent?",
+      "options": [
+        "Parallel universe twin",
+        "Previous render's counterpart",
+        "Fallback component",
+        "Alternative path"
+      ],
+      "answer": 1,
+      "explanation": "Links work-in-progress to current (committed) fiber."
+    },
+    {
+      "question": "API used for cooperative scheduling?",
+      "options": [
+        "setTimeout/setInterval",
+        "requestIdleCallback/requestAnimationFrame",
+        "Web Workers",
+        "MutationObserver"
+      ],
+      "answer": 1,
+      "explanation": "Uses requestIdleCallback and requestAnimationFrame."
+    },
+    {
+      "question": "What happens when component throws a Promise?",
+      "options": [
+        "App crashes",
+        "React catches it, shows fallback, retries",
+        "Promise ignored",
+        "Synchronous wait"
+      ],
+      "answer": 1,
+      "explanation": "Fiber suspends and retries on resolve."
+    },
+    {
+      "question": "Which feature is NOT enabled by Fiber?",
+      "options": [
+        "Suspense",
+        "Error Boundaries",
+        "JSX transformation",
+        "Concurrent Mode"
+      ],
+      "answer": 2,
+      "explanation": "JSX is compile-time (Babel), not Fiber runtime."
+    }
+  ]
+};

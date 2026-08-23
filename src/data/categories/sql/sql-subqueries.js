@@ -1,0 +1,174 @@
+export const sql_subqueries = {
+  "id": "sql-subqueries",
+  "title": "Subqueries & EXISTS",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 25,
+  "tldr": [
+    "A subquery is a query nested inside another query, enclosed in parentheses. It can return scalar, single column, or multi-column results.",
+    "Scalar subqueries return a single value and can be used in SELECT, WHERE, and SET clauses.",
+    "IN, ANY, ALL operators compare expressions with subquery results. EXISTS checks if a subquery returns any rows.",
+    "Correlated subqueries reference columns from the outer query and execute once per outer row. They can be slower than JOINs."
+  ],
+  "laymanDefinition": "A subquery is like asking a question inside another question. \"Show me all employees who earn more than the average salary.\" The inner question (what is the average?) answers first, then the outer question uses that result.",
+  "deepDive": [
+    {
+      "heading": "Scalar Subqueries",
+      "text": "Return a single value (one row, one column). Used in SELECT: SELECT name, (SELECT AVG(salary) FROM employees) AS avg. Used in WHERE: WHERE salary > (SELECT AVG(salary) FROM employees). Must return exactly one value."
+    },
+    {
+      "heading": "Row and Column Subqueries",
+      "text": "Column subquery: SELECT * FROM employees WHERE dept_id IN (SELECT id FROM departments). Multi-column: WHERE (dept_id, salary) IN (SELECT id, max_salary FROM dept_budgets)."
+    },
+    {
+      "heading": "EXISTS and NOT EXISTS",
+      "text": "EXISTS (subquery) returns true if the subquery returns at least one row. More efficient than IN for large datasets because it can use early exit. NOT EXISTS finds records with no match in the subquery."
+    },
+    {
+      "heading": "ANY and ALL Operators",
+      "text": "column > ANY (subquery) — true if > any value returned. column > ALL (subquery) — true if > all values returned. ANY is equivalent to IN with = operator. ALL with != is equivalent to NOT IN."
+    },
+    {
+      "heading": "Correlated Subqueries",
+      "text": "References outer query columns. Executed once per row of the outer query. Example: SELECT * FROM employees e WHERE salary > (SELECT AVG(salary) FROM employees WHERE dept_id = e.dept_id). Can be rewritten as JOIN with GROUP BY for better performance."
+    }
+  ],
+  "interviewAnswer": "Subqueries are powerful for dynamic filtering and calculations. Use them when the result depends on an aggregate or another query. Prefer JOINs for simple relationships and EXISTS for large dataset membership tests.",
+  "interviewQuestions": [
+    {
+      "question": "What is a subquery?",
+      "answer": "A query nested inside another SQL query, enclosed in parentheses. Executed before the outer query (except correlated)."
+    },
+    {
+      "question": "What is a scalar subquery?",
+      "answer": "A subquery that returns a single value (one row, one column). Can be used in SELECT, WHERE, and SET clauses."
+    },
+    {
+      "question": "How does EXISTS differ from IN?",
+      "answer": "EXISTS checks for row existence and can early-exit. IN retrieves all values first. EXISTS is often faster for large subquery results."
+    },
+    {
+      "question": "What is a correlated subquery?",
+      "answer": "A subquery that references columns from the outer query. Executes once for each outer row. Can be slow for large datasets."
+    },
+    {
+      "question": "What does ANY do?",
+      "answer": "Compares a value with any value returned by the subquery. x > ANY (1,2,3) is true if x > 1."
+    },
+    {
+      "question": "What does ALL do?",
+      "answer": "Compares a value with all values returned. x > ALL (1,2,3) is true only if x > 3."
+    },
+    {
+      "question": "Can subqueries be used in SELECT?",
+      "answer": "Yes. Scalar subqueries in SELECT: SELECT name, (SELECT MAX(salary) FROM employees) AS max_sal FROM employees;"
+    },
+    {
+      "question": "Can subqueries be used in FROM?",
+      "answer": "Yes. Called a derived table or subquery in FROM: SELECT * FROM (SELECT * FROM employees WHERE salary > 50000) AS high_earners."
+    },
+    {
+      "question": "What is the difference between IN and = ANY?",
+      "answer": "They are equivalent. IN is syntactically cleaner for simple cases. = ANY is more explicit."
+    },
+    {
+      "question": "What happens if a scalar subquery returns no rows?",
+      "answer": "It evaluates to NULL. The outer query handles it based on NULL comparison rules."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"300\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">Subqueries & EXISTS</text><rect x=\"10\" y=\"35\" width=\"120\" height=\"25\" rx=\"5\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1.5\"/><text x=\"70\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Scalar</text><text x=\"70\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Single value</text><rect x=\"10\" y=\"65\" width=\"120\" height=\"25\" rx=\"5\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1.5\"/><text x=\"70\" y=\"81\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Row/Column</text><text x=\"70\" y=\"84\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Multiple values</text><rect x=\"10\" y=\"95\" width=\"120\" height=\"25\" rx=\"5\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1.5\"/><text x=\"70\" y=\"111\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">EXISTS</text><text x=\"70\" y=\"114\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Row existence</text><rect x=\"10\" y=\"125\" width=\"120\" height=\"25\" rx=\"5\" fill=\"#dc3545\" stroke=\"#dc3545\" stroke-width=\"1.5\"/><text x=\"70\" y=\"141\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Correlated</text><text x=\"70\" y=\"144\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Per-row exec</text><line x1=\"130\" y1=\"48\" x2=\"160\" y2=\"48\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"130\" y1=\"78\" x2=\"160\" y2=\"78\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"130\" y1=\"108\" x2=\"160\" y2=\"108\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"130\" y1=\"138\" x2=\"160\" y2=\"138\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"170\" y=\"35\" width=\"210\" height=\"130\" rx=\"5\" fill=\"#17a2b8\" stroke=\"#17a2b8\" stroke-width=\"1.5\"/><text x=\"275\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Subqueries</text><text x=\"275\" y=\"148\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Nested queries for dynamic filtering a</text><text x=\"275\" y=\"159\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">nd calculations in SQL.</text><text x=\"240\" y=\"195\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">Subqueries: Scalar, column, correlated, and EXISTS</text><text x=\"240\" y=\"207\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\"> for powerful dynamic queries.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "Scalar Subquery in WHERE",
+      "useCase": "Employees above average salary.",
+      "code": "SELECT name, salary\nFROM employees\nWHERE salary > (SELECT AVG(salary) FROM employees)\nORDER BY salary DESC;",
+      "description": "Finds employees earning more than the company average."
+    },
+    {
+      "title": "IN with Subquery",
+      "useCase": "Employees in active departments.",
+      "code": "SELECT name, dept_id\nFROM employees\nWHERE dept_id IN (SELECT id FROM departments WHERE status = 'active');",
+      "description": "Returns employees belonging to active departments only."
+    },
+    {
+      "title": "EXISTS Example",
+      "useCase": "Customers who have placed orders.",
+      "code": "SELECT c.name, c.email\nFROM customers c\nWHERE EXISTS (SELECT 1 FROM orders o WHERE o.customer_id = c.id);",
+      "description": "EXISTS returns true when the subquery finds at least one order."
+    },
+    {
+      "title": "Correlated Subquery",
+      "useCase": "Above-average salary by department.",
+      "code": "SELECT e.name, e.salary, e.dept_id\nFROM employees e\nWHERE e.salary > (\n  SELECT AVG(salary) FROM employees\n  WHERE dept_id = e.dept_id\n) ORDER BY e.dept_id;",
+      "description": "For each employee, compares salary to their own department average."
+    },
+    {
+      "title": "Subquery in FROM (Derived Table)",
+      "useCase": "Second highest salary per dept.",
+      "code": "SELECT dept_id, MAX(salary) AS second_highest\nFROM employees\nWHERE salary < (\n  SELECT MAX(salary) FROM employees e2\n  WHERE e2.dept_id = employees.dept_id\n) GROUP BY dept_id;",
+      "description": "Uses a subquery to exclude the highest salary, then finds the next highest."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What does a scalar subquery return?",
+      "options": [
+        "A list",
+        "A single value",
+        "A table",
+        "Multiple rows"
+      ],
+      "answer": 1,
+      "explanation": "Scalar subquery returns exactly one value (one row, one column)."
+    },
+    {
+      "question": "What is a correlated subquery?",
+      "options": "References outer query",
+      "answer": "Executes once",
+      "explanation": "Is faster than JOIN"
+    },
+    {
+      "question": "Which is faster for large datasets: EXISTS or IN?",
+      "options": [
+        "IN",
+        "EXISTS",
+        "Same",
+        "Depends on indexes"
+      ],
+      "answer": 1,
+      "explanation": "EXISTS can short-circuit on first match, making it faster for large datasets."
+    },
+    {
+      "question": "What does x > ALL (1,2,3) require?",
+      "options": [
+        "x > 1",
+        "x > 3",
+        "x > 0",
+        "x > 2"
+      ],
+      "answer": 1,
+      "explanation": "ALL requires the value to be greater than every value in the set."
+    },
+    {
+      "question": "Can a subquery be used in a SELECT clause?",
+      "options": [
+        "Yes",
+        "No",
+        "Only in WHERE",
+        "Only in FROM"
+      ],
+      "answer": 0,
+      "explanation": "Scalar subqueries can be used in SELECT, WHERE, FROM, HAVING, and SET clauses."
+    },
+    {
+      "question": "What is a derived table?",
+      "options": [
+        "A view",
+        "A subquery in FROM",
+        "A temporary table",
+        "An indexed view"
+      ],
+      "answer": 1,
+      "explanation": "A derived table is a subquery placed in the FROM clause with an alias."
+    }
+  ]
+};

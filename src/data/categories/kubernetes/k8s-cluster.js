@@ -1,0 +1,217 @@
+export const k8s_cluster = {
+  "id": "k8s-cluster",
+  "title": "Cluster",
+  "difficulty": "beginner",
+  "estimatedMinutes": 10,
+  "file": "k8s-cluster.json",
+  "interviewAnswer": "A Kubernetes cluster is a group of computers that work together as a single powerful unit. Think of it like a sports team — you have a coach (Control Plane) who makes strategic decisions, and players (Worker Nodes) who execute the plays. The coach decides who plays when, and the players run the actual game. Together they form a cluster that can run applications reliably, scale up when demand increases, and heal itself when something breaks.",
+  "tldr": [
+    "A Kubernetes cluster consists of at least one Control Plane node and multiple Worker Nodes working as a unified system",
+    "The Control Plane manages cluster state, scheduling, and coordination while Worker Nodes host application workloads",
+    "Clusters can span multiple physical or virtual machines across on-premises data centers or cloud providers",
+    "Production clusters typically run multiple Control Plane replicas for high availability and fault tolerance",
+    "Nodes within a cluster communicate via the Kubernetes API and a flat network fabric provided by CNI plugins"
+  ],
+  "deepDive": [
+    {
+      "heading": "Cluster Topology and Node Roles",
+      "text": "A cluster has distinct node roles: Control Plane nodes run etcd, API Server, Scheduler, and Controller Manager. Worker Nodes run kubelet, kube-proxy, and the container runtime. In production, you would have 3+ Control Plane nodes (for etcd quorum) and many Worker Nodes scaled based on workload demands. Cloud providers like EKS, AKS, and GKE manage the Control Plane for you."
+    },
+    {
+      "heading": "Cluster Networking Requirements",
+      "text": "Every Pod must be able to communicate with every other Pod without NAT, every Node must be able to communicate with every Pod, and the network must provide a flat IP space. CNI plugins such as Calico (BGP-based), Flannel (VXLAN overlay), or Cilium (eBPF-based) implement these requirements by assigning unique IPs to Pods and managing routing rules across the cluster."
+    },
+    {
+      "heading": "Cluster Lifecycle and Maintenance",
+      "text": "Clusters require ongoing maintenance: certificate rotation (kubelet and API Server certs expire after 1 year by default), version upgrades (Kubernetes releases quarterly), node patching (OS and runtime updates), and backup/restore of etcd data. Tools like kubeadm, kOps, and EKS managed services simplify cluster lifecycle management."
+    }
+  ],
+  "interviewQuestions": [
+    {
+      "question": "What is a Kubernetes cluster?",
+      "answer": "A Kubernetes cluster is a set of machines (nodes) that run containerized applications managed by Kubernetes. It includes a Control Plane for management and Worker Nodes for running workloads."
+    },
+    {
+      "question": "What are the minimum requirements for a cluster?",
+      "answer": "A minimal cluster needs at least one Control Plane node and one Worker Node. For production HA, you need at least 3 Control Plane nodes (for etcd quorum) and multiple Worker Nodes."
+    },
+    {
+      "question": "How do nodes register with a cluster?",
+      "answer": "Nodes register by running kubelet with a join token or certificate signed by the cluster CA. Kubelet presents its credentials to the API Server, which authenticates and adds the node to the cluster."
+    },
+    {
+      "question": "What is a single-node cluster used for?",
+      "answer": "Single-node clusters like minikube, kind, or k3s are used for local development, testing, and learning. They run all Control Plane and Worker components on one machine."
+    },
+    {
+      "question": "How does cluster scaling work?",
+      "answer": "Cluster scaling adds or removes Worker Nodes. This can be manual (using kubeadm join/reset) or automatic via Cluster Autoscaler, which monitors pending Pods and adjusts node count accordingly."
+    },
+    {
+      "question": "What is the difference between a cluster and a namespace?",
+      "answer": "A cluster is the entire Kubernetes environment. Namespaces are virtual clusters within a physical cluster — they isolate resources and provide scope for names, RBAC, and resource quotas."
+    },
+    {
+      "question": "How do you check cluster health?",
+      "answer": "Use kubectl get componentstatuses to check Control Plane health, kubectl get nodes to view node status, and kubectl cluster-info for cluster endpoints."
+    },
+    {
+      "question": "What happens when a node fails?",
+      "answer": "The Node Controller detects the failure after a timeout (default 40s). Pods on the failed node are evicted after 5 minutes (pod-eviction-timeout) and rescheduled on healthy nodes."
+    },
+    {
+      "question": "Can a cluster span multiple regions?",
+      "answer": "While possible with advanced networking, it is not recommended due to latency and stateful workload constraints. Kubernetes assumes a flat, low-latency network. Multi-region clusters require service mesh or federation solutions."
+    },
+    {
+      "question": "What is the cluster CA and why is it important?",
+      "answer": "The Cluster Certificate Authority (CA) signs all certificates within the cluster (API Server, kubelet, etcd, etc.). It is the root of trust for secure communication between components."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What is the minimum number of Control Plane nodes recommended for production?",
+      "options": [
+        "1",
+        "3",
+        "5",
+        "7"
+      ],
+      "answer": 1,
+      "explanation": "Production clusters need 3 Control Plane nodes for etcd quorum (requires majority, so N/2+1 nodes)."
+    },
+    {
+      "question": "Which component handles node failure detection?",
+      "options": [
+        "kube-scheduler",
+        "kube-controller-manager (Node Controller)",
+        "kubelet",
+        "kube-proxy"
+      ],
+      "answer": 1,
+      "explanation": "The Node Controller within kube-controller-manager monitors node health via periodic heartbeats."
+    },
+    {
+      "question": "What is the default pod eviction timeout after node failure?",
+      "options": [
+        "40 seconds",
+        "5 minutes",
+        "15 minutes",
+        "30 seconds"
+      ],
+      "answer": 1,
+      "explanation": "Pods on an unreachable node are evicted after 5 minutes by default (pod-eviction-timeout)."
+    },
+    {
+      "question": "Which tool is used for local development clusters?",
+      "options": [
+        "kubeadm",
+        "kubectl",
+        "minikube",
+        "etcdctl"
+      ],
+      "answer": 2,
+      "explanation": "minikube runs a single-node Kubernetes cluster locally, ideal for development and testing."
+    },
+    {
+      "question": "What does the Cluster Autoscaler do?",
+      "options": [
+        "Scale Pods up/down",
+        "Scale Nodes up/down",
+        "Scale storage",
+        "Scale network"
+      ],
+      "answer": 1,
+      "explanation": "Cluster Autoscaler adjusts the number of Worker Nodes based on resource demands and pending Pods."
+    },
+    {
+      "question": "How do Worker Nodes communicate with the Control Plane?",
+      "options": [
+        "Direct SSH",
+        "API Server",
+        "etcd directly",
+        "kube-proxy"
+      ],
+      "answer": 1,
+      "explanation": "All components, including Worker Nodes, communicate with the cluster through the API Server."
+    },
+    {
+      "question": "What happens to Pods on a failed node?",
+      "options": [
+        "They are restarted on the same node",
+        "They are deleted and rescheduled",
+        "They continue running",
+        "They are lost permanently"
+      ],
+      "answer": 1,
+      "explanation": "After the eviction timeout, Pods are deleted from the API Server and rescheduled onto healthy nodes."
+    },
+    {
+      "question": "What is etcd quorum in a 3-node cluster?",
+      "options": [
+        "1 node",
+        "2 nodes",
+        "3 nodes",
+        "All nodes"
+      ],
+      "answer": 1,
+      "explanation": "etcd quorum requires a majority of nodes (N/2+1), so 2 out of 3 nodes must be healthy."
+    },
+    {
+      "question": "Which network requirement must Kubernetes clusters satisfy?",
+      "options": [
+        "Pods must use host networking",
+        "Pods must communicate without NAT",
+        "All traffic must go through Ingress",
+        "Services must have external IPs"
+      ],
+      "answer": 1,
+      "explanation": "Kubernetes requires that every Pod can communicate with every other Pod without network address translation."
+    },
+    {
+      "question": "What manages Pod-to-Pod networking across nodes?",
+      "options": [
+        "kube-proxy",
+        "CNI plugin",
+        "kubelet",
+        "etcd"
+      ],
+      "answer": 1,
+      "explanation": "CNI plugins (Calico, Flannel, Cilium) implement the cluster network fabric that enables Pod-to-Pod communication across nodes."
+    }
+  ],
+  "codeExamples": [
+    {
+      "title": "Create a kind Cluster",
+      "useCase": "Spin up a local multi-node cluster for testing",
+      "code": "kind create cluster --name demo --config - <<EOF\nkind: Cluster\napiVersion: kind.x-k8s.io/v1alpha4\nnodes:\n- role: control-plane\n- role: worker\n- role: worker\nEOF",
+      "description": "Creates a 3-node kind cluster (1 Control Plane + 2 Workers) locally using Docker."
+    },
+    {
+      "title": "Check Cluster Info",
+      "useCase": "Verify cluster connection and endpoints",
+      "code": "kubectl cluster-info\nkubectl cluster-info dump",
+      "description": "Shows cluster endpoints and dumps cluster diagnostics."
+    },
+    {
+      "title": "List All Nodes",
+      "useCase": "View node status, roles, and versions",
+      "code": "kubectl get nodes -o wide\nkubectl describe node <node-name>",
+      "description": "Lists all nodes with internal IP, roles, and Kubernetes version."
+    },
+    {
+      "title": "Get Cluster Events",
+      "useCase": "Troubleshoot cluster-level issues",
+      "code": "kubectl get events --all-namespaces --sort-by=.lastTimestamp",
+      "description": "Shows all events across the cluster, sorted by time."
+    },
+    {
+      "title": "Drain a Node for Maintenance",
+      "useCase": "Safely evict Pods before node maintenance",
+      "code": "kubectl drain <node-name> --ignore-daemonsets --delete-emptydir-data\nkubectl cordon <node-name>",
+      "description": "Safely evicts all Pods from a node and marks it unschedulable for maintenance."
+    }
+  ],
+  "laymanDefinition": "A Kubernetes cluster is a group of computers that work together as a single powerful unit. Think of it like a sports team — you have a coach (Control Plane) who makes strategic decisions, and players (Worker Nodes) who execute the plays. The coach decides who plays when, and the players run the actual game. Together they form a cluster that can run applications reliably, scale up when demand increases, and heal itself when something breaks.",
+  "diagramSvg": "<svg viewBox=\"0 0 500 280\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"280\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">Cluster</text><rect x=\"20\" y=\"45\" width=\"460\" height=\"60\" rx=\"5\" fill=\"#e8f4f8\" stroke=\"#ccc\" stroke-width=\"1.5\"/><text x=\"250\" y=\"80\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Cluster</text><text x=\"250\" y=\"155\" font-size=\"10\" fill=\"#555\" text-anchor=\"middle\">A Kubernetes cluster consists of at least one Cont</text><text x=\"250\" y=\"168\" font-size=\"10\" fill=\"#555\" text-anchor=\"middle\">rol Plane node and multiple Worker Nodes working a</text><text x=\"250\" y=\"181\" font-size=\"10\" fill=\"#555\" text-anchor=\"middle\">s a unified system</text></svg>"
+};

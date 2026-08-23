@@ -1,0 +1,175 @@
+export const dsa_bst = {
+  "id": "dsa-bst",
+  "title": "Binary Search Trees",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 20,
+  "tldr": [
+    "A Binary Search Tree (BST) is a binary tree where left child values < parent value < right child values.",
+    "BST property enables O(log n) average-time search, insert, and delete operations.",
+    "Inorder traversal of a BST visits nodes in sorted ascending order.",
+    "Worst-case O(n) when tree becomes skewed (sorted input). Self-balancing trees (AVL, Red-Black) prevent this."
+  ],
+  "laymanDefinition": "A BST is like a well-organized phone book. You start at the middle. If the name comes before, go left. If after, go right. Each step eliminates half of the remaining names. When well-organized, finding a name takes O(log n) steps.",
+  "deepDive": [
+    {
+      "heading": "BST Property",
+      "text": "Left subtree: all values less than parent. Right subtree: all values greater than parent. No duplicates typically. This ordering enables binary search on the tree."
+    },
+    {
+      "heading": "BST Operations",
+      "text": "Search: compare with root, go left/right recursively O(h). Insert: search for position, add leaf O(h). Delete: 3 cases — leaf (remove), one child (replace with child), two children (replace with inorder successor)."
+    },
+    {
+      "heading": "BST vs Array Binary Search",
+      "text": "BST: dynamic insert/delete O(log n) average. Array: binary search O(log n) but insert/delete O(n). BST is better when data changes frequently."
+    },
+    {
+      "heading": "Self-Balancing BSTs",
+      "text": "AVL trees: height difference <= 1. Rotations rebalance. Red-Black trees: 5 constraints guarantee O(log n) height. B-Trees: multi-way search trees optimized for disk I/O."
+    }
+  ],
+  "interviewAnswer": "BSTs are the go-to for ordered dynamic data. The BST property enables O(log n) operations when balanced. For guaranteed O(log n) in production, use AVL or Red-Black trees.",
+  "interviewQuestions": [
+    {
+      "question": "What is the BST property?",
+      "answer": "Left child < parent < right child for all nodes."
+    },
+    {
+      "question": "Average BST search complexity?",
+      "answer": "O(log n) for balanced tree."
+    },
+    {
+      "question": "Worst-case BST search time?",
+      "answer": "O(n) — skewed tree (sorted input)."
+    },
+    {
+      "question": "What traversal gives sorted order in BST?",
+      "answer": "Inorder traversal (left, root, right)."
+    },
+    {
+      "question": "How to find minimum value in BST?",
+      "answer": "Keep going left until no left child."
+    },
+    {
+      "question": "How to find maximum value in BST?",
+      "answer": "Keep going right until no right child."
+    },
+    {
+      "question": "What is a successor in BST?",
+      "answer": "The next larger value. For node with right child: leftmost of right subtree."
+    },
+    {
+      "question": "What is deletion case with two children?",
+      "answer": "Replace with inorder successor, then delete successor."
+    },
+    {
+      "question": "Difference between BST and AVL tree?",
+      "answer": "AVL self-balances to guarantee O(log n) height. BST can become skewed."
+    },
+    {
+      "question": "What data structure uses BST internally?",
+      "answer": "C++ std::map, std::set (Red-Black tree)."
+    }
+  ],
+  "diagramSvg": "<svg viewBox=\"0 0 500 300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"300\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">Binary Search Trees</text><rect x=\"10\" y=\"35\" width=\"110\" height=\"25\" rx=\"5\" fill=\"#0070f3\" stroke=\"#0070f3\" stroke-width=\"1.5\"/><text x=\"65\" y=\"53\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Root: 8</text><line x1=\"120\" y1=\"48\" x2=\"150\" y2=\"48\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"120\" y1=\"55\" x2=\"150\" y2=\"72\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"160\" y=\"35\" width=\"100\" height=\"25\" rx=\"5\" fill=\"#28a745\" stroke=\"#28a745\" stroke-width=\"1.5\"/><text x=\"210\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Left: 3</text><text x=\"210\" y=\"54\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">< 8</text><rect x=\"160\" y=\"65\" width=\"100\" height=\"25\" rx=\"5\" fill=\"#ffc107\" stroke=\"#ffc107\" stroke-width=\"1.5\"/><text x=\"210\" y=\"81\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Right: 10</text><text x=\"210\" y=\"84\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">> 8</text><line x1=\"210\" y1=\"48\" x2=\"210\" y2=\"65\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><line x1=\"210\" y1=\"78\" x2=\"210\" y2=\"100\" stroke=\"#666\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/><rect x=\"10\" y=\"100\" width=\"100\" height=\"25\" rx=\"5\" fill=\"#dc3545\" stroke=\"#dc3545\" stroke-width=\"1.5\"/><text x=\"60\" y=\"116\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Left: 1</text><text x=\"60\" y=\"119\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">< 3</text><rect x=\"10\" y=\"130\" width=\"100\" height=\"25\" rx=\"5\" fill=\"#e83e8c\" stroke=\"#e83e8c\" stroke-width=\"1.5\"/><text x=\"60\" y=\"146\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Right: 6</text><text x=\"60\" y=\"149\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">> 3, < 8</text><rect x=\"160\" y=\"100\" width=\"100\" height=\"25\" rx=\"5\" fill=\"#6610f2\" stroke=\"#6610f2\" stroke-width=\"1.5\"/><text x=\"210\" y=\"116\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Right: 14</text><text x=\"210\" y=\"119\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">> 10</text><rect x=\"290\" y=\"35\" width=\"190\" height=\"150\" rx=\"5\" fill=\"#17a2b8\" stroke=\"#17a2b8\" stroke-width=\"1.5\"/><text x=\"385\" y=\"51\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">BST</text><text x=\"385\" y=\"168\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">Left < Parent < Right. O(log n) ba</text><text x=\"385\" y=\"179\" text-anchor=\"middle\" font-size=\"9\" fill=\"#ddd\">lanced.</text><text x=\"240\" y=\"220\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">BST: Left child < parent < right child. O(log n) s</text><text x=\"240\" y=\"232\" font-size=\"9\" fill=\"#666\" text-anchor=\"middle\">earch/insert/delete when balanced.</text></svg>",
+  "codeExamples": [
+    {
+      "title": "BST Search",
+      "useCase": "Recursive and iterative.",
+      "code": "function searchBST(root, val) {\n  if (!root || root.val === val) return root;\n  return val < root.val ? searchBST(root.left, val) : searchBST(root.right, val);\n}\nfunction searchIterative(root, val) {\n  while (root && root.val !== val)\n    root = val < root.val ? root.left : root.right;\n  return root;\n}",
+      "description": "BST search O(h) recursive and iterative."
+    },
+    {
+      "title": "BST Insert",
+      "useCase": "Insert maintaining BST property.",
+      "code": "function insertBST(root, val) {\n  if (!root) return new TreeNode(val);\n  if (val < root.val) root.left = insertBST(root.left, val);\n  else if (val > root.val) root.right = insertBST(root.right, val);\n  return root;\n}",
+      "description": "BST insert O(h) recursive."
+    },
+    {
+      "title": "BST Delete",
+      "useCase": "Delete node with three cases.",
+      "code": "function deleteBST(root, val) {\n  if (!root) return null;\n  if (val < root.val) root.left = deleteBST(root.left, val);\n  else if (val > root.val) root.right = deleteBST(root.right, val);\n  else {\n    if (!root.left) return root.right;\n    if (!root.right) return root.left;\n    let succ = root.right; while (succ.left) succ = succ.left;\n    root.val = succ.val;\n    root.right = deleteBST(root.right, succ.val);\n  }\n  return root;\n}",
+      "description": "BST delete O(h) with inorder successor."
+    },
+    {
+      "title": "Validate BST",
+      "useCase": "Check if tree satisfies BST property.",
+      "code": "function isValidBST(root) {\n  function validate(node, min, max) {\n    if (!node) return true;\n    if (node.val <= min || node.val >= max) return false;\n    return validate(node.left, min, node.val) && validate(node.right, node.val, max);\n  }\n  return validate(root, -Infinity, Infinity);\n}",
+      "description": "Validate BST using min/max range."
+    },
+    {
+      "title": "Kth Smallest in BST",
+      "useCase": "Inorder traversal tracking kth.",
+      "code": "function kthSmallest(root, k) {\n  const stack = []; let curr = root;\n  while (curr || stack.length) {\n    while (curr) { stack.push(curr); curr = curr.left; }\n    curr = stack.pop();\n    if (--k === 0) return curr.val;\n    curr = curr.right;\n  }\n  return -1;\n}",
+      "description": "Kth smallest using iterative inorder O(n)."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "What is the BST property?",
+      "options": [
+        "Left < Root < Right",
+        "Left > Root > Right",
+        "Left = Root = Right",
+        "No ordering"
+      ],
+      "answer": 0,
+      "explanation": "Left child < parent < right child."
+    },
+    {
+      "question": "Average BST search complexity?",
+      "options": [
+        "O(1)",
+        "O(log n)",
+        "O(n)",
+        "O(n^2)"
+      ],
+      "answer": 1,
+      "explanation": "O(log n) when balanced."
+    },
+    {
+      "question": "Worst-case BST search?",
+      "options": [
+        "O(1)",
+        "O(log n)",
+        "O(n)",
+        "O(n log n)"
+      ],
+      "answer": 2,
+      "explanation": "O(n) for skewed tree."
+    },
+    {
+      "question": "What traversal gives sorted BST values?",
+      "options": [
+        "Preorder",
+        "Inorder",
+        "Postorder",
+        "Level order"
+      ],
+      "answer": 1,
+      "explanation": "Inorder gives sorted values."
+    },
+    {
+      "question": "How to find min in BST?",
+      "options": [
+        "Go left until null",
+        "Go right until null",
+        "Search all nodes",
+        "Use recursion"
+      ],
+      "answer": 0,
+      "explanation": "Leftmost node is minimum."
+    },
+    {
+      "question": "What ensures O(log n) in production BST?",
+      "options": [
+        "Random input",
+        "Self-balancing (AVL/RB)",
+        "Hash tables",
+        "Arrays"
+      ],
+      "answer": 1,
+      "explanation": "Self-balancing trees guarantee O(log n)."
+    }
+  ]
+};

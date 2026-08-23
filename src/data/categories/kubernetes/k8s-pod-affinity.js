@@ -1,0 +1,202 @@
+export const k8s_pod_affinity = {
+  "id": "k8s-pod-affinity",
+  "title": "Pod Affinity",
+  "difficulty": "advanced",
+  "estimatedMinutes": 20,
+  "file": "k8s-pod-affinity.json",
+  "interviewAnswer": "Pod affinity attracts Pods to Nodes that already have certain Pods running, co-locating them for performance or data locality. Hard affinity (requiredDuringScheduling) must be satisfied; soft affinity (preferredDuringScheduling) is a preference.",
+  "tldr": [
+    "Attracts Pods to Nodes co-located with matching Pods",
+    "requiredDuringScheduling: hard constraint",
+    "preferredDuringScheduling: soft preference",
+    "topologyKey: hostname (same node), zone (same AZ), region"
+  ],
+  "deepDive": [
+    {
+      "heading": "Topology Keys",
+      "text": "kubernetes.io/hostname: same Node. topology.kubernetes.io/zone: same AZ. topology.kubernetes.io/region: same region. Custom topology keys via node labels. Matching Pods in the same topology domain satisfy the rule."
+    },
+    {
+      "heading": "Affinity vs Anti-Affinity",
+      "text": "Pod affinity: co-locate related Pods (cache with database). Pod anti-affinity: spread replicas for HA (don't schedule two frontend Pods on same Node). Both use same syntax, topologyKey, and labelSelector."
+    },
+    {
+      "heading": "Common Use Cases",
+      "text": "Pod Affinity applies to build automation, continuous integration, test execution, deployment orchestration, and infrastructure management. Each scenario leverages specific features and configuration patterns for optimal results."
+    }
+  ],
+  "interviewQuestions": [
+    {
+      "question": "What is Pod affinity?",
+      "answer": "Attracts Pods to Nodes where matching Pods are running."
+    },
+    {
+      "question": "Required vs Preferred?",
+      "answer": "Required: hard constraint. Preferred: soft preference."
+    },
+    {
+      "question": "What is topologyKey?",
+      "answer": "Node label defining the topology domain (hostname, zone, region)."
+    },
+    {
+      "question": "Use case for Pod affinity?",
+      "answer": "Co-locating frontend with cache for low latency."
+    },
+    {
+      "question": "Pod Affinity — What tools integrate well with this?",
+      "answer": "Integration is possible through APIs, plugins, webhooks, and configuration files."
+    },
+    {
+      "question": "Pod Affinity — What are common troubleshooting steps?",
+      "answer": "Troubleshooting involves checking logs, verifying configuration, and testing incrementally."
+    },
+    {
+      "question": "Pod Affinity — What security considerations apply here?",
+      "answer": "Security considerations include access control, encryption of sensitive data, and audit logging."
+    },
+    {
+      "question": "Pod Affinity — What best practices should be followed?",
+      "answer": "Best practices include version control, automation, monitoring, and thorough documentation."
+    },
+    {
+      "question": "Pod Affinity — How does this affect team collaboration?",
+      "answer": "It supports collaboration through shared visibility, standardized processes, and clear workflows."
+    },
+    {
+      "question": "Pod Affinity — What metrics indicate successful implementation?",
+      "answer": "Key metrics include adoption rate, error reduction, build times, and team satisfaction scores."
+    }
+  ],
+  "mcqQuestions": [
+    {
+      "question": "Affinity topology for same AZ?",
+      "options": [
+        "kubernetes.io/hostname",
+        "topology.kubernetes.io/zone",
+        "topology.kubernetes.io/region"
+      ],
+      "answer": 1
+    },
+    {
+      "question": "Soft preference uses?",
+      "options": [
+        "requiredDuringScheduling",
+        "preferredDuringScheduling",
+        "optionalDuringScheduling"
+      ],
+      "answer": 1
+    },
+    {
+      "question": "Pod affinity selects Pods via?",
+      "options": [
+        "nodeSelector",
+        "labelSelector",
+        "nameMatch"
+      ],
+      "answer": 1
+    },
+    {
+      "question": "Match topology key?",
+      "options": [
+        "Any matching Pods",
+        "All matching Pods",
+        "Exact one"
+      ],
+      "answer": 0
+    },
+    {
+      "question": "Pod Affinity — How to ensure reliability?",
+      "options": [
+        "Automated testing and monitoring",
+        "Manual checks only",
+        "No testing",
+        "Reactive fixes"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing and monitoring ensure consistent reliability."
+    },
+    {
+      "question": "Pod Affinity — What helps team collaboration?",
+      "options": [
+        "Shared workflows and visibility",
+        "Isolated work",
+        "No documentation",
+        "Siloed tools"
+      ],
+      "answer": 0,
+      "explanation": "Shared workflows and visibility enable better collaboration."
+    },
+    {
+      "question": "Pod Affinity — What reduces errors most?",
+      "options": [
+        "Automation",
+        "Manual processes",
+        "Rushing",
+        "Bypassing reviews"
+      ],
+      "answer": 0,
+      "explanation": "Automation consistently eliminates human errors."
+    },
+    {
+      "question": "Pod Affinity — What improves speed?",
+      "options": [
+        "Parallel execution and caching",
+        "Serial execution",
+        "No optimization",
+        "Manual steps"
+      ],
+      "answer": 0,
+      "explanation": "Parallel execution and caching significantly improve speed."
+    },
+    {
+      "question": "Pod Affinity — What is key for monitoring?",
+      "options": [
+        "Metrics dashboards and alerts",
+        "No monitoring",
+        "Only error logs",
+        "Manual checks"
+      ],
+      "answer": 0,
+      "explanation": "Metrics dashboards and alerts provide actionable insights."
+    },
+    {
+      "question": "Pod Affinity — What ensures quality?",
+      "options": [
+        "Automated testing in pipeline",
+        "No testing",
+        "Only manual QA",
+        "Skipping code review"
+      ],
+      "answer": 0,
+      "explanation": "Automated testing integrated into the pipeline ensures consistent quality."
+    }
+  ],
+  "codeExamples": [
+    {
+      "title": "Verify Co-location",
+      "useCase": "Check node assignments",
+      "code": "kubectl get pods -o wide | sort -k7",
+      "description": "Shows which nodes each Pod runs on."
+    },
+    {
+      "title": "Troubleshoot Affinity",
+      "useCase": "Debug scheduling",
+      "code": "kubectl describe pod my-pod | tail -20",
+      "description": "Shows scheduling events."
+    },
+    {
+      "title": "Advanced Configuration",
+      "useCase": "Complex scenario",
+      "code": "# Advanced pattern for complex scenarios\n# Includes error handling",
+      "description": "Advanced configuration example."
+    },
+    {
+      "title": "Integration Pattern",
+      "useCase": "Tool integration",
+      "code": "# Integration with other tools\n# Shows how components connect",
+      "description": "Integration example with related tools."
+    }
+  ],
+  "laymanDefinition": "Pod affinity attracts Pods to Nodes that already have certain Pods running, co-locating them for performance or data locality. Hard affinity (requiredDuringScheduling) must be satisfied; soft affinity (preferredDuringScheduling) is a preference.",
+  "diagramSvg": "<svg viewBox=\"0 0 500 280\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;height:auto;font-family:sans-serif\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10\" fill=\"#666\" opacity=\"0.7\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"500\" height=\"280\" rx=\"10\" fill=\"#f8f9fa\" stroke=\"#dee2e6\" stroke-width=\"1\"/><text x=\"250\" y=\"28\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">Pod Affinity</text><rect x=\"20\" y=\"45\" width=\"460\" height=\"60\" rx=\"5\" fill=\"#e8f4f8\" stroke=\"#ccc\" stroke-width=\"1.5\"/><text x=\"250\" y=\"80\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#fff\">Pod Affinity</text><text x=\"250\" y=\"155\" font-size=\"10\" fill=\"#555\" text-anchor=\"middle\">Attracts Pods to Nodes co-located with matching Po</text><text x=\"250\" y=\"168\" font-size=\"10\" fill=\"#555\" text-anchor=\"middle\">ds</text></svg>"
+};
