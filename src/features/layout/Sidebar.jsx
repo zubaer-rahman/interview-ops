@@ -50,7 +50,7 @@ export function Sidebar({
                 className={`io-cat-btn ${isActive ? "is-active" : ""}`}
                 onClick={() => setActiveCategory(isActive ? activeCategory : cat.id)}
               >
-                <span className="io-cat-tag">{cat.tag}</span>
+                <span className="io-cat-tag" style={{ background: `${cat.color}20`, color: cat.color }}>{cat.icon}</span>
                 <span className="io-cat-name">{cat.name}</span>
                 <span className="io-cat-count">
                   {cp.done}/{cp.total}
