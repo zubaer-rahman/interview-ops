@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Check, BookOpen, Lightbulb, Layers, MessageSquare, Workflow, Code2, ArrowRight, Target, Clock, ChevronLeft, ChevronRight } from "lucide-react";
+import { Check, Copy, BookOpen, Lightbulb, Layers, MessageSquare, Workflow, Code2, ArrowRight, Target, Clock, ChevronLeft, ChevronRight } from "lucide-react";
 import { highlightCode } from "../../utils/highlightCode";
 import { formatContentHtml } from "../../utils/sanitizeHtml";
 
@@ -32,10 +32,20 @@ export function TopicContent({
 }) {
   const [mcqAnswers, setMcqAnswers] = useState({});
   const [mcqSubmitted, setMcqSubmitted] = useState(false);
+  const [copiedIdx, setCopiedIdx] = useState(null);
+
+  const handleCopy = (codeText, idx) => {
+    if (!codeText) return;
+    navigator.clipboard?.writeText(codeText).then(() => {
+      setCopiedIdx(idx);
+      setTimeout(() => setCopiedIdx(null), 2000);
+    }).catch(() => {});
+  };
 
   useEffect(() => {
     setMcqAnswers({});
     setMcqSubmitted(false);
+    setCopiedIdx(null);
   }, [activeTopic?.id]);
 
   if (!activeTopic) return null;
@@ -345,23 +355,86 @@ export function TopicContent({
             <div className="io-code-examples">
               {activeTopic.content?.codeExamples?.length > 0 ? (
                 Array.isArray(activeTopic.content.codeExamples) ? (
-                  activeTopic.content.codeExamples.map((ex, i) => (
-                    <div key={i} style={{ marginBottom: '24px' }}>
-                      <h4 style={{ fontSize: '14px', marginBottom: '6px', color: 'var(--text)' }}>{ex.title || ex.useCase || `Example ${i + 1}`}</h4>
-                      {ex.title && ex.useCase && <div style={{ fontSize: '12px', color: 'var(--teal)', marginBottom: '6px', fontFamily: 'var(--font-mono)' }}>Use Case: {ex.useCase}</div>}
-                      {ex.description && <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '8px' }}>{ex.description}</p>}
-                      <pre className="io-code">
-                        <code dangerouslySetInnerHTML={{ __html: highlightCode(ex.code || ex.snippet || '') }} />
-                      </pre>
-                    </div>
-                  ))
+                  activeTopic.content.codeExamples.map((ex, i) => {
+                    const codeSnippet = ex.code || ex.snippet || '';
+                    return (
+                      <div key={i} className="io-code-card">
+                        <div className="io-code-header">
+                          <div className="io-code-header-left">
+                            <h4 className="io-code-title">{ex.title || `Example ${i + 1}`}</h4>
+                            {ex.useCase && <span className="io-code-badge">{ex.useCase}</span>}
+                          </div>
+                          {codeSnippet && (
+                            <button
+                              type="button"
+                              className={`io-code-copy-btn ${copiedIdx === i ? "is-copied" : ""}`}
+                              onClick={() => handleCopy(codeSnippet, i)}
+                              title="Copy code to clipboard"
+                              aria-label="Copy code to clipboard"
+                            >
+                              {copiedIdx === i ? (
+                                <>
+                                  <Check size={12} strokeWidth={3} />
+                                  <span>Copied!</span>
+                                </>
+                              ) : (
+                                <>
+                                  <Copy size={12} />
+                                  <span>Copy</span>
+                                </>
+                              )}
+                            </button>
+                          )}
+                        </div>
+                        {ex.description && (
+                          <p className="io-code-desc" dangerouslySetInnerHTML={{ __html: formatContentHtml(ex.description) }} />
+                        )}
+                        <pre className="io-code in-card">
+                          <code dangerouslySetInnerHTML={{ __html: highlightCode(codeSnippet) }} />
+                        </pre>
+                      </div>
+                    );
+                  })
                 ) : (
                   <div className="io-code-raw" dangerouslySetInnerHTML={{ __html: activeTopic.content.codeExamples }} />
                 )
               ) : (activeTopic.content?.code || activeTopic.code) ? (
-                <pre className="io-code">
-                  <code dangerouslySetInnerHTML={{ __html: highlightCode(activeTopic.content?.code?.snippet || activeTopic.code?.snippet) }} />
-                </pre>
+                (() => {
+                  const singleSnippet = activeTopic.content?.code?.snippet || activeTopic.code?.snippet || (typeof activeTopic.content?.code === 'string' ? activeTopic.content.code : '') || (typeof activeTopic.code === 'string' ? activeTopic.code : '');
+                  return (
+                    <div className="io-code-card">
+                      <div className="io-code-header">
+                        <div className="io-code-header-left">
+                          <h4 className="io-code-title">Code Example</h4>
+                        </div>
+                        {singleSnippet && (
+                          <button
+                            type="button"
+                            className={`io-code-copy-btn ${copiedIdx === "single" ? "is-copied" : ""}`}
+                            onClick={() => handleCopy(singleSnippet, "single")}
+                            title="Copy code to clipboard"
+                            aria-label="Copy code to clipboard"
+                          >
+                            {copiedIdx === "single" ? (
+                              <>
+                                <Check size={12} strokeWidth={3} />
+                                <span>Copied!</span>
+                              </>
+                            ) : (
+                              <>
+                                <Copy size={12} />
+                                <span>Copy</span>
+                              </>
+                            )}
+                          </button>
+                        )}
+                      </div>
+                      <pre className="io-code in-card">
+                        <code dangerouslySetInnerHTML={{ __html: highlightCode(singleSnippet) }} />
+                      </pre>
+                    </div>
+                  );
+                })()
               ) : <EmptyState message="No code examples available for this topic." />}
             </div>
           )}
