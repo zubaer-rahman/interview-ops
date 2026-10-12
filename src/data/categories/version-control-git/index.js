@@ -16,7 +16,7 @@ export const version_control_git = {
       content: () => import('./git-basics.js').then(m => m.git_basics)
     },
     {
-      id: "git-branching",
+      id: "vc-git-branching",
       title: "Git Branching",
       difficulty: "intermediate",
       estimatedMinutes: 20,
@@ -72,42 +72,42 @@ export const version_control_git = {
       content: () => import('./git-pull.js').then(m => m.git_pull)
     },
     {
-      id: "git-merge",
+      id: "vc-git-merge",
       title: "Git Merge",
       difficulty: "intermediate",
       estimatedMinutes: 15,
       content: () => import('./git-merge.js').then(m => m.git_merge)
     },
     {
-      id: "git-rebase",
+      id: "vc-git-rebase",
       title: "Git Rebase",
       difficulty: "intermediate",
       estimatedMinutes: 15,
       content: () => import('./git-rebase.js').then(m => m.git_rebase)
     },
     {
-      id: "git-stash",
+      id: "vc-git-stash",
       title: "Git Stash",
       difficulty: "intermediate",
       estimatedMinutes: 10,
       content: () => import('./git-stash.js').then(m => m.git_stash)
     },
     {
-      id: "git-cherry-pick",
+      id: "vc-git-cherry-pick",
       title: "Git Cherry Pick",
       difficulty: "intermediate",
       estimatedMinutes: 15,
       content: () => import('./git-cherry-pick.js').then(m => m.git_cherry_pick)
     },
     {
-      id: "git-revert",
+      id: "vc-git-revert",
       title: "Git Revert",
       difficulty: "intermediate",
       estimatedMinutes: 10,
       content: () => import('./git-revert.js').then(m => m.git_revert)
     },
     {
-      id: "git-reset",
+      id: "vc-git-reset",
       title: "Git Reset",
       difficulty: "intermediate",
       estimatedMinutes: 15,
@@ -121,7 +121,7 @@ export const version_control_git = {
       content: () => import('./git-tags.js').then(m => m.git_tags)
     },
     {
-      id: "git-hooks",
+      id: "vc-git-hooks",
       title: "Git Hooks",
       difficulty: "intermediate",
       estimatedMinutes: 15,
@@ -163,14 +163,14 @@ export const version_control_git = {
       content: () => import('./git-reflog.js').then(m => m.git_reflog)
     },
     {
-      id: "git-bisect",
+      id: "vc-git-bisect",
       title: "Git Bisect",
       difficulty: "advanced",
       estimatedMinutes: 20,
       content: () => import('./git-bisect.js').then(m => m.git_bisect)
     },
     {
-      id: "git-submodule",
+      id: "vc-git-submodule",
       title: "Git Submodule",
       difficulty: "advanced",
       estimatedMinutes: 20,

@@ -1,5 +1,5 @@
 export const devops_culture = {
-  "id": "devops-culture",
+  "id": "devops-fund-culture",
   "title": "DevOps Culture",
   "difficulty": "beginner",
   "estimatedMinutes": 15,

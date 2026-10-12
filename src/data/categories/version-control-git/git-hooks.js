@@ -1,5 +1,5 @@
 export const git_hooks = {
-  "id": "git-hooks",
+  "id": "vc-git-hooks",
   "title": "Git Hooks",
   "difficulty": "intermediate",
   "estimatedMinutes": 15,

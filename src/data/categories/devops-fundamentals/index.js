@@ -23,7 +23,7 @@ export const devops_fundamentals = {
       content: () => import('./devops-lifecycle.js').then(m => m.devops_lifecycle)
     },
     {
-      id: "devops-culture",
+      id: "devops-fund-culture",
       title: "DevOps Culture",
       difficulty: "beginner",
       estimatedMinutes: 15,
@@ -65,14 +65,14 @@ export const devops_fundamentals = {
       content: () => import('./devops-continuous-deployment.js').then(m => m.devops_continuous_deployment)
     },
     {
-      id: "devops-iac",
+      id: "devops-fund-iac",
       title: "Infrastructure as Code (IaC)",
       difficulty: "intermediate",
       estimatedMinutes: 25,
       content: () => import('./devops-iac.js').then(m => m.devops_iac)
     },
     {
-      id: "devops-config-mgmt",
+      id: "devops-fund-config-mgmt",
       title: "Configuration Management",
       difficulty: "intermediate",
       estimatedMinutes: 20,

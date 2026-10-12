@@ -1,5 +1,5 @@
 export const git_stash = {
-  "id": "git-stash",
+  "id": "vc-git-stash",
   "title": "Git Stash",
   "difficulty": "intermediate",
   "estimatedMinutes": 10,

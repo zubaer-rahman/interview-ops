@@ -158,7 +158,7 @@ export const modules = {
     },
     {
       "question": "What does 'tree-shaking' mean in relation to modules?",
-      "answers": [
+      "options": [
         "Modules that fall over",
         "Bundlers removing unused exports to reduce bundle size",
         "Organizing code into a tree structure",

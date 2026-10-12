@@ -1,5 +1,5 @@
 export const git_rebase = {
-  "id": "git-rebase",
+  "id": "vc-git-rebase",
   "title": "Git Rebase",
   "difficulty": "intermediate",
   "estimatedMinutes": 15,

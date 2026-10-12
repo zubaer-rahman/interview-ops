@@ -1,5 +1,5 @@
 export const devops_config_mgmt = {
-  "id": "devops-config-mgmt",
+  "id": "devops-fund-config-mgmt",
   "title": "Configuration Management",
   "difficulty": "intermediate",
   "estimatedMinutes": 20,

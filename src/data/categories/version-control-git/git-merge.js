@@ -1,5 +1,5 @@
 export const git_merge = {
-  "id": "git-merge",
+  "id": "vc-git-merge",
   "title": "Git Merge",
   "difficulty": "intermediate",
   "estimatedMinutes": 15,

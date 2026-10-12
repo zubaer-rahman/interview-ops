@@ -1,5 +1,5 @@
 export const git_bisect = {
-  "id": "git-bisect",
+  "id": "vc-git-bisect",
   "title": "Git Bisect",
   "difficulty": "advanced",
   "estimatedMinutes": 20,

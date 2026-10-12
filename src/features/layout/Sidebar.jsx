@@ -89,6 +89,7 @@ export function Sidebar({
                       onClick={() => {
                         setActiveTopicId(t.id);
                         setActiveTab("overview");
+                        if (setIsSidebarOpen) setIsSidebarOpen(false);
                       }}
                     >
                       <span className={`io-dot ${progress[t.id] ? "is-done" : ""}`}>
@@ -116,14 +117,20 @@ export function Sidebar({
         <div style={{ display: 'flex', gap: '4px' }}>
           <button
             className="io-profile-switch"
-            onClick={onOpenPrefs}
+            onClick={() => {
+              if (setIsSidebarOpen) setIsSidebarOpen(false);
+              onOpenPrefs();
+            }}
             title="Preferences"
           >
             <Settings size={15} />
           </button>
           <button
             className="io-profile-switch"
-            onClick={switchProfile}
+            onClick={() => {
+              if (setIsSidebarOpen) setIsSidebarOpen(false);
+              switchProfile();
+            }}
             title="Switch profile"
           >
             <LogOut size={15} />

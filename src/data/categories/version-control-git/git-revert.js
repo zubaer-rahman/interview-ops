@@ -1,5 +1,5 @@
 export const git_revert = {
-  "id": "git-revert",
+  "id": "vc-git-revert",
   "title": "Git Revert",
   "difficulty": "intermediate",
   "estimatedMinutes": 10,
