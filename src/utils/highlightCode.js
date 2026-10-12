@@ -46,7 +46,7 @@ export function highlightCode(code) {
 
   for (let i = placeholders.length - 1; i >= 0; i--) {
     let p = placeholders[i];
-    code = code.replace(p.id, p.text);
+    code = code.replace(p.id, () => p.text);
   }
 
   return code;
