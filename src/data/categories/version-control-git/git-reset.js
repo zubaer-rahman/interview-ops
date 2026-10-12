@@ -1,5 +1,5 @@
 export const git_reset = {
-  "id": "git-reset",
+  "id": "vc-git-reset",
   "title": "Git Reset",
   "difficulty": "intermediate",
   "estimatedMinutes": 15,

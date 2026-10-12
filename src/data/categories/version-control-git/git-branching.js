@@ -1,5 +1,5 @@
 export const git_branching = {
-  "id": "git-branching",
+  "id": "vc-git-branching",
   "title": "Git Branching",
   "difficulty": "intermediate",
   "estimatedMinutes": 20,

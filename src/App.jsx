@@ -68,7 +68,8 @@ export default function App() {
     })).filter((c) => c.topics.length > 0);
   }, [query]);
 
-  const completedCount = Object.values(progress).filter(Boolean).length;
+  const allTopicIds = useMemo(() => new Set(CATEGORIES.flatMap((c) => c.topics.map((t) => t.id))), []);
+  const completedCount = Object.keys(progress).filter((id) => allTopicIds.has(id) && progress[id]).length;
   const overallPct = TOTAL_TOPICS 
     ? completedCount === 0 ? 0 : Math.max(1, Math.round((completedCount / TOTAL_TOPICS) * 100)) 
     : 0;

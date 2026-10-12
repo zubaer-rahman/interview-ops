@@ -78,8 +78,15 @@ export const k8s_nginx_reverse_proxy = {
       "answer": 1
     },
     {
-      "question": "X-Forwarded-For preserves?",
-      "answer": "Client original IP through proxies."
+      "question": "What does the X-Forwarded-For HTTP header preserve?",
+      "options": [
+        "Client original IP through proxies",
+        "Target server MAC address",
+        "Proxy SSL session identifier",
+        "DNS lookup latency"
+      ],
+      "answer": 0,
+      "explanation": "The X-Forwarded-For header preserves the original client IP address when requests traverse reverse proxies or load balancers."
     },
     {
       "question": "NGINX Ingress backends?",

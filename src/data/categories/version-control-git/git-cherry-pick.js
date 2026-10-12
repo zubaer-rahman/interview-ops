@@ -1,5 +1,5 @@
 export const git_cherry_pick = {
-  "id": "git-cherry-pick",
+  "id": "vc-git-cherry-pick",
   "title": "Git Cherry Pick",
   "difficulty": "intermediate",
   "estimatedMinutes": 15,

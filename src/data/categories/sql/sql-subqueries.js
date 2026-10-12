@@ -122,9 +122,14 @@ export const sql_subqueries = {
     },
     {
       "question": "What is a correlated subquery?",
-      "options": "References outer query",
-      "answer": "Executes once",
-      "explanation": "Is faster than JOIN"
+      "options": [
+        "A subquery that references outer query columns and runs for each outer row",
+        "A subquery that executes once before the outer query runs",
+        "A subquery that only operates on correlated temporary tables",
+        "A subquery that runs in a background thread"
+      ],
+      "answer": 0,
+      "explanation": "A correlated subquery references columns from the outer query and must execute once for each row processed by the outer query."
     },
     {
       "question": "Which is faster for large datasets: EXISTS or IN?",

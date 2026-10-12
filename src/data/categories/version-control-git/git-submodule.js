@@ -1,5 +1,5 @@
 export const git_submodule = {
-  "id": "git-submodule",
+  "id": "vc-git-submodule",
   "title": "Git Submodule",
   "difficulty": "advanced",
   "estimatedMinutes": 20,

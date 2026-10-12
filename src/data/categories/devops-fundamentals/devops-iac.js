@@ -1,5 +1,5 @@
 export const devops_iac = {
-  "id": "devops-iac",
+  "id": "devops-fund-iac",
   "title": "Infrastructure as Code (IaC)",
   "difficulty": "intermediate",
   "estimatedMinutes": 25,

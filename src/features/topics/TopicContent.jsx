@@ -189,75 +189,95 @@ export function TopicContent({ activeTopic, progress, toggleComplete, activeTab,
             </div>
           )}
           
-          {activeTab === "mcq" && (
-            <div className="io-mcq-list">
-              {(activeTopic.content?.mcqQuestions || []).map((mcq, i) => {
-                const isCorrect = mcqAnswers[i] === mcq.answer;
-                const hasAnswered = mcqAnswers[i] !== undefined;
+          {activeTab === "mcq" && (() => {
+            const rawQuestions = Array.isArray(activeTopic.content?.mcqQuestions)
+              ? activeTopic.content.mcqQuestions
+              : (Array.isArray(activeTopic.mcqQuestions) ? activeTopic.mcqQuestions : []);
+            
+            const mcqList = rawQuestions.filter((q) => q && q.question);
 
-                return (
-                  <div className="io-mcq-item" key={i} style={{ marginBottom: '32px' }}>
-                    <h4 style={{ fontSize: '15px', color: 'var(--text)', marginBottom: '16px' }}>{i + 1}. {mcq.question}</h4>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '12px' }}>
-                      {(mcq.options || mcq.components || []).map((opt, idx) => {
-                        let bg = 'var(--panel-alt)';
-                        let border = 'var(--border)';
-                        let color = 'var(--text)';
-                        
-                        if (mcqSubmitted) {
-                          if (idx === mcq.answer) {
-                            bg = 'var(--success-bg)';
-                            border = 'var(--success-border)';
-                            color = 'var(--success-text)';
-                          } else if (mcqAnswers[i] === idx && idx !== mcq.answer) {
-                            bg = 'var(--danger-bg)';
-                            border = 'var(--danger-border)';
-                            color = 'var(--danger-text)';
+            if (mcqList.length === 0) {
+              return <EmptyState message="No judge questions available for this topic." />;
+            }
+
+            return (
+              <div className="io-mcq-list">
+                {mcqList.map((mcq, i) => {
+                  const options = Array.isArray(mcq.options)
+                    ? mcq.options
+                    : (Array.isArray(mcq.components) ? mcq.components : (Array.isArray(mcq.answers) ? mcq.answers : []));
+                  
+                  const resolvedAnswer = typeof mcq.answer === "number"
+                    ? mcq.answer
+                    : (typeof mcq.answer === "string"
+                        ? options.findIndex((o) => String(o).trim().toLowerCase() === String(mcq.answer).trim().toLowerCase())
+                        : -1);
+
+                  const isCorrect = mcqAnswers[i] === resolvedAnswer;
+                  const hasAnswered = mcqAnswers[i] !== undefined;
+
+                  return (
+                    <div className="io-mcq-item" key={i} style={{ marginBottom: "32px" }}>
+                      <h4 style={{ fontSize: "15px", color: "var(--text)", marginBottom: "16px" }}>{i + 1}. {mcq.question}</h4>
+                      <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "12px" }}>
+                        {options.map((opt, idx) => {
+                          let bg = "var(--panel-alt)";
+                          let border = "var(--border)";
+                          let color = "var(--text)";
+                          
+                          if (mcqSubmitted) {
+                            if (idx === resolvedAnswer) {
+                              bg = "var(--success-bg)";
+                              border = "var(--success-border)";
+                              color = "var(--success-text)";
+                            } else if (mcqAnswers[i] === idx && idx !== resolvedAnswer) {
+                              bg = "var(--danger-bg)";
+                              border = "var(--danger-border)";
+                              color = "var(--danger-text)";
+                            }
+                          } else if (mcqAnswers[i] === idx) {
+                            border = "var(--teal)";
+                            bg = "var(--teal-dim)";
+                            color = "var(--text)";
                           }
-                        } else if (mcqAnswers[i] === idx) {
-                          border = 'var(--teal)';
-                          bg = 'var(--teal-dim)';
-                          color = 'var(--text)';
-                        }
 
-                        return (
-                          <label key={idx} style={{ 
-                            padding: '12px 16px', 
-                            background: bg, 
-                            border: `1px solid ${border}`, 
-                            borderRadius: '8px',
-                            color: color,
-                            display: 'flex',
-                            alignItems: 'flex-start',
-                            gap: '12px',
-                            cursor: mcqSubmitted ? 'default' : 'pointer',
-                            transition: 'all 0.2s'
-                          }}>
-                            <input 
-                              type="radio" 
-                              name={`mcq-${i}`} 
-                              checked={mcqAnswers[i] === idx}
-                              onChange={() => !mcqSubmitted && setMcqAnswers(prev => ({...prev, [i]: idx}))}
-                              disabled={mcqSubmitted}
-                              style={{ marginTop: '4px', accentColor: 'var(--teal)' }}
-                            />
-                            <span style={{ fontWeight: 'bold' }}>{String.fromCharCode(65 + idx)}.</span>
-                            <span dangerouslySetInnerHTML={{ __html: opt }} />
-                          </label>
-                        );
-                      })}
-                    </div>
-                    {mcqSubmitted && mcq.explanation && (
-                      <div style={{ padding: '12px 16px', background: 'var(--amber-dim)', border: '1px solid var(--amber-border)', borderLeft: '4px solid var(--amber)', borderRadius: '6px', fontSize: '13.5px', lineHeight: '1.6', color: 'var(--text)', marginTop: '16px' }}>
-                        <strong style={{ color: 'var(--amber)' }}>Explanation:</strong> <span dangerouslySetInnerHTML={{ __html: mcq.explanation }} />
+                          return (
+                            <label key={idx} style={{ 
+                              padding: "12px 16px", 
+                              background: bg, 
+                              border: `1px solid ${border}`, 
+                              borderRadius: "8px",
+                              color: color,
+                              display: "flex",
+                              alignItems: "flex-start",
+                              gap: "12px",
+                              cursor: mcqSubmitted ? "default" : "pointer",
+                              transition: "all 0.2s"
+                            }}>
+                              <input 
+                                type="radio" 
+                                name={`mcq-${i}`} 
+                                checked={mcqAnswers[i] === idx}
+                                onChange={() => !mcqSubmitted && setMcqAnswers((prev) => ({ ...prev, [i]: idx }))}
+                                disabled={mcqSubmitted}
+                                style={{ marginTop: "4px", accentColor: "var(--teal)" }}
+                              />
+                              <span style={{ fontWeight: "bold" }}>{String.fromCharCode(65 + idx)}.</span>
+                              <span dangerouslySetInnerHTML={{ __html: opt }} />
+                            </label>
+                          );
+                        })}
                       </div>
-                    )}
-                  </div>
-                );
-              })}
-              
-              {(activeTopic.content?.mcqQuestions?.length > 0) ? (
-                <div style={{ marginTop: '32px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                      {mcqSubmitted && mcq.explanation && (
+                        <div style={{ padding: "12px 16px", background: "var(--amber-dim)", border: "1px solid var(--amber-border)", borderLeft: "4px solid var(--amber)", borderRadius: "6px", fontSize: "13.5px", lineHeight: "1.6", color: "var(--text)", marginTop: "16px" }}>
+                          <strong style={{ color: "var(--amber)" }}>Explanation:</strong> <span dangerouslySetInnerHTML={{ __html: mcq.explanation }} />
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+                
+                <div style={{ marginTop: "32px", display: "flex", flexDirection: "column", gap: "16px" }}>
                   {!mcqSubmitted ? (
                     <button 
                       className="io-submit-btn"
@@ -266,29 +286,39 @@ export function TopicContent({ activeTopic, progress, toggleComplete, activeTab,
                       Submit Answers
                     </button>
                   ) : (() => {
-                    const total = activeTopic.content.mcqQuestions.length;
-                    const correct = activeTopic.content.mcqQuestions.filter((q, i) => mcqAnswers[i] === q.answer).length;
+                    const total = mcqList.length;
+                    const correct = mcqList.filter((q, i) => {
+                      const options = Array.isArray(q.options)
+                        ? q.options
+                        : (Array.isArray(q.components) ? q.components : (Array.isArray(q.answers) ? q.answers : []));
+                      const resolvedAnswer = typeof q.answer === "number"
+                        ? q.answer
+                        : (typeof q.answer === "string"
+                            ? options.findIndex((o) => String(o).trim().toLowerCase() === String(q.answer).trim().toLowerCase())
+                            : -1);
+                      return mcqAnswers[i] === resolvedAnswer;
+                    }).length;
                     const pct = Math.round((correct / total) * 100);
                     const passed = pct >= 70;
                     
                     return (
                       <div style={{
-                        padding: '16px 24px',
-                        background: passed ? 'var(--success-bg)' : 'var(--amber-dim)',
-                        border: `1px solid ${passed ? 'var(--success-border)' : 'var(--amber-border)'}`,
-                        borderRadius: '8px',
-                        color: 'var(--text)'
+                        padding: "16px 24px",
+                        background: passed ? "var(--success-bg)" : "var(--amber-dim)",
+                        border: `1px solid ${passed ? "var(--success-border)" : "var(--amber-border)"}`,
+                        borderRadius: "8px",
+                        color: "var(--text)"
                       }}>
-                        <div style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '4px', color: passed ? 'var(--success-text)' : 'var(--amber)' }}>
+                        <div style={{ fontSize: "16px", fontWeight: "bold", marginBottom: "4px", color: passed ? "var(--success-text)" : "var(--amber)" }}>
                           {correct}/{total} correct ({pct}%)
                         </div>
-                        <div style={{ fontSize: '14px', color: 'var(--text-muted)' }}>
-                          {passed ? '✅ Great job! You have a solid understanding of this topic.' : '📖 Review the material and try again.'}
+                        <div style={{ fontSize: "14px", color: "var(--text-muted)" }}>
+                          {passed ? "✅ Great job! You have a solid understanding of this topic." : "📖 Review the material and try again."}
                         </div>
                         <button 
                           className="io-complete-btn"
                           onClick={() => { setMcqSubmitted(false); setMcqAnswers({}); }}
-                          style={{ marginTop: '16px' }}
+                          style={{ marginTop: "16px" }}
                         >
                           Retake Quiz
                         </button>
@@ -296,11 +326,9 @@ export function TopicContent({ activeTopic, progress, toggleComplete, activeTab,
                     );
                   })()}
                 </div>
-              ) : (
-                <EmptyState message="No judge questions available for this topic." />
-              )}
-            </div>
-          )}
+              </div>
+            );
+          })()}
           
           {activeTab === "code" && (
             <div className="io-code-examples">

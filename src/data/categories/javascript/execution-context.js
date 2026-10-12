@@ -205,13 +205,13 @@ export const execution_context = {
     },
     {
       "question": "Which statement about the Global Execution Context is true?",
-      "components": [
+      "options": [
         "It is created once per function call",
         "It is destroyed when the last function returns",
         "var declarations become properties of the global object",
         "It does not have a scope chain"
       ],
-      "answer": 1,
+      "answer": 2,
       "explanation": "At the global level, var declarations create properties on the global object (window in browsers). let and const are globally scoped but not attached to the global object."
     }
   ]
