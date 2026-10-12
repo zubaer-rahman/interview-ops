@@ -446,6 +446,15 @@ body {
   line-height: var(--line-height-base, 1.75);
   margin: 0;
 }
+.io-deepdive ul, .io-deepdive ol {
+  color: var(--text);
+  padding-left: 20px;
+  margin: 8px 0 0;
+}
+.io-deepdive li {
+  margin-bottom: 8px;
+  line-height: var(--line-height-base, 1.75);
+}
 
 .io-plain {
   font-size: 1rem; line-height: var(--line-height-base, 1.75);
