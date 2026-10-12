@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Check, BookOpen, Lightbulb, Layers, MessageSquare, Workflow, Code2, ArrowRight, Target, Clock } from "lucide-react";
+import { Check, BookOpen, Lightbulb, Layers, MessageSquare, Workflow, Code2, ArrowRight, Target, Clock, ChevronLeft, ChevronRight } from "lucide-react";
 import { highlightCode } from "../../utils/highlightCode";
 
 const TABS = [
@@ -18,7 +18,16 @@ const EmptyState = ({ message }) => (
   </div>
 );
 
-export function TopicContent({ activeTopic, progress, toggleComplete, activeTab, setActiveTab }) {
+export function TopicContent({
+  activeTopic,
+  progress,
+  toggleComplete,
+  activeTab,
+  setActiveTab,
+  prevTopic,
+  nextTopic,
+  goToTopic
+}) {
   const [mcqAnswers, setMcqAnswers] = useState({});
   const [mcqSubmitted, setMcqSubmitted] = useState(false);
 
@@ -352,6 +361,36 @@ export function TopicContent({ activeTopic, progress, toggleComplete, activeTab,
                   <code dangerouslySetInnerHTML={{ __html: highlightCode(activeTopic.content?.code?.snippet || activeTopic.code?.snippet) }} />
                 </pre>
               ) : <EmptyState message="No code examples available for this topic." />}
+            </div>
+          )}
+
+          {(prevTopic || nextTopic) && goToTopic && (
+            <div className="io-topic-nav-footer">
+              {prevTopic ? (
+                <button
+                  className="io-topic-nav-btn is-prev"
+                  onClick={() => goToTopic(prevTopic.id)}
+                >
+                  <ChevronLeft size={18} />
+                  <div className="io-nav-btn-text">
+                    <span className="io-nav-btn-label">Previous Topic</span>
+                    <span className="io-nav-btn-title">{prevTopic.title}</span>
+                  </div>
+                </button>
+              ) : <div />}
+
+              {nextTopic && (
+                <button
+                  className="io-topic-nav-btn is-next"
+                  onClick={() => goToTopic(nextTopic.id)}
+                >
+                  <div className="io-nav-btn-text">
+                    <span className="io-nav-btn-label">Next Topic</span>
+                    <span className="io-nav-btn-title">{nextTopic.title}</span>
+                  </div>
+                  <ChevronRight size={18} />
+                </button>
+              )}
             </div>
           )}
         </div>

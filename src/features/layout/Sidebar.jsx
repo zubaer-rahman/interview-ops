@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Terminal, Search, Check, ChevronRight, ChevronDown, LogOut, Settings } from "lucide-react";
 
 export function Sidebar({
@@ -17,9 +17,16 @@ export function Sidebar({
   switchProfile,
   isSidebarOpen,
   setIsSidebarOpen,
-  onOpenPrefs
+  onOpenPrefs,
+  searchInputRef
 }) {
   const [openCategories, setOpenCategories] = useState(() => new Set([activeCategory]));
+
+  useEffect(() => {
+    if (activeCategory) {
+      setOpenCategories((prev) => new Set([...prev, activeCategory]));
+    }
+  }, [activeCategory]);
 
   function toggleCategory(catId) {
     setOpenCategories((prev) => {
@@ -47,17 +54,19 @@ export function Sidebar({
       <div className="io-search">
         <Search size={14} />
         <input
+          ref={searchInputRef}
           placeholder="Search topics…"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
+        <kbd className="io-search-kbd" title="Press / to search">/</kbd>
       </div>
 
       <nav className="io-nav">
         {filteredCategories.map((cat) => {
           const cp = categoryProgress(cat);
           const isActive = cat.id === activeCategory;
-          const isOpen = openCategories.has(cat.id);
+          const isOpen = query.trim() ? true : openCategories.has(cat.id);
           return (
             <div key={cat.id} className="io-cat-group">
               <button
