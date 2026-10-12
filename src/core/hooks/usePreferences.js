@@ -5,14 +5,20 @@ const DEFAULT_PREFS = {
   bodyFont: "'Inter', sans-serif",
   fontSize: 14.5,
   lineHeight: 1.75,
-  contentWidth: 680
+  contentWidth: 980
 };
 
 export function usePreferences() {
   const [prefs, setPrefs] = useState(() => {
     try {
       const saved = localStorage.getItem("io-preferences");
-      if (saved) return { ...DEFAULT_PREFS, ...JSON.parse(saved) };
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.contentWidth === 680 || parsed.contentWidth === 840 || parsed.contentWidth === 1200) {
+          parsed.contentWidth = DEFAULT_PREFS.contentWidth;
+        }
+        return { ...DEFAULT_PREFS, ...parsed };
+      }
     } catch (e) {
       console.error("Failed to load preferences", e);
     }

@@ -65,49 +65,53 @@ export function TopicContent({
   return (
     <div className="io-content">
       <div className="io-content-head">
-        <div className="io-breadcrumb" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
-          <span>{activeTopic.categoryName}</span>
-          <div className="io-mobile-meta" style={{ display: 'none', gap: '8px' }}>
-            {activeTopic.difficulty && (
-              <div className={`io-meta-badge diff-${activeTopic.difficulty.toLowerCase()}`}>
-                <Target size={12} />
-                <span>{activeTopic.difficulty}</span>
-              </div>
-            )}
-            {activeTopic.estimatedMinutes && (
-              <div className="io-meta-badge time-badge">
-                <Clock size={12} />
-                <span>{activeTopic.estimatedMinutes}m</span>
-              </div>
-            )}
+        <div className="io-content-head-inner">
+          <div className="io-breadcrumb" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+            <span>{activeTopic.categoryName}</span>
+            <div className="io-mobile-meta" style={{ display: 'none', gap: '8px' }}>
+              {activeTopic.difficulty && (
+                <div className={`io-meta-badge diff-${activeTopic.difficulty.toLowerCase()}`}>
+                  <Target size={12} />
+                  <span>{activeTopic.difficulty}</span>
+                </div>
+              )}
+              {activeTopic.estimatedMinutes && (
+                <div className="io-meta-badge time-badge">
+                  <Clock size={12} />
+                  <span>{activeTopic.estimatedMinutes}m</span>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-        <div className="io-content-title-row">
-          <h2 className="io-content-title">{activeTopic.title}</h2>
-          <button
-            className={`io-complete-btn ${progress[activeTopic.id] ? "is-done" : ""}`}
-            onClick={() => toggleComplete(activeTopic.id)}
-          >
-            <Check size={14} strokeWidth={3} />
-            {progress[activeTopic.id] ? "Completed" : "Mark complete"}
-          </button>
+          <div className="io-content-title-row">
+            <h2 className="io-content-title">{activeTopic.title}</h2>
+            <button
+              className={`io-complete-btn ${progress[activeTopic.id] ? "is-done" : ""}`}
+              onClick={() => toggleComplete(activeTopic.id)}
+            >
+              <Check size={14} strokeWidth={3} />
+              {progress[activeTopic.id] ? "Completed" : "Mark complete"}
+            </button>
+          </div>
         </div>
       </div>
 
       <div className="io-tabs">
-        {TABS.map((tab) => {
-          const Icon = tab.icon;
-          return (
-            <button
-              key={tab.id}
-              className={`io-tab ${activeTab === tab.id ? "is-active" : ""}`}
-              onClick={() => setActiveTab(tab.id)}
-            >
-              <Icon size={14} />
-              {tab.label}
-            </button>
-          );
-        })}
+        <div className="io-tabs-inner">
+          {TABS.map((tab) => {
+            const Icon = tab.icon;
+            return (
+              <button
+                key={tab.id}
+                className={`io-tab ${activeTab === tab.id ? "is-active" : ""}`}
+                onClick={() => setActiveTab(tab.id)}
+              >
+                <Icon size={14} />
+                {tab.label}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       <div className="io-scroll-area">

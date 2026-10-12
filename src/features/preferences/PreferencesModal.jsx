@@ -86,7 +86,7 @@ export function PreferencesModal({ isOpen, onClose, prefs, updatePrefs, resetPre
             <div className="io-pref-row">
               <input 
                 type="range" 
-                min="600" max="1200" step="20"
+                min="720" max="1400" step="20"
                 value={prefs.contentWidth}
                 onChange={(e) => updatePrefs({ contentWidth: Number(e.target.value) })}
                 className="io-pref-range"
