@@ -5,8 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/interview-ops/favicon.svg" />
     <title>Interview Ops</title>
-    <script type="module" crossorigin src="/interview-ops/assets/index-CMsMfcky.js"></script>
-    <link rel="stylesheet" crossorigin href="/interview-ops/assets/index-CwdOyACk.css">
+    <script>
+      try {
+        var p = JSON.parse(localStorage.getItem('io-preferences') || '{}');
+        if (p.theme === 'light') document.documentElement.classList.add('theme-light');
+      } catch (e) {}
+    </script>
+    <script type="module" crossorigin src="/interview-ops/assets/index-BnY_rCKj.js"></script>
+    <link rel="stylesheet" crossorigin href="/interview-ops/assets/index-oKkwPC6i.css">
   </head>
   <body>
     <div id="root"></div>
