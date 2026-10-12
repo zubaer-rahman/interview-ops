@@ -127,7 +127,7 @@ export function TopicContent({ activeTopic, progress, toggleComplete, activeTab,
           {activeTab === "blueprint" && (
             <>
               {activeTopic.content?.diagramSvg ? (
-                <div className="io-blueprint-svg" dangerouslySetInnerHTML={{ __html: activeTopic.content.diagramSvg }} style={{ background: 'var(--panel-alt)', padding: '16px', borderRadius: '8px', overflowX: 'auto' }} />
+                <div className="io-blueprint-svg" dangerouslySetInnerHTML={{ __html: activeTopic.content.diagramSvg }} />
               ) : (activeTopic.content?.diagram || activeTopic.diagram) ? (
                 <div className="io-blueprint">
                   {(activeTopic.content?.diagram?.steps || activeTopic.diagram?.steps || []).map((step, i, arr) => (
@@ -151,9 +151,9 @@ export function TopicContent({ activeTopic, progress, toggleComplete, activeTab,
           {activeTab === "qa" && (
             <div className="io-qa-list">
               {(activeTopic.content?.interviewAnswer || activeTopic.interviewAnswer) && (
-                <div className="io-qa-item io-qa-summary" style={{ background: 'var(--panel-alt)', padding: '16px', borderRadius: '8px', marginBottom: '24px', borderLeft: '4px solid var(--amber)' }}>
+                <div className="io-qa-item io-qa-summary">
                   <h4 style={{ color: 'var(--text)', marginBottom: '8px', fontSize: '14px' }}>How to answer in an interview:</h4>
-                  <div dangerouslySetInnerHTML={{ __html: activeTopic.content?.interviewAnswer || activeTopic.interviewAnswer }} style={{ fontSize: '14.5px', lineHeight: '1.6' }} />
+                  <div dangerouslySetInnerHTML={{ __html: activeTopic.content?.interviewAnswer || activeTopic.interviewAnswer }} style={{ fontSize: '14.5px', lineHeight: '1.6', color: 'var(--text)' }} />
                 </div>
               )}
               
@@ -183,21 +183,22 @@ export function TopicContent({ activeTopic, progress, toggleComplete, activeTab,
                       {(mcq.options || mcq.components || []).map((opt, idx) => {
                         let bg = 'var(--panel-alt)';
                         let border = 'var(--border)';
-                        let color = 'var(--text-dim)';
+                        let color = 'var(--text)';
                         
                         if (mcqSubmitted) {
                           if (idx === mcq.answer) {
-                            bg = 'rgba(72,187,120,0.1)';
-                            border = '#48bb78';
-                            color = '#48bb78';
+                            bg = 'var(--success-bg)';
+                            border = 'var(--success-border)';
+                            color = 'var(--success-text)';
                           } else if (mcqAnswers[i] === idx && idx !== mcq.answer) {
-                            bg = 'rgba(229,62,62,0.1)';
-                            border = '#e53e3e';
-                            color = '#e53e3e';
+                            bg = 'var(--danger-bg)';
+                            border = 'var(--danger-border)';
+                            color = 'var(--danger-text)';
                           }
                         } else if (mcqAnswers[i] === idx) {
                           border = 'var(--teal)';
-                          bg = 'rgba(79,209,197,0.05)';
+                          bg = 'var(--teal-dim)';
+                          color = 'var(--text)';
                         }
 
                         return (
@@ -219,7 +220,7 @@ export function TopicContent({ activeTopic, progress, toggleComplete, activeTab,
                               checked={mcqAnswers[i] === idx}
                               onChange={() => !mcqSubmitted && setMcqAnswers(prev => ({...prev, [i]: idx}))}
                               disabled={mcqSubmitted}
-                              style={{ marginTop: '4px' }}
+                              style={{ marginTop: '4px', accentColor: 'var(--teal)' }}
                             />
                             <span style={{ fontWeight: 'bold' }}>{String.fromCharCode(65 + idx)}.</span>
                             <span dangerouslySetInnerHTML={{ __html: opt }} />
@@ -228,8 +229,8 @@ export function TopicContent({ activeTopic, progress, toggleComplete, activeTab,
                       })}
                     </div>
                     {mcqSubmitted && mcq.explanation && (
-                      <div style={{ padding: '12px 16px', background: 'rgba(242, 169, 74, 0.1)', borderLeft: '4px solid var(--amber)', borderRadius: '4px', fontSize: '13px', color: '#e8eaed', marginTop: '16px' }}>
-                        <strong>Explanation:</strong> <span dangerouslySetInnerHTML={{ __html: mcq.explanation }} />
+                      <div style={{ padding: '12px 16px', background: 'var(--amber-dim)', border: '1px solid var(--amber-border)', borderLeft: '4px solid var(--amber)', borderRadius: '6px', fontSize: '13.5px', lineHeight: '1.6', color: 'var(--text)', marginTop: '16px' }}>
+                        <strong style={{ color: 'var(--amber)' }}>Explanation:</strong> <span dangerouslySetInnerHTML={{ __html: mcq.explanation }} />
                       </div>
                     )}
                   </div>
@@ -254,15 +255,15 @@ export function TopicContent({ activeTopic, progress, toggleComplete, activeTab,
                     return (
                       <div style={{
                         padding: '16px 24px',
-                        background: passed ? 'rgba(72,187,120,0.1)' : 'rgba(242, 169, 74, 0.1)',
-                        border: `1px solid ${passed ? '#48bb78' : 'var(--amber)'}`,
+                        background: passed ? 'var(--success-bg)' : 'var(--amber-dim)',
+                        border: `1px solid ${passed ? 'var(--success-border)' : 'var(--amber-border)'}`,
                         borderRadius: '8px',
                         color: 'var(--text)'
                       }}>
-                        <div style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '4px', color: passed ? '#48bb78' : 'var(--amber)' }}>
+                        <div style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '4px', color: passed ? 'var(--success-text)' : 'var(--amber)' }}>
                           {correct}/{total} correct ({pct}%)
                         </div>
-                        <div style={{ fontSize: '14px', color: 'var(--text-dim)' }}>
+                        <div style={{ fontSize: '14px', color: 'var(--text-muted)' }}>
                           {passed ? '✅ Great job! You have a solid understanding of this topic.' : '📖 Review the material and try again.'}
                         </div>
                         <button 
@@ -289,14 +290,14 @@ export function TopicContent({ activeTopic, progress, toggleComplete, activeTab,
                   activeTopic.content.codeExamples.map((ex, i) => (
                     <div key={i} style={{ marginBottom: '24px' }}>
                       <h4 style={{ fontSize: '14px', marginBottom: '6px', color: 'var(--text)' }}>{ex.title}</h4>
-                      {ex.description && <p style={{ fontSize: '13px', color: 'var(--text-dim)', marginBottom: '8px' }}>{ex.description}</p>}
+                      {ex.description && <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '8px' }}>{ex.description}</p>}
                       <pre className="io-code">
                         <code dangerouslySetInnerHTML={{ __html: highlightCode(ex.code) }} />
                       </pre>
                     </div>
                   ))
                 ) : (
-                  <div style={{ background: 'var(--panel-alt)', padding: '16px', borderRadius: '8px', overflowX: 'auto' }} dangerouslySetInnerHTML={{ __html: activeTopic.content.codeExamples }} />
+                  <div className="io-code-raw" dangerouslySetInnerHTML={{ __html: activeTopic.content.codeExamples }} />
                 )
               ) : (activeTopic.content?.code || activeTopic.code) ? (
                 <pre className="io-code">

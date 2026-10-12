@@ -9,23 +9,17 @@ const DEFAULT_PREFS = {
 };
 
 export function usePreferences() {
-  const [prefs, setPrefs] = useState(DEFAULT_PREFS);
-  const [isLoaded, setIsLoaded] = useState(false);
-
-  useEffect(() => {
+  const [prefs, setPrefs] = useState(() => {
     try {
       const saved = localStorage.getItem("io-preferences");
-      if (saved) {
-        setPrefs({ ...DEFAULT_PREFS, ...JSON.parse(saved) });
-      }
+      if (saved) return { ...DEFAULT_PREFS, ...JSON.parse(saved) };
     } catch (e) {
       console.error("Failed to load preferences", e);
     }
-    setIsLoaded(true);
-  }, []);
+    return DEFAULT_PREFS;
+  });
 
   useEffect(() => {
-    if (!isLoaded) return;
     try {
       localStorage.setItem("io-preferences", JSON.stringify(prefs));
     } catch (e) {
@@ -43,7 +37,7 @@ export function usePreferences() {
     root.style.fontSize = `${prefs.fontSize}px`;
     root.style.setProperty("--line-height-base", prefs.lineHeight);
     root.style.setProperty("--content-width", `${prefs.contentWidth}px`);
-  }, [prefs, isLoaded]);
+  }, [prefs]);
 
   const updatePrefs = (updates) => {
     setPrefs((prev) => ({ ...prev, ...updates }));
