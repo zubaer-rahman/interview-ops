@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 
 const PROFILE_KEY = "io:profile";
 import { useProgress } from "./core/hooks/useProgress";
@@ -17,15 +17,69 @@ export default function App() {
   const [nameInput, setNameInput] = useState("");
   const { progress, setProgress, loading, error, toggleComplete } = useProgress(profile);
 
-  const [activeCategory, setActiveCategory] = useState(CATEGORIES[0]?.id || "");
-  const [activeTopicId, setActiveTopicId] = useState(
-    CATEGORIES[0]?.topics[0]?.id || ""
-  );
+  const allTopics = useMemo(() => {
+    return CATEGORIES.flatMap((c) =>
+      c.topics.map((t) => ({ ...t, categoryId: c.id, categoryName: c.name }))
+    );
+  }, []);
+
+  const [activeTopicId, setActiveTopicId] = useState(() => {
+    if (typeof window !== "undefined") {
+      const hash = window.location.hash.replace(/^#/, "").trim();
+      if (hash) {
+        const found = allTopics.find((t) => t.id === hash);
+        if (found) return found.id;
+      }
+      try {
+        const saved = localStorage.getItem("io:lastTopic");
+        if (saved) {
+          const found = allTopics.find((t) => t.id === saved);
+          if (found) return found.id;
+        }
+      } catch (e) {}
+    }
+    return CATEGORIES[0]?.topics[0]?.id || "";
+  });
+
+  const [activeCategory, setActiveCategory] = useState(() => {
+    const found = allTopics.find((t) => t.id === activeTopicId);
+    return found ? found.categoryId : CATEGORIES[0]?.id || "";
+  });
+
   const [activeTab, setActiveTab] = useState("overview");
   const [query, setQuery] = useState("");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isPrefsOpen, setIsPrefsOpen] = useState(false);
   const { prefs, updatePrefs, resetPrefs } = usePreferences();
+  const searchInputRef = useRef(null);
+
+  // Sync activeTopicId with URL hash and localStorage
+  useEffect(() => {
+    if (!activeTopicId) return;
+    const currentHash = window.location.hash.replace(/^#/, "");
+    if (currentHash !== activeTopicId) {
+      window.location.hash = activeTopicId;
+    }
+    try {
+      localStorage.setItem("io:lastTopic", activeTopicId);
+    } catch (e) {}
+  }, [activeTopicId]);
+
+  // Listen to browser back/forward buttons
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace(/^#/, "").trim();
+      if (hash && hash !== activeTopicId) {
+        const match = allTopics.find((t) => t.id === hash);
+        if (match) {
+          setActiveTopicId(match.id);
+          setActiveCategory(match.categoryId);
+        }
+      }
+    };
+    window.addEventListener("hashchange", handleHashChange);
+    return () => window.removeEventListener("hashchange", handleHashChange);
+  }, [activeTopicId, allTopics]);
 
   const activeTopicMeta = useMemo(() => {
     for (const cat of CATEGORIES) {
@@ -43,7 +97,7 @@ export default function App() {
       return;
     }
 
-    if (typeof activeTopicMeta.content === 'function') {
+    if (typeof activeTopicMeta.content === "function") {
       let cancelled = false;
       setActiveTopic({ ...activeTopicMeta, content: null });
       activeTopicMeta.content().then((res) => {
@@ -57,9 +111,68 @@ export default function App() {
     }
   }, [activeTopicMeta]);
 
+  function goToTopic(topicId) {
+    const found = allTopics.find((t) => t.id === topicId);
+    if (found) {
+      setActiveTopicId(found.id);
+      setActiveCategory(found.categoryId);
+      setActiveTab("overview");
+      setIsSidebarOpen(false);
+    }
+  }
+
+  // Adjacent topic calculation
+  const currentTopicIndex = useMemo(() => {
+    return allTopics.findIndex((t) => t.id === activeTopicId);
+  }, [allTopics, activeTopicId]);
+
+  const prevTopic = currentTopicIndex > 0 ? allTopics[currentTopicIndex - 1] : null;
+  const nextTopic = currentTopicIndex >= 0 && currentTopicIndex < allTopics.length - 1 ? allTopics[currentTopicIndex + 1] : null;
+
+  // Keyboard navigation shortcuts
+  useEffect(() => {
+    const onKeyDown = (e) => {
+      const isEditing = ["INPUT", "TEXTAREA"].includes(e.target?.tagName) || e.target?.isContentEditable;
+
+      if (e.key === "/" && !isEditing) {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+        return;
+      }
+
+      if (isEditing) return;
+
+      if (e.key === "[" || (e.altKey && e.key === "ArrowLeft")) {
+        if (prevTopic) {
+          e.preventDefault();
+          goToTopic(prevTopic.id);
+        }
+      } else if (e.key === "]" || (e.altKey && e.key === "ArrowRight")) {
+        if (nextTopic) {
+          e.preventDefault();
+          goToTopic(nextTopic.id);
+        }
+      } else if (e.key >= "1" && e.key <= "7") {
+        const tabMap = ["overview", "plain", "deepdive", "qa", "blueprint", "code", "mcq"];
+        const targetTab = tabMap[parseInt(e.key, 10) - 1];
+        if (targetTab) {
+          e.preventDefault();
+          setActiveTab(targetTab);
+        }
+      } else if (e.key.toLowerCase() === "c" && activeTopicId) {
+        e.preventDefault();
+        toggleComplete(activeTopicId);
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [prevTopic, nextTopic, activeTopicId, toggleComplete]);
+
+  // Filtering by search
   const filteredCategories = useMemo(() => {
     if (!query.trim()) return CATEGORIES;
-    const q = query.toLowerCase();
+    const q = query.toLowerCase().trim();
     return CATEGORIES.map((c) => ({
       ...c,
       topics: c.topics.filter(
@@ -118,8 +231,7 @@ export default function App() {
         categoryProgress={categoryProgress}
         activeTopicId={activeTopicId}
         setActiveTopicId={(id) => {
-          setActiveTopicId(id);
-          setIsSidebarOpen(false);
+          goToTopic(id);
         }}
         setActiveTab={setActiveTab}
         progress={progress}
@@ -129,6 +241,7 @@ export default function App() {
         isSidebarOpen={isSidebarOpen}
         setIsSidebarOpen={setIsSidebarOpen}
         onOpenPrefs={() => setIsPrefsOpen(true)}
+        searchInputRef={searchInputRef}
       />
 
       <main className="io-main">
@@ -149,6 +262,9 @@ export default function App() {
           toggleComplete={toggleComplete}
           activeTab={activeTab}
           setActiveTab={setActiveTab}
+          prevTopic={prevTopic}
+          nextTopic={nextTopic}
+          goToTopic={goToTopic}
         />
       </main>
 
