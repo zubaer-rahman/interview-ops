@@ -624,11 +624,13 @@ body {
 }
 
 .io-code-desc {
-  padding: 14px 18px 0;
-  font-size: 0.8966rem;
-  line-height: 1.6;
-  color: var(--text-muted);
+  padding: 13px 18px;
+  font-size: 0.9137rem;
+  line-height: 1.65;
+  color: var(--text);
   margin: 0;
+  background: var(--panel-alt);
+  border-bottom: 1px solid var(--border);
 }
 
 .io-code {

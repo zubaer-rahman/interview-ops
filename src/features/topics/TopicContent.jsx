@@ -400,12 +400,15 @@ export function TopicContent({
                 )
               ) : (activeTopic.content?.code || activeTopic.code) ? (
                 (() => {
-                  const singleSnippet = activeTopic.content?.code?.snippet || activeTopic.code?.snippet || (typeof activeTopic.content?.code === 'string' ? activeTopic.content.code : '') || (typeof activeTopic.code === 'string' ? activeTopic.code : '');
+                  const codeObj = activeTopic.content?.code || activeTopic.code;
+                  const singleSnippet = codeObj?.snippet || (typeof codeObj === 'string' ? codeObj : '');
+                  const singleTitle = (typeof codeObj === 'object' && (codeObj?.title || codeObj?.name)) || 'Code Example';
+                  const singleDesc = typeof codeObj === 'object' && (codeObj?.description || codeObj?.useCase);
                   return (
                     <div className="io-code-card">
                       <div className="io-code-header">
                         <div className="io-code-header-left">
-                          <h4 className="io-code-title">Code Example</h4>
+                          <h4 className="io-code-title">{singleTitle}</h4>
                         </div>
                         {singleSnippet && (
                           <button
@@ -429,6 +432,9 @@ export function TopicContent({
                           </button>
                         )}
                       </div>
+                      {singleDesc && (
+                        <p className="io-code-desc" dangerouslySetInnerHTML={{ __html: formatContentHtml(singleDesc) }} />
+                      )}
                       <pre className="io-code in-card">
                         <code dangerouslySetInnerHTML={{ __html: highlightCode(singleSnippet) }} />
                       </pre>
