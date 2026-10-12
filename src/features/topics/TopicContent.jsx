@@ -104,7 +104,16 @@ export function TopicContent({ activeTopic, progress, toggleComplete, activeTab,
           {activeTab === "plain" && (
             <div className="io-plain">
               {activeTopic.content?.laymanDefinition || activeTopic.content?.layman || activeTopic.layman ? (
-                <p dangerouslySetInnerHTML={{ __html: activeTopic.content?.laymanDefinition || activeTopic.content?.layman || activeTopic.layman }} />
+                (() => {
+                  const plainContent = activeTopic.content?.laymanDefinition || activeTopic.content?.layman || activeTopic.layman;
+                  return Array.isArray(plainContent) ? (
+                    plainContent.map((p, idx) => (
+                      <p key={idx} dangerouslySetInnerHTML={{ __html: p }} style={{ marginBottom: idx < plainContent.length - 1 ? '12px' : 0 }} />
+                    ))
+                  ) : (
+                    <p dangerouslySetInnerHTML={{ __html: plainContent }} />
+                  );
+                })()
               ) : <EmptyState message="No plain English explanation available." />}
             </div>
           )}
@@ -115,8 +124,18 @@ export function TopicContent({ activeTopic, progress, toggleComplete, activeTab,
                 Array.isArray(activeTopic.content?.deepDive) 
                   ? activeTopic.content.deepDive.map((section, i) => (
                       <div key={i} style={{ marginBottom: '1.5rem' }}>
-                        <h3 style={{ color: 'var(--amber)', fontSize: '15px', marginBottom: '8px' }}>{section.heading}</h3>
-                        <p dangerouslySetInnerHTML={{ __html: section.text }} />
+                        {section.heading && <h3 style={{ color: 'var(--amber)', fontSize: '15px', marginBottom: '8px' }}>{section.heading}</h3>}
+                        {section.text && <p dangerouslySetInnerHTML={{ __html: section.text }} />}
+                        {Array.isArray(section.list) && section.list.length > 0 && (
+                          <ul className="io-deepdive-list">
+                            {section.list.map((item, idx) => (
+                              <li key={idx} dangerouslySetInnerHTML={{ __html: item }} />
+                            ))}
+                          </ul>
+                        )}
+                        {!section.text && !section.list && section.content && (
+                          <p dangerouslySetInnerHTML={{ __html: section.content }} />
+                        )}
                       </div>
                     ))
                   : <p dangerouslySetInnerHTML={{ __html: activeTopic.content?.deepDive || activeTopic.deepDive }} />
@@ -289,10 +308,11 @@ export function TopicContent({ activeTopic, progress, toggleComplete, activeTab,
                 Array.isArray(activeTopic.content.codeExamples) ? (
                   activeTopic.content.codeExamples.map((ex, i) => (
                     <div key={i} style={{ marginBottom: '24px' }}>
-                      <h4 style={{ fontSize: '14px', marginBottom: '6px', color: 'var(--text)' }}>{ex.title}</h4>
+                      <h4 style={{ fontSize: '14px', marginBottom: '6px', color: 'var(--text)' }}>{ex.title || ex.useCase || `Example ${i + 1}`}</h4>
+                      {ex.title && ex.useCase && <div style={{ fontSize: '12px', color: 'var(--teal)', marginBottom: '6px', fontFamily: 'var(--font-mono)' }}>Use Case: {ex.useCase}</div>}
                       {ex.description && <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '8px' }}>{ex.description}</p>}
                       <pre className="io-code">
-                        <code dangerouslySetInnerHTML={{ __html: highlightCode(ex.code) }} />
+                        <code dangerouslySetInnerHTML={{ __html: highlightCode(ex.code || ex.snippet || '') }} />
                       </pre>
                     </div>
                   ))
