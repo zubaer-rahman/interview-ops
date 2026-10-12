@@ -29,7 +29,7 @@ export const react_hoc = {
     },
     {
       "heading": "Migrating from HOCs to Hooks",
-      "text": "The same logic can usually be expressed as a custom hook: function useLogger(props) { useEffect(() => { console.log('Props changed:', props); }); } then used directly: function MyComponent(props) { useLogger(props); return <div>...</div>; }. Hooks avoid wrapper nesting, are easier to type with TypeScript, and don't have the static method/ref forwarding issues. However, HOCs remain useful for cross-cutting concerns in class components and for libraries that need to inject props declaratively."
+      "text": "The same logic can usually be expressed as a custom hook: <code>function useLogger(props) { useEffect(() =&gt; { console.log('Props changed:', props); }); }</code> then used directly: <code>function MyComponent(props) { useLogger(props); return &lt;div&gt;...&lt;/div&gt;; }</code>. Hooks avoid wrapper nesting, are easier to type with TypeScript, and don't have the static method/ref forwarding issues. However, HOCs remain useful for cross-cutting concerns in class components and for libraries that need to inject props declaratively."
     }
   ],
   "interviewAnswer": "A Higher-Order Component is a function that takes a component and returns a new component with additional props or behavior. It's a pattern for reusing component logic: withAuth, withLogger, withData. HOCs compose via nesting or compose(). Key considerations: copy static methods, forward refs, set display names, and don't mutate the original. For new code, prefer React hooks over HOCs — hooks are simpler, compose naturally without nesting, and avoid the static method/ref forwarding issues. HOCs remain relevant for class components and library APIs.",

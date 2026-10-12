@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Check, BookOpen, Lightbulb, Layers, MessageSquare, Workflow, Code2, ArrowRight, Target, Clock } from "lucide-react";
 import { highlightCode } from "../../utils/highlightCode";
+import { formatContentHtml } from "../../utils/sanitizeHtml";
+
 
 const TABS = [
   { id: "overview", label: "Overview", icon: BookOpen },
@@ -95,8 +97,8 @@ export function TopicContent({ activeTopic, progress, toggleComplete, activeTab,
             <div className="io-tldr">
               {activeTopic.content?.tldr?.length > 0 || activeTopic.tldr ? (
                 Array.isArray(activeTopic.content?.tldr) 
-                  ? <ul style={{ paddingLeft: '20px' }}>{activeTopic.content.tldr.map((p, i) => <li key={i} dangerouslySetInnerHTML={{ __html: p }} style={{ marginBottom: '8px' }} />)}</ul>
-                  : <p dangerouslySetInnerHTML={{ __html: activeTopic.content?.tldr || activeTopic.tldr }} />
+                  ? <ul style={{ paddingLeft: '20px' }}>{activeTopic.content.tldr.map((p, i) => <li key={i} dangerouslySetInnerHTML={{ __html: formatContentHtml(p) }} style={{ marginBottom: '8px' }} />)}</ul>
+                  : <p dangerouslySetInnerHTML={{ __html: formatContentHtml(activeTopic.content?.tldr || activeTopic.tldr) }} />
               ) : <EmptyState message="No overview available for this topic." />}
             </div>
           )}
@@ -108,10 +110,10 @@ export function TopicContent({ activeTopic, progress, toggleComplete, activeTab,
                   const plainContent = activeTopic.content?.laymanDefinition || activeTopic.content?.layman || activeTopic.layman;
                   return Array.isArray(plainContent) ? (
                     plainContent.map((p, idx) => (
-                      <p key={idx} dangerouslySetInnerHTML={{ __html: p }} style={{ marginBottom: idx < plainContent.length - 1 ? '12px' : 0 }} />
+                      <p key={idx} dangerouslySetInnerHTML={{ __html: formatContentHtml(p) }} style={{ marginBottom: idx < plainContent.length - 1 ? '12px' : 0 }} />
                     ))
                   ) : (
-                    <p dangerouslySetInnerHTML={{ __html: plainContent }} />
+                    <p dangerouslySetInnerHTML={{ __html: formatContentHtml(plainContent) }} />
                   );
                 })()
               ) : <EmptyState message="No plain English explanation available." />}
@@ -125,20 +127,20 @@ export function TopicContent({ activeTopic, progress, toggleComplete, activeTab,
                   ? activeTopic.content.deepDive.map((section, i) => (
                       <div key={i} style={{ marginBottom: '1.5rem' }}>
                         {section.heading && <h3 style={{ color: 'var(--amber)', fontSize: '15px', marginBottom: '8px' }}>{section.heading}</h3>}
-                        {section.text && <p dangerouslySetInnerHTML={{ __html: section.text }} />}
+                        {section.text && <p dangerouslySetInnerHTML={{ __html: formatContentHtml(section.text) }} />}
                         {Array.isArray(section.list) && section.list.length > 0 && (
                           <ul className="io-deepdive-list">
                             {section.list.map((item, idx) => (
-                              <li key={idx} dangerouslySetInnerHTML={{ __html: item }} />
+                              <li key={idx} dangerouslySetInnerHTML={{ __html: formatContentHtml(item) }} />
                             ))}
                           </ul>
                         )}
                         {!section.text && !section.list && section.content && (
-                          <p dangerouslySetInnerHTML={{ __html: section.content }} />
+                          <p dangerouslySetInnerHTML={{ __html: formatContentHtml(section.content) }} />
                         )}
                       </div>
                     ))
-                  : <p dangerouslySetInnerHTML={{ __html: activeTopic.content?.deepDive || activeTopic.deepDive }} />
+                  : <p dangerouslySetInnerHTML={{ __html: formatContentHtml(activeTopic.content?.deepDive || activeTopic.deepDive) }} />
               ) : <EmptyState message="No deep dive content available for this topic." />}
             </div>
           )}
@@ -172,15 +174,15 @@ export function TopicContent({ activeTopic, progress, toggleComplete, activeTab,
               {(activeTopic.content?.interviewAnswer || activeTopic.interviewAnswer) && (
                 <div className="io-qa-item io-qa-summary">
                   <h4 style={{ color: 'var(--text)', marginBottom: '8px', fontSize: '14px' }}>How to answer in an interview:</h4>
-                  <div dangerouslySetInnerHTML={{ __html: activeTopic.content?.interviewAnswer || activeTopic.interviewAnswer }} style={{ fontSize: '14.5px', lineHeight: '1.6', color: 'var(--text)' }} />
+                  <div dangerouslySetInnerHTML={{ __html: formatContentHtml(activeTopic.content?.interviewAnswer || activeTopic.interviewAnswer) }} style={{ fontSize: '14.5px', lineHeight: '1.6', color: 'var(--text)' }} />
                 </div>
               )}
               
               {((activeTopic.content?.interviewQuestions || activeTopic.content?.qa || activeTopic.qa || [])).length > 0 ? (
                 (activeTopic.content?.interviewQuestions || activeTopic.content?.qa || activeTopic.qa || []).map((pair, i) => (
                   <div className="io-qa-item" key={i}>
-                    <div className="io-qa-q" dangerouslySetInnerHTML={{ __html: `Q. ${pair.question || pair.q}` }} />
-                    <div className="io-qa-a" dangerouslySetInnerHTML={{ __html: pair.answer || pair.a }} />
+                    <div className="io-qa-q" dangerouslySetInnerHTML={{ __html: formatContentHtml(`Q. ${pair.question || pair.q}`) }} />
+                    <div className="io-qa-a" dangerouslySetInnerHTML={{ __html: formatContentHtml(pair.answer || pair.a) }} />
                   </div>
                 ))
               ) : (
@@ -263,14 +265,14 @@ export function TopicContent({ activeTopic, progress, toggleComplete, activeTab,
                                 style={{ marginTop: "4px", accentColor: "var(--teal)" }}
                               />
                               <span style={{ fontWeight: "bold" }}>{String.fromCharCode(65 + idx)}.</span>
-                              <span dangerouslySetInnerHTML={{ __html: opt }} />
+                              <span dangerouslySetInnerHTML={{ __html: formatContentHtml(opt) }} />
                             </label>
                           );
                         })}
                       </div>
                       {mcqSubmitted && mcq.explanation && (
                         <div style={{ padding: "12px 16px", background: "var(--amber-dim)", border: "1px solid var(--amber-border)", borderLeft: "4px solid var(--amber)", borderRadius: "6px", fontSize: "13.5px", lineHeight: "1.6", color: "var(--text)", marginTop: "16px" }}>
-                          <strong style={{ color: "var(--amber)" }}>Explanation:</strong> <span dangerouslySetInnerHTML={{ __html: mcq.explanation }} />
+                          <strong style={{ color: "var(--amber)" }}>Explanation:</strong> <span dangerouslySetInnerHTML={{ __html: formatContentHtml(mcq.explanation) }} />
                         </div>
                       )}
                     </div>

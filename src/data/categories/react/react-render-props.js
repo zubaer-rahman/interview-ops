@@ -13,7 +13,7 @@ export const react_render_props = {
   "deepDive": [
     {
       "heading": "How Render Props Work",
-      "text": "A component with a render prop accepts a function as a prop. Inside its render, it calls the function, passing relevant state/data as arguments. The function returns JSX. Example: <DataProvider render={data => <div>{data.name}</div>} />. The component controls the logic, the parent controls the rendering. The prop can be named \"render\" or \"children\" (when used as a function child pattern: <DataProvider>{data => <div>{data.name}</div>}</DataProvider>)."
+      "text": "A component with a render prop accepts a function as a prop. Inside its render, it calls the function, passing relevant state/data as arguments. The function returns JSX. Example: <code>&lt;DataProvider render={data =&gt; &lt;div&gt;{data.name}&lt;/div&gt;} /&gt;</code>. The component controls the logic, the parent controls the rendering. The prop can be named \"render\" or \"children\" (when used as a function child pattern: <code>&lt;DataProvider&gt;{data =&gt; &lt;div&gt;{data.name}&lt;/div&gt;}&lt;/DataProvider&gt;</code>)."
     },
     {
       "heading": "Render Props vs HOC",
@@ -21,7 +21,7 @@ export const react_render_props = {
     },
     {
       "heading": "Common Real-World Examples",
-      "text": "React Router's Route: <Route path=\"/user\" render={props => <User {...props} />} />. React Motion's Motion: <Motion style={{x: spring(10)}}>{interpolated => <div style={interpolated} />}</Motion>. Formik's <Formik> component uses render props to give form state. React Context's Consumer was a render prop before hooks: <ThemeContext.Consumer>{theme => <div>{theme}</div>}</ThemeContext.Consumer>."
+      "text": "React Router's Route: <code>&lt;Route path=\"/user\" render={props =&gt; &lt;User {...props} /&gt;} /&gt;</code>. React Motion's Motion: <code>&lt;Motion style={{x: spring(10)}}&gt;{interpolated =&gt; &lt;div style={interpolated} /&gt;}&lt;/Motion&gt;</code>. Formik's <code>&lt;Formik&gt;</code> component uses render props to give form state. React Context's Consumer was a render prop before hooks: <code>&lt;ThemeContext.Consumer&gt;{theme =&gt; &lt;div&gt;{theme}&lt;/div&gt;}&lt;/ThemeContext.Consumer&gt;</code>."
     },
     {
       "heading": "Performance Considerations",

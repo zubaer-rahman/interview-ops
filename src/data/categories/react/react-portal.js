@@ -17,7 +17,7 @@ export const react_portal = {
     },
     {
       "heading": "Event Bubbling Through Portal Boundaries",
-      "text": "This is the most important and often misunderstood portal behavior. Events from portal content bubble up through the React component tree, NOT the DOM tree. Example: A modal (rendered via portal to document.body) contains a button that triggers an onClick on the parent component. Even though the button is a DOM child of <body> and the parent is nested deep in <div id=\"root\">, the onClick from the portal button bubbles up through the React component hierarchy and triggers the parents handler normally. This is because React uses its own synthetic event system that follows React component hierarchy, not DOM hierarchy. This behavior is crucial for event delegation, context providers, and redux connect() to work correctly across portal boundaries."
+      "text": "This is the most important and often misunderstood portal behavior. Events from portal content bubble up through the React component tree, NOT the DOM tree. Example: A modal (rendered via portal to document.body) contains a button that triggers an onClick on the parent component. Even though the button is a DOM child of <code>&lt;body&gt;</code> and the parent is nested deep in <code>&lt;div id=\"root\"&gt;</code>, the onClick from the portal button bubbles up through the React component hierarchy and triggers the parents handler normally. This is because React uses its own synthetic event system that follows React component hierarchy, not DOM hierarchy. This behavior is crucial for event delegation, context providers, and redux connect() to work correctly across portal boundaries."
     },
     {
       "heading": "Portal Use Cases and Patterns",
@@ -60,7 +60,7 @@ export const react_portal = {
     },
     {
       "question": "Can portals be used with server-side rendering?",
-      "answer": "Yes, but the portal container DOM node must exist in the server-rendered HTML. Create the container element in the HTML template (e.g., <div id=\"modal-root\"></div>) so hydration can attach the portal correctly."
+      "answer": "Yes, but the portal container DOM node must exist in the server-rendered HTML. Create the container element in the HTML template (e.g., <code>&lt;div id=\"modal-root\"&gt;&lt;/div&gt;</code>) so hydration can attach the portal correctly."
     },
     {
       "question": "What happens to portal content when the portal-creating component unmounts?",
@@ -150,12 +150,12 @@ export const react_portal = {
       "question": "What is the recommended DOM node for modal portals?",
       "options": [
         "Inside the parent component",
-        "document.body or a dedicated <div id=\"modal-root\">",
+        "document.body or a dedicated <code>&lt;div id=\"modal-root\"&gt;</code>",
         "The window object",
         "The document head"
       ],
       "answer": 1,
-      "explanation": "A dedicated container element (e.g., <div id=\"modal-root\">) or document.body is recommended. The container should be outside the main app root for proper z-index and overflow stacking."
+      "explanation": "A dedicated container element (e.g., <code>&lt;div id=\"modal-root\"&gt;</code>) or document.body is recommended. The container should be outside the main app root for proper z-index and overflow stacking."
     }
   ]
 };

@@ -17,7 +17,7 @@ export const react_rendering_cycle = {
     },
     {
       "heading": "Phase 2: Reconciliation (The Diffing Algorithm)",
-      "text": "Reconciliation is the process of comparing the new VDOM tree with the previous one. React uses a heuristic O(n) algorithm based on two assumptions: (1) Different element types produce different trees (replacing <div> with <span> tears down the subtree). (2) Keys identify stable elements across renders. The algorithm: (a) If the element type changed (div -> span), destroy the old tree and build a new one. (b) If the type is the same, update the existing DOM element with changed props/attributes. (c) For lists, use keys to determine which items changed position, were added, or removed. The key prop is critical for list reconciliation - use stable, unique, and predictable keys (item IDs), avoiding array indices."
+      "text": "Reconciliation is the process of comparing the new VDOM tree with the previous one. React uses a heuristic O(n) algorithm based on two assumptions: (1) Different element types produce different trees (replacing <code>&lt;div&gt;</code> with <code>&lt;span&gt;</code> tears down the subtree). (2) Keys identify stable elements across renders. The algorithm: (a) If the element type changed (div -> span), destroy the old tree and build a new one. (b) If the type is the same, update the existing DOM element with changed props/attributes. (c) For lists, use keys to determine which items changed position, were added, or removed. The key prop is critical for list reconciliation - use stable, unique, and predictable keys (item IDs), avoiding array indices."
     },
     {
       "heading": "Phase 3: Commit Phase (DOM Mutations and Effects)",
