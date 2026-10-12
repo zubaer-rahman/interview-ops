@@ -13,7 +13,7 @@ export const react_controlled_components = {
   "deepDive": [
     {
       "heading": "What Is a Controlled Component?",
-      "text": "A form element (<input>, <textarea>, <select>) whose value is controlled by React state. The component stores the current value in state and updates it via onChange. React becomes the single source of truth."
+      "text": "A form element (<code>&lt;input&gt;</code>, <code>&lt;textarea&gt;</code>, <code>&lt;select&gt;</code>) whose value is controlled by React state. The component stores the current value in state and updates it via onChange. React becomes the single source of truth."
     },
     {
       "heading": "How It Works",

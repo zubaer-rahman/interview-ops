@@ -40,7 +40,7 @@ export const react_uncontrolled_components = {
     },
     {
       "question": "How do you read the current value?",
-      "answer": "Via a ref: const inputRef = useRef(); <input ref={inputRef} />. Read: inputRef.current.value."
+      "answer": "Via a ref: <code>const inputRef = useRef(); &lt;input ref={inputRef} /&gt;</code>. Read: <code>inputRef.current.value</code>."
     },
     {
       "question": "When to use uncontrolled over controlled?",

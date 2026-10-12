@@ -17,7 +17,7 @@ export const git_bisect = {
     },
     {
       "heading": "Automated Bisect",
-      "text": "git bisect run <script>: automate testing. Provide a script that exits 0 (good) or non-0 (bad). Git automatically runs the script on each commit. Example: git bisect run npm test. Perfect for CI regression detection. Set up: npm test exits 1 if test fails (bug present), 0 if passes (bug absent)."
+      "text": "<code>git bisect run &lt;script&gt;</code>: automate testing. Provide a script that exits 0 (good) or non-0 (bad). Git automatically runs the script on each commit. Example: <code>git bisect run npm test</code>. Perfect for CI regression detection. Set up: npm test exits 1 if test fails (bug present), 0 if passes (bug absent)."
     },
     {
       "heading": "Workflow Integration",
@@ -36,7 +36,7 @@ export const git_bisect = {
     },
     {
       "question": "How to automate bisect?",
-      "answer": "git bisect run <script> — provide a script that exits 0 for good, non-0 for bad."
+      "answer": "<code>git bisect run &lt;script&gt;</code> — provide a script that exits 0 for good, non-0 for bad."
     },
     {
       "question": "Git Bisect — How do you get started with this concept?",

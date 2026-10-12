@@ -13,7 +13,7 @@ export const react_usecallback = {
   "deepDive": [
     {
       "heading": "The Referential Identity Problem",
-      "text": "Every time a React component re-renders, all inline functions defined in the component body are recreated as new function objects in memory. Consider: <Child onClick={() => handleClick(id)} />. The arrow function is a new function reference on every render. If Child is wrapped in React.memo, it sees the onClick prop change on every parent render and cannot skip re-rendering. useCallback solves this by returning the same function reference (identity) across renders as long as dependencies have not changed. The function is only recreated when its closure variables actually change. This is the core reason useCallback exists - not to make the component faster directly, but to enable React.memo on children to work effectively."
+      "text": "Every time a React component re-renders, all inline functions defined in the component body are recreated as new function objects in memory. Consider: <code>&lt;Child onClick={() =&gt; handleClick(id)} /&gt;</code>. The arrow function is a new function reference on every render. If Child is wrapped in React.memo, it sees the onClick prop change on every parent render and cannot skip re-rendering. useCallback solves this by returning the same function reference (identity) across renders as long as dependencies have not changed. The function is only recreated when its closure variables actually change. This is the core reason useCallback exists - not to make the component faster directly, but to enable React.memo on children to work effectively."
     },
     {
       "heading": "useCallback in the Component Lifecycle",
@@ -21,7 +21,7 @@ export const react_usecallback = {
     },
     {
       "heading": "Common Misconceptions and Overuse",
-      "text": "The most common mistake is wrapping every event handler in useCallback, assuming it is a free optimization. In reality: (1) useCallback adds overhead - the dependency comparison runs on every render. (2) For handlers used on native DOM elements (<button onClick={handler}>), React.memo on DOM elements is irrelevant. (3) For handlers passed to non-memoized children, useCallback provides zero benefit because the child re-renders anyway. (4) The dependency array must be correct - omitting a dependency can cause the callback to reference stale values, leading to subtle bugs. (5) If the callback does expensive work internally, useMemo on the result is more appropriate than useCallback on the function."
+      "text": "The most common mistake is wrapping every event handler in useCallback, assuming it is a free optimization. In reality: (1) useCallback adds overhead - the dependency comparison runs on every render. (2) For handlers used on native DOM elements (<code>&lt;button onClick={handler}&gt;</code>), React.memo on DOM elements is irrelevant. (3) For handlers passed to non-memoized children, useCallback provides zero benefit because the child re-renders anyway. (4) The dependency array must be correct - omitting a dependency can cause the callback to reference stale values, leading to subtle bugs. (5) If the callback does expensive work internally, useMemo on the result is more appropriate than useCallback on the function."
     },
     {
       "heading": "useCallback vs useMemo for Functions",
